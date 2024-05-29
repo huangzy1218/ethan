@@ -4,10 +4,14 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+
 public class TestPojo implements Serializable {
 
     private String data;
     private Date date;
+
+    public TestPojo() {
+    }
 
     public TestPojo(String data, Date date) {
         this.data = data;
