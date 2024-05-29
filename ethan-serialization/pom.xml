@@ -6,9 +6,45 @@
     <parent>
         <groupId>com.ethan</groupId>
         <artifactId>ethan</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>ethan-serialization</artifactId>
+    <description>The serialization module of ethan project</description>
+
+    <dependencies>
+        <!-- Hessian serialize -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>hessian-lite</artifactId>
+        </dependency>
+        <!-- Kryo serialize -->
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+        </dependency>
+        <!-- Netty -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <argLine>
+                        --add-opens=java.base/java.lang=ALL-UNNAMED
+                        --add-opens=java.base/java.util=ALL-UNNAMED
+                    </argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

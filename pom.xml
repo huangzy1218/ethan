@@ -6,7 +6,7 @@
 
     <groupId>com.ethan</groupId>
     <artifactId>ethan</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <modules>
         <module>ethan-common</module>
@@ -20,6 +20,43 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <revision>1.0-SNAPSHOT</revision>
+        <hessian-lite.version>3.2.13</hessian-lite.version>
+        <junit-jupiter.version>5.8.2</junit-jupiter.version>
+        <kryo.version>4.0.2</kryo.version>
+        <netty.version>4.1.42.Final</netty.version>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Hessian serialize -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>hessian-lite</artifactId>
+                <version>${hessian-lite.version}</version>
+            </dependency>
+            <!-- Kryo serialize -->
+            <dependency>
+                <groupId>com.esotericsoftware</groupId>
+                <artifactId>kryo</artifactId>
+                <version>${kryo.version}</version>
+            </dependency>
+            <!-- Netty -->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
