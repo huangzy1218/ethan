@@ -1,4 +1,5 @@
-package com.ethan.serialize.hessian2;
+package com.ethan.serialize.jdk;
+
 
 import com.ethan.example.TestPojo;
 import com.ethan.serialize.api.ObjectInput;
@@ -11,11 +12,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Date;
 
-class Hessian2SerializationTest {
+public class JavaSerializationTest {
 
     @Test
-    void testReadString() throws IOException {
-        Serialization serialization = new Hessian2Serialization();
+    void testReadString() throws IOException, ClassNotFoundException {
+        Serialization serialization = new JavaSerialization();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ObjectOutput objectOutput = serialization.serialize(outputStream);
         objectOutput.writeUTF("hello");
@@ -29,7 +30,7 @@ class Hessian2SerializationTest {
 
     @Test
     void testReadObject() throws IOException, ClassNotFoundException {
-        Serialization serialization = new Hessian2Serialization();
+        Serialization serialization = new JavaSerialization();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ObjectOutput objectOutput = serialization.serialize(outputStream);
         TestPojo pojo = new TestPojo("hello", new Date());
