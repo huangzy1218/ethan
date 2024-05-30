@@ -11,7 +11,7 @@ public class KryoThreadLocalUtils {
 
     private static final ThreadLocal<Kryo> KRYO_THREAD_LOCAL = ThreadLocal.withInitial(() -> {
         Kryo kryo = new Kryo();
-        // Register necessary bean
+        // Register necessary class
         return kryo;
     });
 

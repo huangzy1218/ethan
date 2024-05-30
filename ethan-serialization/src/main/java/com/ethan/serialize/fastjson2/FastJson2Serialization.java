@@ -1,0 +1,53 @@
+package com.ethan.serialize.fastjson2;
+
+import com.ethan.common.bean.ScopeBeanFactory;
+import com.ethan.rpc.model.FrameworkModel;
+import com.ethan.serialize.api.ObjectInput;
+import com.ethan.serialize.api.ObjectOutput;
+import com.ethan.serialize.api.Serialization;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+/**
+ * FastJson serialization implementation.<br/>
+ *
+ * <pre>
+ *     e.g. &lt;ethan:protocol serialization="fastjson" /&gt;
+ * </pre>
+ *
+ * @author Huang Z.Y.
+ */
+@Slf4j
+public class FastJson2Serialization implements Serialization {
+
+    private static final FrameworkModel frameworkModel = FrameworkModel.defaultModel();
+
+    static {
+        Class<?> aClass = null;
+        try {
+            aClass = com.alibaba.fastjson2.JSONB.class;
+        } catch (Throwable ignored) {
+        }
+        ScopeBeanFactory beanFactory = frameworkModel.getBeanFactory();
+        beanFactory.registerBean(new Fastjson2CreatorManager());
+    }
+
+    @Override
+    public ObjectOutput serialize(OutputStream output) throws IOException {
+        Fastjson2CreatorManager fastjson2CreatorManager = frameworkModel
+                .getBeanFactory().getBean(Fastjson2CreatorManager.class);
+        return new FastJson2ObjectOutput(fastjson2CreatorManager, output);
+    }
+
+    @Override
+    public ObjectInput deserialize(InputStream input) throws IOException {
+        Fastjson2CreatorManager fastjson2CreatorManager = frameworkModel
+                .getBeanFactory().getBean(Fastjson2CreatorManager.class);
+        return new FastJson2ObjectInput(fastjson2CreatorManager, input);
+    }
+
+}
+
