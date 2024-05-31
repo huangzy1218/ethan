@@ -4,6 +4,7 @@ import com.ethan.example.TestPojo;
 import com.ethan.serialize.api.ObjectInput;
 import com.ethan.serialize.api.ObjectOutput;
 import com.ethan.serialize.api.Serialization;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -24,7 +25,7 @@ class FastJson2SerializationTest {
         byte[] bytes = outputStream.toByteArray();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         ObjectInput objectInput = serialization.deserialize(inputStream);
-        System.out.println(objectInput.readUTF());
+        Assertions.assertEquals("hello", objectInput.readUTF());
     }
 
     @Test
@@ -39,7 +40,7 @@ class FastJson2SerializationTest {
         byte[] bytes = outputStream.toByteArray();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         ObjectInput objectInput = serialization.deserialize(inputStream);
-        System.out.println(objectInput.readObject());
+        Assertions.assertEquals(pojo, objectInput.readObject());
     }
 
 }

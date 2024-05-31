@@ -62,7 +62,7 @@ public class KryoObjectInput implements ObjectInput, Cleanable {
 
     @Override
     public String readUTF() throws IOException {
-        return input.readString();
+        return kryo.readObject(input, String.class);
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.ethan.example.TestPojo;
 import com.ethan.serialize.api.ObjectInput;
 import com.ethan.serialize.api.ObjectOutput;
 import com.ethan.serialize.api.Serialization;
-import com.ethan.serialize.kryo.util.KryoThreadLocalUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -25,12 +25,11 @@ class KryoSerializationTest {
         byte[] bytes = outputStream.toByteArray();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         ObjectInput objectInput = serialization.deserialize(inputStream);
-        System.out.println(objectInput.readUTF());
+        Assertions.assertEquals("hello", objectInput.readUTF());
     }
 
     @Test
     void testReadObject() throws IOException, ClassNotFoundException {
-        KryoThreadLocalUtils.getKryo().register(TestPojo.class, 0);
         Serialization serialization = new KryoSerialization();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ObjectOutput objectOutput = serialization.serialize(outputStream);
@@ -41,7 +40,7 @@ class KryoSerializationTest {
         byte[] bytes = outputStream.toByteArray();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         ObjectInput objectInput = serialization.deserialize(inputStream);
-        System.out.println(objectInput.readObject(TestPojo.class));
+        Assertions.assertEquals(pojo, objectInput.readObject(TestPojo.class));
     }
 
 }

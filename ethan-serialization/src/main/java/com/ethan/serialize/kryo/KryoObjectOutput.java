@@ -81,7 +81,8 @@ public class KryoObjectOutput implements ObjectOutput, Cleanable {
 
     @Override
     public void writeObject(Object obj) throws IOException {
-        kryo.writeClassAndObject(output, obj);
+        kryo.register(obj.getClass());
+        kryo.writeObject(output, obj);
     }
 
     @Override
