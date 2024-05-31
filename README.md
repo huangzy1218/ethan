@@ -4,7 +4,7 @@ Ethan is a high-performance, Java-based RPC framework. It refers to the design o
 
 ## Architecture
 
-![RPC.png](assets/architecture.png)
+<img src="assets/architecture.png" alt="RPC Architecture" width="80%"/>
 
 - **Registration Center** is a crucial component in an RPC (Remote Procedure Call) framework. It acts as a service
   directory where services register themselves with their metadata, such as service names, addresses, and protocols.

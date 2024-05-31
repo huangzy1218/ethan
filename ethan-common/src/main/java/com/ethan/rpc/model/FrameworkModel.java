@@ -1,6 +1,8 @@
 package com.ethan.rpc.model;
 
 import com.ethan.common.bean.ScopeBeanFactory;
+import com.ethan.common.extension.ExtensionAccessor;
+import com.ethan.common.extension.ExtensionDirector;
 import com.ethan.common.util.Assert;
 import com.ethan.common.util.ConcurrentHashSet;
 import lombok.Getter;
@@ -13,7 +15,7 @@ import java.util.Set;
  * @author Huang Z.Y.
  */
 @Getter
-public class FrameworkModel {
+public class FrameworkModel implements ExtensionAccessor {
 
     private static volatile FrameworkModel defaultInstance;
 
@@ -24,6 +26,8 @@ public class FrameworkModel {
     private volatile ScopeBeanFactory beanFactory;
 
     private final Set<ClassLoader> classLoaders = new ConcurrentHashSet<>();
+
+    private volatile ExtensionDirector extensionDirector;
 
     public FrameworkModel() {
         initialize();
@@ -41,7 +45,7 @@ public class FrameworkModel {
     protected void initialize() {
         synchronized (instLock) {
             this.beanFactory = new ScopeBeanFactory(null);
-
+            this.extensionDirector = new ExtensionDirector();
             // Add Framework's ClassLoader by default
             ClassLoader ethanClassLoader = FrameworkModel.class.getClassLoader();
             if (ethanClassLoader != null) {
@@ -75,6 +79,11 @@ public class FrameworkModel {
         synchronized (instLock) {
             this.classLoaders.add(classLoader);
         }
+    }
+
+    @Override
+    public ExtensionDirector getExtensionDirector() {
+        return null;
     }
 
 }

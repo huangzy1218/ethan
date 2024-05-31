@@ -68,4 +68,14 @@ public class StringUtils {
         return array == null || array.length == 0;
     }
 
+    /**
+     * Checks if a string is null or empty.
+     *
+     * @param str The string to check
+     * @return {@code true} if the string is null or empty, false otherwise
+     */
+    public static boolean isNullOrEmpty(String str) {
+        return str == null || str.isEmpty();
+    }
+
 }
