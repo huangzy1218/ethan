@@ -26,11 +26,6 @@ public class FastJson2Serialization implements Serialization {
     private static final FrameworkModel frameworkModel = FrameworkModel.defaultModel();
 
     static {
-        Class<?> aClass = null;
-        try {
-            aClass = com.alibaba.fastjson2.JSONB.class;
-        } catch (Throwable ignored) {
-        }
         ScopeBeanFactory beanFactory = frameworkModel.getBeanFactory();
         beanFactory.registerBean(new Fastjson2CreatorManager());
     }

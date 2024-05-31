@@ -80,6 +80,7 @@ public class FastJson2ObjectInput implements ObjectInput {
         return bytes;
     }
 
+    @Deprecated
     @Override
     public Object readObject() throws IOException, ClassNotFoundException {
         return readObject(Object.class);
@@ -148,7 +149,7 @@ public class FastJson2ObjectInput implements ObjectInput {
         int read = is.read(bytes, 0, Integer.BYTES);
         if (read != Integer.BYTES) {
             throw new IllegalArgumentException(
-                    "deserialize failed. expected read length: " + Integer.BYTES + " but actual read: " + read);
+                    "Deserialize failed. expected read length: " + Integer.BYTES + " but actual read: " + read);
         }
         int value = 0;
         for (byte b : bytes) {
