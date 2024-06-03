@@ -9,9 +9,11 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -113,7 +115,7 @@ public class CuratorZookeeperClient {
      * @param path Node path
      * @param data Real date
      */
-    public void update(String path, String data) {
+    public static void update(String path, String data) {
         byte[] dataBytes = data.getBytes(CHARSET);
         try {
             client.setData().forPath(path, dataBytes);
@@ -122,18 +124,49 @@ public class CuratorZookeeperClient {
         }
     }
 
-    protected void createOrUpdatePersistent(String path, String data) {
+    public static void createOrUpdatePersistent(String path, String data) {
         try {
             if (checkExists(path)) {
                 update(path, data);
             } else {
-                createPersistent(path, data, true);
+                createPersistent(path, data);
             }
         } catch (Exception e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
 
+
+    protected static void createOrUpdateEphemeral(String path, String data) {
+        try {
+            if (checkExists(path)) {
+                update(path, data);
+            } else {
+                createEphemeral(path, data);
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
+    public static void deletePath(String path) {
+        try {
+            client.delete().deletingChildrenIfNeeded().forPath(path);
+        } catch (KeeperException.NoNodeException ignored) {
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
+    public static List<String> getChildren(String path) {
+        try {
+            return client.getChildren().forPath(path);
+        } catch (KeeperException.NoNodeException e) {
+            return null;
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
 
     public static boolean checkExists(String path) {
         try {
