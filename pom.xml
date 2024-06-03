@@ -29,6 +29,8 @@
         <lombok.version>1.18.4</lombok.version>
         <slf4j.version>1.7.5</slf4j.version>
         <fastjson2.version>2.0.47</fastjson2.version>
+        <curator.version>4.2.0</curator.version>
+        <spring-boot.version>3.2.4</spring-boot.version>
     </properties>
 
     <dependencies>
@@ -86,6 +88,27 @@
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ethan</groupId>
+                <artifactId>ethan-remoting</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ethan</groupId>
+                <artifactId>ethan-rpc</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ethan</groupId>
+                <artifactId>ethan-registry</artifactId>
+                <version>${revision}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
