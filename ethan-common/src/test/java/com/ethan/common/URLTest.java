@@ -11,6 +11,7 @@ class URLTest {
         url.addParam("param1", "value1");
         url.addParam("param2", "value2");
         System.out.println(url);
+        System.out.println(url.getServiceKey());
     }
 
 }

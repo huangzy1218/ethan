@@ -1,4 +1,4 @@
-package com.ethan.remoting.exange;
+package com.ethan.remoting.exchange;
 
 import lombok.Data;
 import lombok.ToString;
@@ -72,13 +72,14 @@ public class Response {
      */
     public static final byte SERVER_THREADPOOL_EXHAUSTED_ERROR = 100;
 
-    private long mId = 0;
+    private long id = 0;
+    private Object result;
 
     public Response() {
     }
 
     public Response(long id) {
-        mId = id;
+        this.id = id;
     }
 
 }

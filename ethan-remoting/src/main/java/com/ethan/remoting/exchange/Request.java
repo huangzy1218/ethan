@@ -1,4 +1,4 @@
-package com.ethan.remoting.exange;
+package com.ethan.remoting.exchange;
 
 import lombok.Data;
 import lombok.ToString;
@@ -17,7 +17,9 @@ public class Request {
 
     private static final AtomicLong INVOKE_ID;
 
-    private final long mId;
+    private final long id;
+
+    private Object data;
 
 
     static {
@@ -31,11 +33,11 @@ public class Request {
     }
 
     public Request() {
-        mId = newId();
+        id = newId();
     }
 
     public Request(long id) {
-        mId = id;
+        this.id = id;
     }
 
 }

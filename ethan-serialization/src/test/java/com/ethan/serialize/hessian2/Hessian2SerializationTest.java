@@ -40,7 +40,7 @@ class Hessian2SerializationTest {
         byte[] bytes = outputStream.toByteArray();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         ObjectInput objectInput = serialization.deserialize(inputStream);
-        Assertions.assertEquals(pojo, objectInput.readObject());
+        Assertions.assertEquals(pojo, objectInput.readObject(TestPojo.class));
     }
 
 }

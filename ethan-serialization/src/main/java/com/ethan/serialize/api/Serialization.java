@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * 指定序列化器的序列化策略接口.
+ * Specify the serialization strategy interface of the serializer.
  *
  * @author Huang Z.Y.
  */

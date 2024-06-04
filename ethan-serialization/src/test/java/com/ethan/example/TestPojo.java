@@ -1,5 +1,6 @@
 package com.ethan.example;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -11,6 +12,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Data
 @ToString
+@AllArgsConstructor
 public class TestPojo implements Serializable {
 
     private String data;
