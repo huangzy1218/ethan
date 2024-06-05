@@ -16,9 +16,8 @@ import java.util.Properties;
  *
  * @author Huang Z.Y.
  */
-@Deprecated
 @Slf4j
-public class PropertiesFileUtils {
+public class PropertiesUtils {
 
     private static final Charset CHARSET = StandardCharsets.UTF_8;
 

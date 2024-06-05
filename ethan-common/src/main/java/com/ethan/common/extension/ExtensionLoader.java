@@ -1,5 +1,7 @@
 package com.ethan.common.extension;
 
+import com.ethan.common.lang.Prioritized;
+import com.ethan.common.util.CollectionUtils;
 import com.ethan.common.util.Holder;
 import com.ethan.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -8,10 +10,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -240,6 +239,26 @@ public class ExtensionLoader<T> {
         if (destroyed.get()) {
             throw new IllegalStateException("ExtensionLoader is destroyed: " + type);
         }
+    }
+
+    public Set<T> getSupportedExtensionInstances() {
+        checkDestroyed();
+        List<T> instances = new LinkedList<>();
+        Set<String> supportedExtensions = getSupportedExtensions();
+        if (CollectionUtils.isNotEmpty(supportedExtensions)) {
+            for (String name : supportedExtensions) {
+                instances.add(getExtension(name));
+            }
+        }
+        // sort the Prioritized instances
+        instances.sort(Prioritized.COMPARATOR);
+        return new LinkedHashSet<>(instances);
+    }
+
+    public Set<String> getSupportedExtensions() {
+        checkDestroyed();
+        Map<String, Class<?>> classes = getExtensionClasses();
+        return Collections.unmodifiableSet(new TreeSet<>(classes.keySet()));
     }
 
 }

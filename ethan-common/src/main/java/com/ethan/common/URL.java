@@ -63,4 +63,54 @@ public class URL implements Serializable {
         return sb.toString();
     }
 
+    // todo
+//    /**
+//     * Get value of specified key in URLParam.
+//     *
+//     * @param key Specified key
+//     * @return Value, null if key is absent
+//     */
+//    public String getParameter(String key) {
+//        int keyIndex = DynamicParamTable.getKeyIndex(enableCompressed, key);
+//        if (keyIndex < 0) {
+//            return EXTRA_PARAMS.get(key);
+//        }
+//        if (KEY.get(keyIndex)) {
+//            String value;
+//            int offset = keyIndexToOffset(keyIndex);
+//            value = DynamicParamTable.getValue(keyIndex, offset);
+//
+//            return value;
+//            //            if (StringUtils.isEmpty(value)) {
+//            //                // Forward compatible, make sure key dynamic increment can work.
+//            //                // In that case, some values which are proceed before increment will set in EXTRA_PARAMS.
+//            //                return EXTRA_PARAMS.get(key);
+//            //            } else {
+//            //                return value;
+//            //            }
+//        }
+//        return null;
+//    }
+//
+//    public int getParameter(String key, int defaultValue) {
+//        String value = getParameter(key);
+//        if (StringUtils.isEmpty(value)) {
+//            return defaultValue;
+//        }
+//        return Integer.parseInt(value);
+//    }
+//
+//    public String getParameter(String key) {
+//        return urlParam.getParameter(key);
+//    }
+//
+//
+//    public int getPositiveParameter(String key, int defaultValue) {
+//        if (defaultValue <= 0) {
+//            throw new IllegalArgumentException("defaultValue <= 0");
+//        }
+//        int value = getParameter(key, defaultValue);
+//        return value <= 0 ? defaultValue : value;
+//    }
+
 }
