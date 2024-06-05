@@ -24,7 +24,7 @@ class RpcConfigPropertiesTest {
     @Test
     public void testRpcProperties() {
         RpcConfigProperties bean = ApplicationContextProvider.getBean(RpcConfigProperties.class);
-        System.out.println(rpcConfigProperties);
+        System.out.println(bean);
     }
 
 }

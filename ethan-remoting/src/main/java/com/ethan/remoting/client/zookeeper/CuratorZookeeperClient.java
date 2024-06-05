@@ -1,5 +1,6 @@
 package com.ethan.remoting.client.zookeeper;
 
+import com.ethan.common.context.ApplicationContextProvider;
 import com.ethan.rpc.RpcConfigProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
@@ -30,12 +31,9 @@ public class CuratorZookeeperClient {
     private static final int MAX_RETRIES = 3;
     private static CuratorFramework client;
 
-    private final RpcConfigProperties rpcConfigProperties;
-
     @Autowired
-    public CuratorZookeeperClient(RpcConfigProperties rpcConfigProperties) {
-        this.rpcConfigProperties = rpcConfigProperties;
-    }
+    private RpcConfigProperties rpcConfigProperties
+            = ApplicationContextProvider.getBean(RpcConfigProperties.class);
 
     /**
      * Get the Zookeeper client.
