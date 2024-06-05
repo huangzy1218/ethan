@@ -1,6 +1,5 @@
 package com.ethan.remoting.client.zookeeper;
 
-import com.ethan.remoting.util.RpcConfigUtils;
 import com.ethan.rpc.RpcConfigProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
@@ -10,6 +9,8 @@ import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -21,6 +22,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Huang Z.Y.
  */
+@Component
 @Slf4j
 public class CuratorZookeeperClient {
 
@@ -28,8 +30,12 @@ public class CuratorZookeeperClient {
     private static final int MAX_RETRIES = 3;
     private static CuratorFramework client;
 
-    private static final RpcConfigProperties rpcConfigProperties = RpcConfigUtils.getRpcConfigProperties();
+    private final RpcConfigProperties rpcConfigProperties;
 
+    @Autowired
+    public CuratorZookeeperClient(RpcConfigProperties rpcConfigProperties) {
+        this.rpcConfigProperties = rpcConfigProperties;
+    }
 
     /**
      * Get the Zookeeper client.

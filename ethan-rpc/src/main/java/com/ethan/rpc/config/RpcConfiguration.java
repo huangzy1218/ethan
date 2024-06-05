@@ -1,11 +1,8 @@
 package com.ethan.rpc.config;
 
-import com.ethan.rpc.RpcConfigProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.context.annotation.PropertySource;
 
 /**
  * Rpc configuration.
@@ -13,13 +10,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
  * @author Huang Z.Y.
  */
 @Configuration
-@EnableConfigurationProperties(RpcConfigProperties.class)
-@ComponentScan(basePackages = "com.ethan")
+@ComponentScan(basePackages = "com.ethan.rpc")
+@PropertySource("classpath:application.yml")
 public class RpcConfiguration {
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
-
 }

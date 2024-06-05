@@ -1,21 +1,19 @@
 package com.ethan.common.context;
 
+import com.ethan.common.config.CommonConfiguration;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * Get bean from application context with annotation {@link org.springframework.stereotype.Component @Component}.
  *
  * @author Huang Z.Y.
  */
-@Configuration
-@ComponentScan(basePackages = {"com.ethan"})
+
 public class ApplicationContextProvider {
 
     private static AnnotationConfigApplicationContext context;
 
-    protected ApplicationContextProvider() {
+    private ApplicationContextProvider() {
         // There has some flaw in order to simplify the code.
         // Configuration class must provide visible constructor but universally utility can not
         // be instantiated.
@@ -23,7 +21,7 @@ public class ApplicationContextProvider {
 
     // Initialize with a configuration class
     public static void initialize() {
-        context = new AnnotationConfigApplicationContext(ApplicationContextProvider.class);
+        context = new AnnotationConfigApplicationContext(CommonConfiguration.class);
     }
 
 

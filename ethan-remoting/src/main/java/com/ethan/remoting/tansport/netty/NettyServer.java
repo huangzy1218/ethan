@@ -8,8 +8,6 @@ import com.ethan.remoting.RemotingServer;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.netty.bootstrap.ServerBootstrap;
-import org.jboss.netty.channel.ChannelFactory;
-import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +15,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.ethan.remoting.RemotingConstants.*;
+import static com.ethan.remoting.RemotingConstants.EVENT_LOOP_BOSS_POOL_NAME;
+import static com.ethan.remoting.RemotingConstants.EVENT_LOOP_WORKER_POOL_NAME;
 
 /**
  * Netty server.
@@ -49,8 +48,9 @@ public class NettyServer implements RemotingServer {
                 true));
         ExecutorService worker =
                 Executors.newCachedThreadPool(new NamedThreadFactory(EVENT_LOOP_WORKER_POOL_NAME, true));
-        ChannelFactory channelFactory = new NioServerSocketChannelFactory(
-                boss, worker, getUrl().getPositiveParameter(IO_THREADS_KEY, DEFAULT_IO_THREADS));
+        // todo
+        //        ChannelFactory channelFactory = new NioServerSocketChannelFactory(
+//                boss, worker, getUrl().getPositiveParameter(IO_THREADS_KEY, DEFAULT_IO_THREADS));
     }
 
     @Override
