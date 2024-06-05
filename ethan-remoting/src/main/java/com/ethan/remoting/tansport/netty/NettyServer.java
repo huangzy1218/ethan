@@ -3,23 +3,28 @@ package com.ethan.remoting.tansport.netty;
 import com.ethan.common.URL;
 import com.ethan.common.util.CollectionUtils;
 import com.ethan.common.util.NamedThreadFactory;
+import com.ethan.common.util.RuntimeUtils;
 import com.ethan.remoting.Channel;
+import com.ethan.remoting.Constants;
 import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.RemotingServer;
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.jboss.netty.bootstrap.ServerBootstrap;
-import org.jboss.netty.channel.ChannelFactory;
-import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import static com.ethan.remoting.RemotingConstants.EVENT_LOOP_BOSS_POOL_NAME;
-import static com.ethan.remoting.RemotingConstants.EVENT_LOOP_WORKER_POOL_NAME;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Netty server.
@@ -27,6 +32,7 @@ import static com.ethan.remoting.RemotingConstants.EVENT_LOOP_WORKER_POOL_NAME;
  * @author Huang Z.Y.
  */
 @Slf4j
+@Component
 public class NettyServer implements RemotingServer {
 
     @Getter
@@ -39,7 +45,9 @@ public class NettyServer implements RemotingServer {
 
     private ServerBootstrap bootstrap;
 
-    private org.jboss.netty.channel.Channel channel;
+    private io.netty.channel.Channel serverChannel;
+
+    private io.netty.channel.Channel channel;
 
     public NettyServer(URL url) throws RemotingException {
         this.url = url;
@@ -47,55 +55,61 @@ public class NettyServer implements RemotingServer {
 
     @Override
     public void doOpen() {
-        ExecutorService boss = Executors.newCachedThreadPool(new NamedThreadFactory(EVENT_LOOP_BOSS_POOL_NAME,
-                true));
-        ExecutorService worker =
-                Executors.newCachedThreadPool(new NamedThreadFactory(EVENT_LOOP_WORKER_POOL_NAME, true));
-        ChannelFactory channelFactory = new NioServerSocketChannelFactory(boss, worker);
-        bootstrap = new ServerBootstrap(channelFactory);
-        bootstrap.setOption("child.tcpNoDelay", true);
-        channel = bootstrap.bind();
+        String bindIp = getUrl().getParameter(Constants.BIND_IP_KEY, getUrl().getHost());
+        int bindPort = Integer.parseInt(getUrl().getParameter(Constants.BIND_PORT_KEY, String.valueOf(getUrl().getPort())));
+        EventLoopGroup boss = new NioEventLoopGroup(1);
+        EventLoopGroup worker = new NioEventLoopGroup();
+        DefaultEventExecutorGroup serviceHandlerGroup = new DefaultEventExecutorGroup(
+                RuntimeUtils.cpus() * 2,
+                new NamedThreadFactory("service-handler-group", false)
+        );
+        bootstrap = new ServerBootstrap();
+        bootstrap.group(boss, worker)
+                .channel(NioServerSocketChannel.class)
+                // TCP has the Nagle algorithm enabled by default,
+                // which is used to send large data as fast as possible and reduce network transmission.
+                .childOption(ChannelOption.TCP_NODELAY, true)
+                // Enable the underlying TCP heartbeat mechanism
+                .childOption(ChannelOption.SO_KEEPALIVE, true)
+                // Indicates the maximum length of the queue used by the system to temporarily store requests that have completed three-way handshakes.
+                // If the connection establishment is frequent and the server is slow to create new connections, you can increase this parameter appropriately
+                .option(ChannelOption.SO_BACKLOG, 128)
+                .handler(new LoggingHandler(LogLevel.INFO))
+                // It is initialized when the client makes its first request
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) {
+                        // Close the connection if you do not receive a client request within 30 seconds
+                        ChannelPipeline p = ch.pipeline();
+                        p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));
+                        //p.addLast(new RpcMessageEncoder());
+                        //p.addLast(new RpcMessageDecoder());
+                        //p.addLast(serviceHandlerGroup, new NettyRpcServerHandler());
+                    }
+                });
+        ChannelFuture future = null;
+        try {
+            // The bond port is synchronized until the bond succeeds
+            future = bootstrap.bind(bindIp, bindPort).sync();
+            channel = future.channel();
+            // Wait for the listening port on the server to close
+            future.channel().closeFuture().sync();
+        } catch (InterruptedException e) {
+            log.error("Occur exception when start server:", e);
+        } finally {
+            boss.shutdownGracefully();
+            worker.shutdownGracefully();
+            serviceHandlerGroup.shutdownGracefully();
+        }
     }
 
     @Override
     public void doClose() {
-        try {
-            if (channel != null) {
-                // Unbind
-                channel.close();
-            }
-        } catch (Throwable e) {
-            log.warn("Transport closed failed: {}", e.getMessage(), e);
+        if (serverChannel != null) {
+            serverChannel.close();
         }
-        try {
-            Collection<Channel> channels = getChannels();
-            if (CollectionUtils.isNotEmpty(channels)) {
-                for (Channel channel : channels) {
-                    try {
-                        channel.close();
-                    } catch (Throwable e) {
-                        log.warn("Transport closed failed: {}", e.getMessage(), e);
-                    }
-                }
-            }
-        } catch (Throwable e) {
-            log.warn("Transport closed failed: {}", e.getMessage(), e);
-        }
-        try {
-            if (bootstrap != null) {
-                // Release external resource.
-                bootstrap.releaseExternalResources();
-            }
-        } catch (Throwable e) {
-            log.warn("Transport closed failed: {}", e.getMessage(), e);
-        }
-        try {
-            if (channels != null) {
-                channels.clear();
-            }
-        } catch (Throwable e) {
-            log.warn("Transport closed failed: {}", e.getMessage(), e);
-        }
+        closeAllChannels();
+        channels.clear();
     }
 
     @Override
@@ -104,6 +118,19 @@ public class NettyServer implements RemotingServer {
         // Pick channels from NettyServerHandler (needless to check connectivity)
         chs.addAll(this.channels.values());
         return chs;
+    }
+
+    private void closeAllChannels() {
+        Collection<Channel> channelCollection = getChannels();
+        if (CollectionUtils.isNotEmpty(channelCollection)) {
+            for (Channel channel : channelCollection) {
+                try {
+                    channel.close();
+                } catch (Throwable e) {
+                    log.warn("Failed to close channel: {}", e.getMessage(), e);
+                }
+            }
+        }
     }
 
 }

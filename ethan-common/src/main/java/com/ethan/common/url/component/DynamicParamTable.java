@@ -27,16 +27,13 @@ public class DynamicParamTable {
         init();
     }
 
-    public static int getKeyIndex(boolean enabled, String key) {
-        if (!enabled) {
-            return -1;
-        }
+    public static int getKeyIndex(String key) {
         Integer indexFromMap = KEY2INDEX.get(key);
         return indexFromMap == null ? -1 : indexFromMap;
     }
 
     public static int getValueIndex(String key, String value) {
-        int idx = getKeyIndex(true, key);
+        int idx = getKeyIndex(key);
         if (idx < 0) {
             throw new IllegalArgumentException("Cannot found key in url param:" + key);
         }
