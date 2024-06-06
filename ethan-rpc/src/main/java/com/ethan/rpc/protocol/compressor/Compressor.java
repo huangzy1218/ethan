@@ -1,8 +1,16 @@
-package com.ethan.rpc.protocol;
+package com.ethan.rpc.protocol.compressor;
 
+import com.ethan.common.extension.SPI;
 import com.ethan.rpc.model.FrameworkModel;
+import com.ethan.rpc.protocol.compressor.support.Identity;
 
-public interface Compressor {
+/**
+ * Compressor interface.
+ *
+ * @author Huang Z.Y.
+ */
+@SPI
+public interface Compressor extends MessageEncoding {
 
     Compressor NONE = Identity.IDENTITY;
 
