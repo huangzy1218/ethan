@@ -79,15 +79,6 @@ public class URL implements Serializable {
         return urlParam.getParam(key);
     }
 
-
-    public int getPositiveParameter(String key, int defaultValue) {
-        if (defaultValue <= 0) {
-            throw new IllegalArgumentException("defaultValue <= 0");
-        }
-        int value = getParameter(key, defaultValue);
-        return value <= 0 ? defaultValue : value;
-    }
-
     public String getHost() {
         return urlAddress == null ? null : urlAddress.getHost();
     }

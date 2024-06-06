@@ -13,7 +13,7 @@
         <module>ethan-serialization</module>
         <module>ethan-remoting</module>
         <module>ethan-registry</module>
-        <module>ethan-spring</module>
+        <module>ethan-springboot</module>
         <module>ethan-rpc</module>
     </modules>
 

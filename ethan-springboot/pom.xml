@@ -6,9 +6,9 @@
     <parent>
         <groupId>com.ethan</groupId>
         <artifactId>ethan</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
-    <artifactId>ethan-spring</artifactId>
+    <artifactId>ethan-springboot</artifactId>
 
 </project>

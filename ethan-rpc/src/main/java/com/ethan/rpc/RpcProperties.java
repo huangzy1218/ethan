@@ -14,7 +14,7 @@ import java.util.Map;
 @Configuration
 @ConfigurationProperties(prefix = "ethan.rpc.zookeeper")
 @Data
-public class RpcConfigProperties implements InitializingBean {
+public class RpcProperties implements InitializingBean {
 
     private int sleepTime = 1000;
     private int maxRetries = 3;

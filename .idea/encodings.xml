@@ -11,8 +11,8 @@
     <file url="file://$PROJECT_DIR$/ethan-rpc/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ethan-serialization/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ethan-serialization/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/ethan-spring/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/ethan-spring/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ethan-springboot/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ethan-springboot/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>
