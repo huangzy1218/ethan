@@ -12,12 +12,10 @@ public class PayloadDropper {
      * @return Message without data
      */
     public static Object getRequestWithoutData(Object message) {
-        if (message instanceof Request) {
-            Request request = (Request) message;
+        if (message instanceof Request request) {
             request.setData(null);
             return request;
-        } else if (message instanceof Response) {
-            Response response = (Response) message;
+        } else if (message instanceof Response response) {
             response.setResult(null);
             return response;
         }

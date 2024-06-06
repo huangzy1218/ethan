@@ -33,7 +33,6 @@ public interface Channel {
      * Send message.
      *
      * @param message Message to send
-     * @throws RemotingException
      */
     void send(Object message) throws RemotingException;
 

@@ -1,4 +1,4 @@
-package com.ethan.remoting.tansport.netty;
+package com.ethan.remoting.tansport.netty.server;
 
 import com.ethan.common.URL;
 import com.ethan.common.util.CollectionUtils;
@@ -8,15 +8,16 @@ import com.ethan.remoting.Channel;
 import com.ethan.remoting.Constants;
 import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.RemotingServer;
+import com.ethan.remoting.tansport.netty.NettyEventLoopFactory;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import io.netty.util.concurrent.Future;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import static com.ethan.remoting.RemotingConstants.EVENT_LOOP_BOSS_POOL_NAME;
+import static com.ethan.remoting.RemotingConstants.EVENT_LOOP_WORKER_POOL_NAME;
 
 /**
  * Netty server.
@@ -39,15 +43,16 @@ public class NettyServer implements RemotingServer {
     private volatile URL url;
 
     /**
-     * <ip:port, channel>
+     * <ip:port, channel>.
      */
     private Map<String, Channel> channels;
 
     private ServerBootstrap bootstrap;
 
-    private io.netty.channel.Channel serverChannel;
-
     private io.netty.channel.Channel channel;
+
+    EventLoopGroup bossGroup;
+    EventLoopGroup workerGroup;
 
     public NettyServer(URL url) throws RemotingException {
         this.url = url;
@@ -55,16 +60,47 @@ public class NettyServer implements RemotingServer {
 
     @Override
     public void doOpen() {
+        bootstrap = new ServerBootstrap();
+
         String bindIp = getUrl().getParameter(Constants.BIND_IP_KEY, getUrl().getHost());
         int bindPort = Integer.parseInt(getUrl().getParameter(Constants.BIND_PORT_KEY, String.valueOf(getUrl().getPort())));
-        EventLoopGroup boss = new NioEventLoopGroup(1);
-        EventLoopGroup worker = new NioEventLoopGroup();
+        final NettyServerHandler nettyServerHandler = new NettyServerHandler(getUrl());
+        channels = nettyServerHandler.getChannels();
+
+        bossGroup = NettyEventLoopFactory.eventLoopGroup(1, EVENT_LOOP_BOSS_POOL_NAME);
+        workerGroup = NettyEventLoopFactory.eventLoopGroup(Constants.DEFAULT_IO_THREADS, EVENT_LOOP_WORKER_POOL_NAME);
+
         DefaultEventExecutorGroup serviceHandlerGroup = new DefaultEventExecutorGroup(
                 RuntimeUtils.cpus() * 2,
                 new NamedThreadFactory("service-handler-group", false)
         );
-        bootstrap = new ServerBootstrap();
-        bootstrap.group(boss, worker)
+        initServerBootstrap();
+        try {
+            // The bond port is synchronized until the bond succeeds
+            ChannelFuture future = bootstrap.bind(bindIp, bindPort).syncUninterruptibly();
+            channel = future.channel();
+        } catch (Throwable e) {
+            closeBootstrap();
+            log.error("Occur exception when start server:", e);
+        }
+    }
+
+    private void closeBootstrap() {
+        try {
+            if (bootstrap != null) {
+                Future<?> bossGroupShutdownFuture = bossGroup.shutdownGracefully();
+                Future<?> workerGroupShutdownFuture = workerGroup.shutdownGracefully();
+                bossGroupShutdownFuture.syncUninterruptibly();
+                workerGroupShutdownFuture.syncUninterruptibly();
+            }
+        } catch (Throwable e) {
+            closeBootstrap();
+            log.warn("Transport failed to closed", e);
+        }
+    }
+
+    protected void initServerBootstrap() {
+        bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 // TCP has the Nagle algorithm enabled by default,
                 // which is used to send large data as fast as possible and reduce network transmission.
@@ -87,26 +123,12 @@ public class NettyServer implements RemotingServer {
                         //p.addLast(serviceHandlerGroup, new NettyRpcServerHandler());
                     }
                 });
-        ChannelFuture future = null;
-        try {
-            // The bond port is synchronized until the bond succeeds
-            future = bootstrap.bind(bindIp, bindPort).sync();
-            channel = future.channel();
-            // Wait for the listening port on the server to close
-            future.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
-            log.error("Occur exception when start server:", e);
-        } finally {
-            boss.shutdownGracefully();
-            worker.shutdownGracefully();
-            serviceHandlerGroup.shutdownGracefully();
-        }
     }
 
     @Override
     public void doClose() {
-        if (serverChannel != null) {
-            serverChannel.close();
+        if (channel != null) {
+            channel.close();
         }
         closeAllChannels();
         channels.clear();
@@ -131,6 +153,14 @@ public class NettyServer implements RemotingServer {
                 }
             }
         }
+    }
+
+    protected io.netty.channel.Channel getBossChannel() {
+        return channel;
+    }
+
+    protected Map<String, Channel> getServerChannels() {
+        return channels;
     }
 
 }
