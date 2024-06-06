@@ -18,7 +18,7 @@ public class RpcMessage implements Serializable {
     /**
      * Serialization type.
      */
-    private String codec;
+    private byte codec;
     /**
      * Compress type.
      */

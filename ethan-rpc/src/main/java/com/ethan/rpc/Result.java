@@ -2,6 +2,11 @@ package com.ethan.rpc;
 
 import java.io.Serializable;
 
+/**
+ * Invoke result.
+ *
+ * @author Huang Z.Y.
+ */
 public interface Result extends Serializable {
 
     /**

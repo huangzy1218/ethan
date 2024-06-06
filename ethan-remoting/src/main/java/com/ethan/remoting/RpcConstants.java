@@ -30,5 +30,15 @@ public interface RpcConstants {
 
     byte VERSION = 1;
 
+    byte REQUEST_TYPE = 1;
+    byte RESPONSE_TYPE = 2;
+    /**
+     * Ping.
+     */
+    byte HEARTBEAT_REQUEST_TYPE = 3;
+    /**
+     * Pong.
+     */
+    byte HEARTBEAT_RESPONSE_TYPE = 4;
 
 }
