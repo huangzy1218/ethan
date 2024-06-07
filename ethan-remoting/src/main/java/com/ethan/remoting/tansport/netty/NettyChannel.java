@@ -89,20 +89,20 @@ public class NettyChannel implements Channel {
         return closed;
     }
 
-    static void removeChannelIfDisconnected(org.jboss.netty.channel.Channel ch) {
+    static void removeChannelIfDisconnected(Channel ch) {
         if (ch != null && !ch.isConnected()) {
             CHANNEL_MAP.remove(ch);
         }
     }
 
-    static NettyChannel getOrAddChannel(org.jboss.netty.channel.Channel ch, URL url) {
+    public static NettyChannel getOrAddChannel(io.netty.channel.Channel ch, URL url) {
         if (ch == null) {
             return null;
         }
         NettyChannel ret = CHANNEL_MAP.get(ch);
         if (ret == null) {
             NettyChannel nc = new NettyChannel(ch, url);
-            if (ch.isConnected()) {
+            if (ch.isActive()) {
                 ret = CHANNEL_MAP.putIfAbsent(ch, nc);
             }
             if (ret == null) {

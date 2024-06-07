@@ -22,6 +22,7 @@ public interface RpcConstants {
     int MAX_FRAME_LENGTH = 8 * 1024 * 1024;
 
     byte TOTAL_LENGTH = 16;
+    int HEAD_LENGTH = 16;
 
     /**
      * Magic number to verify RpcMessage.
@@ -40,5 +41,8 @@ public interface RpcConstants {
      * Pong.
      */
     byte HEARTBEAT_RESPONSE_TYPE = 4;
+
+    String PING = "ping";
+    String PONG = "pong";
 
 }

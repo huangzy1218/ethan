@@ -9,11 +9,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.HashMap;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-class ApplicationContextProviderTest {
+class BeanProviderTest {
 
     @Test
     public void testGetBeanFromContext() {
-        URLParam bean = ApplicationContextProvider.getBean(URLParam.class);
+        URLParam bean = BeanProvider.getBean(URLParam.class);
         HashMap<String, String> map = new HashMap<>();
         map.put("key", "value");
         bean.setParameters(map);
