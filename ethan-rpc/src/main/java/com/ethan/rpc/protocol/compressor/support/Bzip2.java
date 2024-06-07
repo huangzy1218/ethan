@@ -2,7 +2,6 @@ package com.ethan.rpc.protocol.compressor.support;
 
 import com.ethan.rpc.RpcException;
 import com.ethan.rpc.protocol.compressor.Compressor;
-import com.ethan.rpc.protocol.compressor.Decompressor;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 
@@ -15,7 +14,7 @@ import java.io.ByteArrayOutputStream;
  * @author Huang Z.Y.
  * @link https://commons.apache.org/proper/commons-compress/
  */
-public class Bzip2 implements Compressor, Decompressor {
+public class Bzip2 implements Compressor {
 
     public static final String BZIP2 = "bzip2";
 

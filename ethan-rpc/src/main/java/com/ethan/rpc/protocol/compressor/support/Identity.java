@@ -1,14 +1,13 @@
 package com.ethan.rpc.protocol.compressor.support;
 
 import com.ethan.rpc.protocol.compressor.Compressor;
-import com.ethan.rpc.protocol.compressor.Decompressor;
 
 /**
  * Default compressor.
  *
  * @author Huang Z.Y.
  */
-public class Identity implements Compressor, Decompressor {
+public class Identity implements Compressor {
 
     public static final String MESSAGE_ENCODING = "identity";
 

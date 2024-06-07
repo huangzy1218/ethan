@@ -1,7 +1,6 @@
 package com.ethan.rpc.protocol.compressor.support;
 
 import com.ethan.rpc.protocol.compressor.Compressor;
-import com.ethan.rpc.protocol.compressor.Decompressor;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,7 +12,7 @@ import java.util.zip.GZIPOutputStream;
  *
  * @author Huang Z.Y.
  */
-public class Gzip implements Compressor, Decompressor {
+public class Gzip implements Compressor {
 
     public static final String GZIP = "gzip";
 

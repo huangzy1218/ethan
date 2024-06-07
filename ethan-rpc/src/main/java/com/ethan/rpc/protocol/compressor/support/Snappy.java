@@ -2,7 +2,6 @@ package com.ethan.rpc.protocol.compressor.support;
 
 import com.ethan.rpc.RpcException;
 import com.ethan.rpc.protocol.compressor.Compressor;
-import com.ethan.rpc.protocol.compressor.Decompressor;
 
 import java.io.IOException;
 
@@ -11,7 +10,7 @@ import java.io.IOException;
  *
  * @author Huang Z.Y.
  */
-public class Snappy implements Compressor, Decompressor {
+public class Snappy implements Compressor {
 
     public static final String SNAPPY = "snappy";
 

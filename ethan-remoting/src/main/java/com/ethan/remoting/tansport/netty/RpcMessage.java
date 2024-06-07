@@ -1,11 +1,14 @@
 package com.ethan.remoting.tansport.netty;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
 
+
 @Data
+@Builder
 public class RpcMessage implements Serializable {
 
     @Serial

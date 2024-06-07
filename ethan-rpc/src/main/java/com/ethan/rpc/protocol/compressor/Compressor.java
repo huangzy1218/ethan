@@ -32,4 +32,12 @@ public interface Compressor extends MessageEncoding {
      */
     byte[] compress(byte[] payloadByteArr);
 
+    /**
+     * Decompress payload.
+     *
+     * @param payloadByteArr Payload byte array
+     * @return decompressed Payload byte array
+     */
+    byte[] decompress(byte[] payloadByteArr);
+    
 }

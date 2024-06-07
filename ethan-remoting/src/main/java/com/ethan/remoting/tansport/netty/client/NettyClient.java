@@ -54,7 +54,7 @@ public class NettyClient implements RemotingClient {
     public void doOpen() {
 
     }
-
+ 
     protected void initBootstrap(NettyClientHandler nettyClientHandler) {
         bootstrap
                 .group(eventLoopGroup)
