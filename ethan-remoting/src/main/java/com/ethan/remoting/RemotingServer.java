@@ -1,7 +1,5 @@
 package com.ethan.remoting;
 
-import java.util.Collection;
-
 /**
  * Remoting Server (API/SPI, Prototype, ThreadSafe).
  *
@@ -13,6 +11,4 @@ public interface RemotingServer {
 
     void doClose();
 
-    Collection<Channel> getChannels();
-    
 }

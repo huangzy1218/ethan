@@ -54,6 +54,12 @@ public interface Constants {
 
     String PING = "ping";
     String PONG = "pong";
-    
+    int DEFAULT_CONNECT_TIMEOUT = 3000;
+    String CONNECT_TIMEOUT_KEY = "connect.timeout";
+    String HEARTBEAT_KEY = "heartbeat";
+    String TIMEOUT_KEY = "timeout";
+
+    int DEFAULT_TIMEOUT = 1000;
+
 }
     

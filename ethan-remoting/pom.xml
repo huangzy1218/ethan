@@ -34,6 +34,10 @@
             <groupId>com.ethan</groupId>
             <artifactId>ethan-rpc</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-registry</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,7 +1,6 @@
 package com.ethan.registry;
 
-import java.net.URL;
-import java.util.List;
+import com.ethan.common.URL;
 
 /**
  * Registry (SPI, Prototype, ThreadSafe).
@@ -46,6 +45,6 @@ public interface Registry {
      * @param url Query condition
      * @return The registered information list
      */
-    List<URL> lookup(URL url);
-    
+    com.ethan.common.URL lookup(URL url);
+
 }

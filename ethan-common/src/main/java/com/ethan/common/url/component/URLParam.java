@@ -19,9 +19,14 @@ public class URLParam {
         this.parameters = new HashMap<>();
     }
 
-    public void addParam(String key, String value) {
+    public void addParameter(String key, String value) {
         parameters.put(key, value);
     }
+
+    public void addParameter(String key, int value) {
+        addParameter(key, String.valueOf(value));
+    }
+
 
     public String getParam(String key) {
         return parameters.get(key);

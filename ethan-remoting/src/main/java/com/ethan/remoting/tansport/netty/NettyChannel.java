@@ -118,7 +118,7 @@ public class NettyChannel implements Channel {
         return url;
     }
 
-    static void removeChannelIfDisconnected(io.netty.channel.Channel ch) {
+    public static void removeChannelIfDisconnected(io.netty.channel.Channel ch) {
         if (ch != null && !ch.isActive()) {
             CHANNEL_MAP.remove(ch);
         }

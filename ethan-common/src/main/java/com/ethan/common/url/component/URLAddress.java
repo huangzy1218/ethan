@@ -16,6 +16,12 @@ public class URLAddress {
     private String interfaceName;
     private URLParam urlParam;
 
+    public URLAddress(String protocol, String host, int port) {
+        this.protocol = protocol;
+        this.host = host;
+        this.port = port;
+    }
+
     public URLAddress(String protocol, String host, int port, String interfaceName) {
         this.protocol = protocol;
         this.host = host;
@@ -25,7 +31,7 @@ public class URLAddress {
     }
 
     public void addParam(String key, String value) {
-        urlParam.addParam(key, value);
+        urlParam.addParameter(key, value);
     }
 
     public String getServiceKey() {
@@ -42,5 +48,5 @@ public class URLAddress {
         }
         return sb.toString();
     }
-    
+
 }

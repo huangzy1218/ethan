@@ -2,7 +2,9 @@ package com.ethan.remoting.tansport.netty.client;
 
 import com.ethan.common.URL;
 import com.ethan.common.context.BeanProvider;
-import com.ethan.rpc.AppResponse;
+import com.ethan.remoting.exchange.Response;
+import com.ethan.remoting.exchange.support.DefaultFuture;
+import com.ethan.remoting.tansport.netty.NettyChannel;
 import com.ethan.rpc.Message;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -41,8 +43,10 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
                 if (messageType == HEARTBEAT_RESPONSE_TYPE) {
                     log.info("heart [{}]", mess.getData());
                 } else if (messageType == RESPONSE_TYPE) {
-                    AppResponse rpcResponse = (AppResponse) mess.getData();
-                    unprocessedRequests.complete(rpcResponse);
+                    Response response = (Response) mess.getData();
+                    NettyChannel ch = NettyChannel.getOrAddChannel(ctx.channel(), url);
+                    DefaultFuture.received(ch, response);
+                    unprocessedRequests.complete(response);
                 }
             }
         } finally {

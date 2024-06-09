@@ -1,5 +1,7 @@
 package com.ethan.remoting;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Remoting client.
  *
@@ -28,5 +30,10 @@ public interface RemotingClient {
      * @return Channel
      */
     Channel getChannel();
+
+    /**
+     * Send request.
+     */
+    CompletableFuture<Object> request(Object request) throws RemotingException;
 
 }

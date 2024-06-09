@@ -73,6 +73,8 @@ public class Response {
     public static final byte SERVER_THREADPOOL_EXHAUSTED_ERROR = 100;
 
     private long id = 0;
+    private byte status = OK;
+    private String errorMsg;
     private Object result;
 
     public Response() {

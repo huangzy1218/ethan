@@ -1,11 +1,11 @@
 package com.ethan.registry.support;
 
+import com.ethan.common.URL;
 import com.ethan.common.util.ConcurrentHashSet;
 import com.ethan.registry.NotifyListener;
 import com.ethan.registry.Registry;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -76,5 +76,5 @@ public abstract class AbstractRegistry implements Registry {
         // Do not forget remove notified
         notified.remove(url);
     }
-    
+
 }

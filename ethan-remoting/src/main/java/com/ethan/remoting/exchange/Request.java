@@ -1,6 +1,7 @@
 package com.ethan.remoting.exchange;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.ToString;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -17,6 +18,7 @@ public class Request {
 
     private static final AtomicLong INVOKE_ID;
 
+    @Getter
     private final long id;
 
     private Object data;

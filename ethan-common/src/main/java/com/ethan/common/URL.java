@@ -6,6 +6,8 @@ import com.ethan.common.util.StringUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,8 +40,13 @@ public class URL implements Serializable {
         this.attributes = new HashMap<>();
     }
 
-    public void addParam(String key, String value) {
-        urlParam.addParam(key, value);
+    public URL(URLAddress urlAddress, URLParam urlParam) {
+        this.urlAddress = urlAddress;
+        this.urlParam = urlParam;
+    }
+
+    public void addParameter(String key, String value) {
+        urlParam.addParameter(key, value);
         // Invalidate cached service key
         this.serviceKey = null;
     }
@@ -58,12 +65,16 @@ public class URL implements Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(urlAddress.toString());
-        String paramString = urlParam.toString();
-        if (!paramString.equals("{}")) {
-            sb.append("?").append(paramString.substring(1, paramString.length() - 1).
-                    replace(", ", "&"));
+        sb.append(urlAddress.getProtocol()).append("://")
+                .append(urlAddress.getHost()).append(":")
+                .append(urlAddress.getPort()).append("/")
+                .append(urlAddress.getInterfaceName());
+
+        if (urlParam != null && !urlParam.toString().equals("{}")) {
+            String paramString = urlParam.toString();
+            sb.append("?").append(paramString.substring(1, paramString.length() - 1).replace(", ", "&"));
         }
+
         return sb.toString();
     }
 
@@ -73,6 +84,14 @@ public class URL implements Serializable {
             return defaultValue;
         }
         return value;
+    }
+
+    public int getParameter(String key, int defaultValue) {
+        String value = getParameter(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        return Integer.parseInt(value);
     }
 
     public String getParameter(String key) {
@@ -101,5 +120,72 @@ public class URL implements Serializable {
     public Object getAttribute(String key) {
         return attributes == null ? null : attributes.get(key);
     }
-    
+
+    public int getPositiveParameter(String key, int defaultValue) {
+        if (defaultValue <= 0) {
+            throw new IllegalArgumentException("defaultValue <= 0");
+        }
+        int value = Integer.parseInt(getParameter(key, String.valueOf(defaultValue)));
+        return value <= 0 ? defaultValue : value;
+    }
+
+    /**
+     * Parse decoded url string, formatted dubbo://host:port/path?param=value, into strutted URL.
+     *
+     * @param url, Decoded url string
+     * @return
+     */
+    public static URL valueOf(String url) {
+        return parseEncodedStr(url);
+    }
+
+    public static URL parseEncodedStr(String url) {
+        // Remove the protocol (e.g., "exchange://")
+        int protocolEndIndex = url.indexOf("://");
+        String protocol;
+        if (protocolEndIndex == -1) {
+            protocol = "exchange";
+        } else {
+            protocol = url.substring(0, protocolEndIndex);
+        }
+
+        String remainingUrl = url.substring(protocolEndIndex + 3);
+
+        // Extract host and port
+        int hostPortEndIndex = remainingUrl.indexOf('?');
+        String hostPort;
+        String paramString = "";
+        if (hostPortEndIndex == -1) {
+            hostPort = remainingUrl;
+        } else {
+            hostPort = remainingUrl.substring(0, hostPortEndIndex);
+            paramString = remainingUrl.substring(hostPortEndIndex + 1);
+        }
+
+        String[] hostPortArray = hostPort.split(":");
+        String host = hostPortArray[0];
+        int port = (hostPortArray.length > 1) ? Integer.parseInt(hostPortArray[1]) : -1;
+
+        URLAddress urlAddress = new URLAddress(protocol, host, port);
+
+        // Extract parameters
+        URLParam urlParam = new URLParam();
+        if (!paramString.isEmpty()) {
+            String[] paramPairs = paramString.split("&");
+            for (String pair : paramPairs) {
+                String[] keyValue = pair.split("=");
+                if (keyValue.length == 2) {
+                    String key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);
+                    String value = URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8);
+                    urlParam.addParameter(key, value);
+                }
+            }
+        }
+
+        return new URL(urlAddress, urlParam);
+    }
+
+    public void addParameter(String key, int value) {
+        urlParam.addParameter(key, value);
+    }
 }
