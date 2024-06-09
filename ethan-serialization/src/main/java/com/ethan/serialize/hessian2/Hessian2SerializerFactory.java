@@ -1,6 +1,7 @@
 package com.ethan.serialize.hessian2;
 
 import com.alibaba.com.caucho.hessian.io.*;
+import com.ethan.common.extension.SPI;
 
 import java.io.Serializable;
 
@@ -9,6 +10,7 @@ import java.io.Serializable;
  *
  * @author Huang Z.Y.
  */
+@SPI("hessian2")
 public class Hessian2SerializerFactory extends SerializerFactory {
 
     public Hessian2SerializerFactory(

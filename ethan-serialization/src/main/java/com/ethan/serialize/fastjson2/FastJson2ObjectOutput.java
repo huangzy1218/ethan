@@ -2,7 +2,7 @@ package com.ethan.serialize.fastjson2;
 
 import com.alibaba.fastjson2.JSONB;
 import com.alibaba.fastjson2.JSONWriter;
-import com.ethan.serialize.api.ObjectOutput;
+import com.ethan.serialize.ObjectOutput;
 
 import java.io.IOException;
 import java.io.OutputStream;

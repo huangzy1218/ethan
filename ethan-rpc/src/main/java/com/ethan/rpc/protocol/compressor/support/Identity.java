@@ -1,5 +1,6 @@
 package com.ethan.rpc.protocol.compressor.support;
 
+import com.ethan.common.enumeration.CompressType;
 import com.ethan.rpc.protocol.compressor.Compressor;
 
 /**
@@ -16,6 +17,11 @@ public class Identity implements Compressor {
     @Override
     public String getMessageEncoding() {
         return MESSAGE_ENCODING;
+    }
+
+    @Override
+    public byte getContentTypeId() {
+        return CompressType.getCode(MESSAGE_ENCODING);
     }
 
     @Override

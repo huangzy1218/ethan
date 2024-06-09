@@ -1,8 +1,8 @@
 package com.ethan.serialize.jdk;
 
-import com.ethan.serialize.api.ObjectInput;
-import com.ethan.serialize.api.ObjectOutput;
-import com.ethan.serialize.api.Serialization;
+import com.ethan.serialize.ObjectInput;
+import com.ethan.serialize.ObjectOutput;
+import com.ethan.serialize.Serialization;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -22,6 +22,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class JavaSerialization implements Serialization {
 
     private static final AtomicBoolean warn = new AtomicBoolean(false);
+
+    @Override
+    public byte getContentTypeId() {
+        return 3;
+    }
 
     @Override
     public ObjectOutput serialize(OutputStream out) throws IOException {

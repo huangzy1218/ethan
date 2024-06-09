@@ -1,5 +1,6 @@
 package com.ethan.rpc.protocol.compressor.support;
 
+import com.ethan.common.enumeration.CompressType;
 import com.ethan.rpc.RpcException;
 import com.ethan.rpc.protocol.compressor.Compressor;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
@@ -21,6 +22,11 @@ public class Bzip2 implements Compressor {
     @Override
     public String getMessageEncoding() {
         return BZIP2;
+    }
+
+    @Override
+    public byte getContentTypeId() {
+        return CompressType.getCode(BZIP2);
     }
 
     @Override

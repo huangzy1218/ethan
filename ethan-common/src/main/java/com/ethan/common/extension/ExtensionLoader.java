@@ -37,7 +37,7 @@ public class ExtensionLoader<T> {
 
     private final AtomicBoolean destroyed = new AtomicBoolean();
 
-    private final ConcurrentMap<String, Holder<Object>> cachedInstances = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Holder<Object>> cachedInstances = new ConcurrentHashMap<>(16);
 
     private final Holder<Map<String, Class<?>>> cachedClasses = new Holder<>();
 
@@ -162,7 +162,7 @@ public class ExtensionLoader<T> {
             }
         } catch (Throwable t) {
             throw new IllegalStateException("Exception when loading extension class(interface: " +
-                    type + ", description file: " + fileName + ").", t);
+                    type + ", description file: " + dir + ").", t);
         }
     }
 
@@ -191,7 +191,7 @@ public class ExtensionLoader<T> {
                                         type + ", class line: " + clazz.getName() + "), class " +
                                         clazz.getName() + " is not subtype of interface.");
                             }
-                            if (name == null || name.isEmpty()) {
+                            if (StringUtils.isEmpty(name)) {
                                 name = findAnnotationName(clazz);
                                 if (StringUtils.isNullOrEmpty(name)) {
                                     if (!clazz.getSimpleName().isEmpty()) {

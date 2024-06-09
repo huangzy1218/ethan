@@ -7,22 +7,17 @@ import com.ethan.remoting.RemotingException;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.proxy.Socks5ProxyHandler;
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
 
 import static com.ethan.remoting.tansport.netty.NettyEventLoopFactory.shouldEpoll;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * Netty client.
@@ -54,47 +49,49 @@ public class NettyClient implements RemotingClient {
     public void doOpen() {
 
     }
- 
+
     protected void initBootstrap(NettyClientHandler nettyClientHandler) {
         bootstrap
                 .group(eventLoopGroup)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, getTimeout())
+                //.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, getTimeout())
                 .channel(socketChannelClass());
+        // todo
 
-        bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, Math.max(DEFAULT_CONNECT_TIMEOUT, getConnectTimeout()));
-        SslContext sslContext = SslContexts.buildClientSslContext(getUrl());
-        bootstrap.handler(new ChannelInitializer<SocketChannel>() {
-
-            @Override
-            protected void initChannel(SocketChannel ch) throws Exception {
-                int heartbeatInterval = UrlUtils.getHeartbeat(getUrl());
-
-                if (sslContext != null) {
-                    ch.pipeline().addLast("negotiation", new SslClientTlsHandler(sslContext));
-                }
-
-                NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl(), NettyClient.this);
-                ch.pipeline() // .addLast("logging",new LoggingHandler(LogLevel.INFO))//for debug
-//                        .addLast("decoder", adapter.getDecoder())
-//                        .addLast("encoder", adapter.getEncoder())
-                        // todo
-                        .addLast("client-idle-handler", new IdleStateHandler(heartbeatInterval, 0, 0, MILLISECONDS))
-                        .addLast("handler", nettyClientHandler);
-
-                String socksProxyHost =
-                        ConfigurationUtils.getProperty(getUrl().getOrDefaultApplicationModel(), SOCKS_PROXY_HOST);
-                if (socksProxyHost != null && !isFilteredAddress(getUrl().getHost())) {
-                    int socksProxyPort = Integer.parseInt(ConfigurationUtils.getProperty(
-                            getUrl().getOrDefaultApplicationModel(), SOCKS_PROXY_PORT, DEFAULT_SOCKS_PROXY_PORT));
-                    Socks5ProxyHandler socks5ProxyHandler =
-                            new Socks5ProxyHandler(new InetSocketAddress(socksProxyHost, socksProxyPort));
-                    ch.pipeline().addFirst(socks5ProxyHandler);
-                }
-            }
-        });
+        //bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, Math.max(DEFAULT_CONNECT_TIMEOUT, getConnectTimeout()));
+//        SslContext sslContext = SslContexts.buildClientSslContext(getUrl());
+//        bootstrap.handler(new ChannelInitializer<SocketChannel>() {
+//
+//            @Override
+//            protected void initChannel(SocketChannel ch) throws Exception {
+//                int heartbeatInterval = UrlUtils.getHeartbeat(getUrl());
+//
+//                if (sslContext != null) {
+//                    ch.pipeline().addLast("negotiation", new SslClientTlsHandler(sslContext));
+//                }
+//
+//                NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl(), NettyClient.this);
+//                ch.pipeline() // .addLast("logging",new LoggingHandler(LogLevel.INFO))//for debug
+////                        .addLast("decoder", adapter.getDecoder())
+////                        .addLast("encoder", adapter.getEncoder())
+//                        // todo
+//                        .addLast("client-idle-handler", new IdleStateHandler(heartbeatInterval, 0, 0, MILLISECONDS))
+//                        .addLast("handler", nettyClientHandler);
+//
+//                String socksProxyHost =
+//                        ConfigurationUtils.getProperty(getUrl().getOrDefaultApplicationModel(), SOCKS_PROXY_HOST);
+//                if (socksProxyHost != null && !isFilteredAddress(getUrl().getHost())) {
+//                    int socksProxyPort = Integer.parseInt(ConfigurationUtils.getProperty(
+//                            getUrl().getOrDefaultApplicationModel(), SOCKS_PROXY_PORT, DEFAULT_SOCKS_PROXY_PORT));
+//                    Socks5ProxyHandler socks5ProxyHandler =
+//                            new Socks5ProxyHandler(new InetSocketAddress(socksProxyHost, socksProxyPort));
+//                    ch.pipeline().addFirst(socks5ProxyHandler);
+//                }
+//            }
+//        });
+        // todo
     }
 
     @Override

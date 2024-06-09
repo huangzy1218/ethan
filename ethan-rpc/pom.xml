@@ -59,7 +59,7 @@
         </dependency>
         <dependency>
             <groupId>com.ethan</groupId>
-            <artifactId>ethan-remoting</artifactId>
+            <artifactId>ethan-serialization</artifactId>
         </dependency>
     </dependencies>
 

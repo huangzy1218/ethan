@@ -1,4 +1,6 @@
-package com.ethan.serialize.api;
+package com.ethan.serialize;
+
+import com.ethan.common.extension.SPI;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,7 +11,10 @@ import java.io.OutputStream;
  *
  * @author Huang Z.Y.
  */
+@SPI
 public interface Serialization {
+
+    byte getContentTypeId();
 
     /**
      * Get the serialization implementation instance.

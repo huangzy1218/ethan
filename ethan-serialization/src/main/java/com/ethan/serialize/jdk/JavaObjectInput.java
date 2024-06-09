@@ -1,8 +1,8 @@
 package com.ethan.serialize.jdk;
 
 import com.ethan.common.util.Assert;
-import com.ethan.serialize.api.Cleanable;
-import com.ethan.serialize.api.ObjectInput;
+import com.ethan.serialize.Cleanable;
+import com.ethan.serialize.ObjectInput;
 
 import java.io.IOException;
 import java.io.InputStream;

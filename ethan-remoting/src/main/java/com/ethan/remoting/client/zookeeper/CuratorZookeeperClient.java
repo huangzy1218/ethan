@@ -1,7 +1,7 @@
 package com.ethan.remoting.client.zookeeper;
 
-import com.ethan.common.context.ApplicationContextProvider;
-import com.ethan.rpc.RpcConfigProperties;
+import com.ethan.common.context.BeanProvider;
+import com.ethan.rpc.RpcProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
@@ -10,7 +10,6 @@ import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
@@ -31,9 +30,8 @@ public class CuratorZookeeperClient {
     private static final int MAX_RETRIES = 3;
     private static CuratorFramework client;
 
-    @Autowired
-    private RpcConfigProperties rpcConfigProperties
-            = ApplicationContextProvider.getBean(RpcConfigProperties.class);
+    private static RpcProperties rpcProperties
+            = BeanProvider.getBean(RpcProperties.class);
 
     /**
      * Get the Zookeeper client.
@@ -52,8 +50,8 @@ public class CuratorZookeeperClient {
     private static void initClient() {
         // Check if the user has set a Zookeeper address
         // Properties properties = PropertiesFileUtils.readPropertiesFile(RPC_CONFIG_PATH);
-        String address = rpcConfigProperties.getAddress();
-        int sleepTime = rpcConfigProperties.getSleepTime();
+        String address = rpcProperties.getAddress();
+        int sleepTime = rpcProperties.getSleepTime();
         // Retry 3 times, which will increase the sleep time between retries
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(sleepTime, MAX_RETRIES);
         client = CuratorFrameworkFactory.builder()

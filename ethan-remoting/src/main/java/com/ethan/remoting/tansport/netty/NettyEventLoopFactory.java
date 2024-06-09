@@ -1,5 +1,6 @@
 package com.ethan.remoting.tansport.netty;
 
+import com.ethan.rpc.Constants;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
@@ -7,8 +8,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 
 import java.util.concurrent.ThreadFactory;
-
-import static com.ethan.remoting.RpcConstants.*;
 
 /**
  * Factory class for creating Netty EventLoopGroups.
@@ -36,10 +35,10 @@ public class NettyEventLoopFactory {
      *
      * @return {@code true} if Epoll should be used
      */
-    static boolean shouldEpoll() {
-        if (Boolean.parseBoolean(System.getProperty(NETTY_EPOLL_ENABLE_KEY, "false"))) {
-            String osName = System.getProperty(OS_NAME_KEY);
-            return osName.toLowerCase().contains(OS_LINUX_PREFIX) && Epoll.isAvailable();
+    public static boolean shouldEpoll() {
+        if (Boolean.parseBoolean(System.getProperty(Constants.NETTY_EPOLL_ENABLE_KEY, "false"))) {
+            String osName = System.getProperty(Constants.OS_NAME_KEY);
+            return osName.toLowerCase().contains(Constants.OS_LINUX_PREFIX) && Epoll.isAvailable();
         }
 
         return false;

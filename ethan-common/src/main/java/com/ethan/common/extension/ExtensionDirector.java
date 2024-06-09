@@ -21,6 +21,7 @@ public class ExtensionDirector implements ExtensionAccessor {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> ExtensionLoader<T> getExtensionLoader(Class<T> type) {
         checkDestroyed();
         if (type == null) {
@@ -31,7 +32,7 @@ public class ExtensionDirector implements ExtensionAccessor {
         }
         if (!withExtensionAnnotation(type)) {
             throw new IllegalArgumentException("Extension type (" + type
-                    + ") is not an extension, because it is NOT annotated with @" + SPI.class.getSimpleName() + "!");
+                    + ") is not an extension, because it is NOT annotated with @" + SPI.class.getSimpleName());
         }
 
         // 1. Find in local cache
@@ -44,7 +45,7 @@ public class ExtensionDirector implements ExtensionAccessor {
 
         return loader;
     }
-    
+
     @SuppressWarnings("unchecked")
     private <T> ExtensionLoader<T> createExtensionLoader(Class<T> type) {
         checkDestroyed();

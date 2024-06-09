@@ -1,5 +1,6 @@
 package com.ethan.rpc.protocol.compressor.support;
 
+import com.ethan.common.enumeration.CompressType;
 import com.ethan.rpc.protocol.compressor.Compressor;
 
 import java.io.ByteArrayInputStream;
@@ -19,6 +20,11 @@ public class Gzip implements Compressor {
     @Override
     public String getMessageEncoding() {
         return GZIP;
+    }
+
+    @Override
+    public byte getContentTypeId() {
+        return CompressType.getCode(GZIP);
     }
 
     @Override

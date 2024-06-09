@@ -2,8 +2,8 @@ package com.ethan.serialize.kryo;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
-import com.ethan.serialize.api.Cleanable;
-import com.ethan.serialize.api.ObjectOutput;
+import com.ethan.serialize.Cleanable;
+import com.ethan.serialize.ObjectOutput;
 import com.ethan.serialize.kryo.util.KryoThreadLocalUtils;
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.ethan.serialize.api;
+package com.ethan.serialize;
 
 import java.io.IOException;
 
@@ -84,7 +84,7 @@ public interface DataOutput {
     /**
      * Write byte array.
      *
-     * @param v Value.
+     * @param v   Value.
      * @param off The start offset in the data
      * @param len The number of bytes that are written
      * @throws IOException If an I/O error occurs

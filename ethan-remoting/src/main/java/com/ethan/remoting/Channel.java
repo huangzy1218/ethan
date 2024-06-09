@@ -1,5 +1,7 @@
 package com.ethan.remoting;
 
+import com.ethan.common.URL;
+
 import java.net.InetSocketAddress;
 
 /**
@@ -49,4 +51,22 @@ public interface Channel {
      */
     boolean isClosed();
 
+    /**
+     * Get attribute.
+     *
+     * @param key Key
+     * @return Value
+     */
+    Object getAttribute(String key);
+
+    /**
+     * Set attribute
+     *
+     * @param key   Key
+     * @param value Value
+     */
+    void setAttribute(String key, Object value);
+
+
+    URL getUrl();
 }

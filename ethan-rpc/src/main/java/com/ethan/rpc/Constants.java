@@ -1,13 +1,23 @@
-package com.ethan.remoting;
+package com.ethan.rpc;
+
+import com.ethan.common.enumeration.CompressType;
+import com.ethan.common.enumeration.SerializationType;
 
 /**
- * Remoting module constants.
- *
  * @author Huang Z.Y.
  */
-public interface RpcConstants {
+public interface Constants {
+
+    CompressType DEFAULT_REMOTING_COMPRESS = CompressType.GZIP;
+
+    SerializationType DEFAULT_REMOTING_SERIALIZATION = SerializationType.FASTJSON2;
 
     String BIND_IP_KEY = "bind.ip";
+
+    String COMPRESS_KEY = "message.compress";
+    String DECOMPRESS_KEY = "message.decompress";
+
+    String SERIALIZATION_KEY = "message.serialize";
 
     String BIND_PORT_KEY = "bind.port";
 
@@ -44,5 +54,6 @@ public interface RpcConstants {
 
     String PING = "ping";
     String PONG = "pong";
-
+    
 }
+    

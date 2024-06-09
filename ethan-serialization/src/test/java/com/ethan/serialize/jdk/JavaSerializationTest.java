@@ -1,10 +1,12 @@
 package com.ethan.serialize.jdk;
 
 
+import com.ethan.common.extension.ExtensionLoader;
 import com.ethan.example.TestPojo;
-import com.ethan.serialize.api.ObjectInput;
-import com.ethan.serialize.api.ObjectOutput;
-import com.ethan.serialize.api.Serialization;
+import com.ethan.rpc.model.FrameworkModel;
+import com.ethan.serialize.ObjectInput;
+import com.ethan.serialize.ObjectOutput;
+import com.ethan.serialize.Serialization;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -42,6 +44,24 @@ public class JavaSerializationTest {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         ObjectInput objectInput = serialization.deserialize(inputStream);
         Assertions.assertEquals(pojo, objectInput.readObject(TestPojo.class));
+    }
+
+    @Test
+    void testReadObject2() throws Exception {
+        ExtensionLoader<Serialization> extensionLoader =
+                FrameworkModel.defaultModel().getExtensionLoader(Serialization.class);
+        Serialization serialization = extensionLoader.getExtension("jdk");
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ObjectOutput objectOutput = serialization.serialize(outputStream);
+        TestPojo pojo = new TestPojo("hello", new Date());
+        objectOutput.writeObject(pojo);
+        objectOutput.flushBuffer();
+
+        byte[] bytes = outputStream.toByteArray();
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+        ObjectInput objectInput = serialization.deserialize(inputStream);
+        Assertions.assertEquals(pojo, objectInput.readObject(TestPojo.class));
+
     }
 
 }

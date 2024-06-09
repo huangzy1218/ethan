@@ -3,10 +3,10 @@ package com.ethan.common;
 import com.ethan.common.url.component.URLAddress;
 import com.ethan.common.url.component.URLParam;
 import com.ethan.common.util.StringUtils;
-import org.springframework.stereotype.Component;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +20,6 @@ import java.util.Map;
  *
  * @author Huang Z.Y.
  */
-@Component
 public class URL implements Serializable {
 
     @Serial
@@ -62,7 +61,8 @@ public class URL implements Serializable {
         sb.append(urlAddress.toString());
         String paramString = urlParam.toString();
         if (!paramString.equals("{}")) {
-            sb.append("?").append(paramString.substring(1, paramString.length() - 1).replace(", ", "&"));
+            sb.append("?").append(paramString.substring(1, paramString.length() - 1).
+                    replace(", ", "&"));
         }
         return sb.toString();
     }
@@ -80,11 +80,26 @@ public class URL implements Serializable {
     }
 
     public String getHost() {
-        return urlAddress == null ? null : urlAddress.getHost();
+        return urlAddress.getHost();
     }
 
     public int getPort() {
-        return urlAddress == null ? 0 : urlAddress.getPort();
+        return urlAddress.getPort();
     }
 
+    public Map<String, Object> getAttributes() {
+        return attributes == null ? Collections.emptyMap() : attributes;
+    }
+
+    public URL addAttributes(Map<String, Object> attributeMap) {
+        if (attributeMap != null) {
+            attributes.putAll(attributeMap);
+        }
+        return this;
+    }
+
+    public Object getAttribute(String key) {
+        return attributes == null ? null : attributes.get(key);
+    }
+    
 }

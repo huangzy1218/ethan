@@ -2,8 +2,8 @@ package com.ethan.serialize.hessian2;
 
 import com.alibaba.com.caucho.hessian.io.Hessian2Input;
 import com.alibaba.com.caucho.hessian.io.SerializerFactory;
-import com.ethan.serialize.api.Cleanable;
-import com.ethan.serialize.api.ObjectInput;
+import com.ethan.serialize.Cleanable;
+import com.ethan.serialize.ObjectInput;
 
 import java.io.IOException;
 import java.io.InputStream;

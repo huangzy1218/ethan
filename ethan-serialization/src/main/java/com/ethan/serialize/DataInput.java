@@ -1,4 +1,4 @@
-package com.ethan.serialize.api;
+package com.ethan.serialize;
 
 import java.io.IOException;
 

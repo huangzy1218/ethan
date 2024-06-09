@@ -1,8 +1,8 @@
 package com.ethan.serialize.hessian2;
 
 import com.alibaba.com.caucho.hessian.io.Hessian2Output;
-import com.ethan.serialize.api.Cleanable;
-import com.ethan.serialize.api.ObjectOutput;
+import com.ethan.serialize.Cleanable;
+import com.ethan.serialize.ObjectOutput;
 
 import java.io.IOException;
 import java.io.OutputStream;

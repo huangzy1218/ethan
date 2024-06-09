@@ -1,0 +1,4 @@
+bzip2=com.ethan.rpc.protocol.compressor.support.Bzip2
+gzip=com.ethan.rpc.protocol.compressor.support.Gzip
+identity=com.ethan.rpc.protocol.compressor.support.Identity
+snappy=com.ethan.rpc.protocol.compressor.support.Snappy

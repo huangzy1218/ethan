@@ -1,4 +1,4 @@
-package com.ethan.serialize.api;
+package com.ethan.serialize;
 
 /**
  * Interface definition objects are cleanable.

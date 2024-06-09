@@ -14,6 +14,8 @@ public interface Compressor extends MessageEncoding {
 
     Compressor NONE = Identity.IDENTITY;
 
+    byte getContentTypeId();
+
     static Compressor getCompressor(FrameworkModel frameworkModel, String compressorStr) {
         if (null == compressorStr) {
             return null;
@@ -39,5 +41,5 @@ public interface Compressor extends MessageEncoding {
      * @return decompressed Payload byte array
      */
     byte[] decompress(byte[] payloadByteArr);
-    
+
 }

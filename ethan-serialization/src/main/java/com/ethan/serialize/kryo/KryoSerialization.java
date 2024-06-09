@@ -1,8 +1,8 @@
 package com.ethan.serialize.kryo;
 
-import com.ethan.serialize.api.ObjectInput;
-import com.ethan.serialize.api.ObjectOutput;
-import com.ethan.serialize.api.Serialization;
+import com.ethan.serialize.ObjectInput;
+import com.ethan.serialize.ObjectOutput;
+import com.ethan.serialize.Serialization;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +20,11 @@ import java.io.OutputStream;
 public class KryoSerialization implements Serialization {
 
     private static final long serialVersionUID = 3033787999037024736L;
+
+    @Override
+    public byte getContentTypeId() {
+        return 4;
+    }
 
     @Override
     public ObjectOutput serialize(OutputStream output) throws IOException {

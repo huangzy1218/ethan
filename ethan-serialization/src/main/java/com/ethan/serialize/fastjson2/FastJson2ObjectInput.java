@@ -3,7 +3,7 @@ package com.ethan.serialize.fastjson2;
 import com.alibaba.fastjson2.JSONB;
 import com.alibaba.fastjson2.JSONReader;
 import com.ethan.common.util.ClassUtils;
-import com.ethan.serialize.api.ObjectInput;
+import com.ethan.serialize.ObjectInput;
 
 import java.io.IOException;
 import java.io.InputStream;

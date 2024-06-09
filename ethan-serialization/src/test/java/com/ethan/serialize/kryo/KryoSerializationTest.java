@@ -1,9 +1,9 @@
 package com.ethan.serialize.kryo;
 
 import com.ethan.example.TestPojo;
-import com.ethan.serialize.api.ObjectInput;
-import com.ethan.serialize.api.ObjectOutput;
-import com.ethan.serialize.api.Serialization;
+import com.ethan.serialize.ObjectInput;
+import com.ethan.serialize.ObjectOutput;
+import com.ethan.serialize.Serialization;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

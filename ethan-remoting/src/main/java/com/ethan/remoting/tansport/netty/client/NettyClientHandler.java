@@ -1,15 +1,16 @@
 package com.ethan.remoting.tansport.netty.client;
 
 import com.ethan.common.URL;
-import com.ethan.common.context.ApplicationContextProvider;
-import com.ethan.remoting.tansport.netty.RpcMessage;
+import com.ethan.common.context.BeanProvider;
 import com.ethan.rpc.AppResponse;
+import com.ethan.rpc.Message;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.ethan.remoting.RpcConstants.HEARTBEAT_RESPONSE_TYPE;
-import static com.ethan.remoting.RpcConstants.RESPONSE_TYPE;
+import static com.ethan.rpc.Constants.HEARTBEAT_RESPONSE_TYPE;
+import static com.ethan.rpc.Constants.RESPONSE_TYPE;
+
 
 /**
  * Customize the client ChannelHandler to process the data sent by the server.
@@ -27,15 +28,15 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         if (url == null) {
             throw new IllegalArgumentException("url == null");
         }
-        this.unprocessedRequests = ApplicationContextProvider.getBean(UnprocessedRequests.class);
+        this.unprocessedRequests = BeanProvider.getBean(UnprocessedRequests.class);
         this.url = url;
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {
-            if (msg instanceof RpcMessage) {
-                RpcMessage mess = (RpcMessage) msg;
+            if (msg instanceof Message) {
+                Message mess = (Message) msg;
                 byte messageType = mess.getMessageType();
                 if (messageType == HEARTBEAT_RESPONSE_TYPE) {
                     log.info("heart [{}]", mess.getData());

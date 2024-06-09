@@ -2,9 +2,9 @@ package com.ethan.serialize.fastjson2;
 
 import com.ethan.common.bean.ScopeBeanFactory;
 import com.ethan.rpc.model.FrameworkModel;
-import com.ethan.serialize.api.ObjectInput;
-import com.ethan.serialize.api.ObjectOutput;
-import com.ethan.serialize.api.Serialization;
+import com.ethan.serialize.ObjectInput;
+import com.ethan.serialize.ObjectOutput;
+import com.ethan.serialize.Serialization;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -28,6 +28,11 @@ public class FastJson2Serialization implements Serialization {
     static {
         ScopeBeanFactory beanFactory = frameworkModel.getBeanFactory();
         beanFactory.registerBean(new Fastjson2CreatorManager());
+    }
+
+    @Override
+    public byte getContentTypeId() {
+        return 1;
     }
 
     @Override

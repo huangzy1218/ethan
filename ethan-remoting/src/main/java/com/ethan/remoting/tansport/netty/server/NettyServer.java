@@ -5,10 +5,10 @@ import com.ethan.common.util.CollectionUtils;
 import com.ethan.common.util.NamedThreadFactory;
 import com.ethan.common.util.RuntimeUtils;
 import com.ethan.remoting.Channel;
-import com.ethan.remoting.Constants;
 import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.RemotingServer;
 import com.ethan.remoting.tansport.netty.NettyEventLoopFactory;
+import com.ethan.rpc.Constants;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
@@ -20,7 +20,6 @@ import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.Future;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +35,6 @@ import static com.ethan.remoting.RemotingConstants.EVENT_LOOP_WORKER_POOL_NAME;
  * @author Huang Z.Y.
  */
 @Slf4j
-@Component
 public class NettyServer implements RemotingServer {
 
     @Getter

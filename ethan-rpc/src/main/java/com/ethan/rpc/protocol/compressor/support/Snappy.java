@@ -1,5 +1,6 @@
 package com.ethan.rpc.protocol.compressor.support;
 
+import com.ethan.common.enumeration.CompressType;
 import com.ethan.rpc.RpcException;
 import com.ethan.rpc.protocol.compressor.Compressor;
 
@@ -17,6 +18,11 @@ public class Snappy implements Compressor {
     @Override
     public String getMessageEncoding() {
         return SNAPPY;
+    }
+
+    @Override
+    public byte getContentTypeId() {
+        return CompressType.getCode(SNAPPY);
     }
 
     @Override

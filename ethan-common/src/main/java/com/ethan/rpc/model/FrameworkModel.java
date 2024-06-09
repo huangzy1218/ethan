@@ -83,7 +83,7 @@ public class FrameworkModel implements ExtensionAccessor {
 
     @Override
     public ExtensionDirector getExtensionDirector() {
-        return null;
+        return extensionDirector;
     }
 
 }
