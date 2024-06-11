@@ -17,6 +17,14 @@ public interface CommonConstants {
 
     String SESSION_KEY = "session";
 
+    String DYNAMIC_KEY = "dynamic";
+
+    String ANY_VALUE = "*";
+
     String GROUP_KEY = "group";
+
+    String INTERFACE_KEY = "interface";
+
+    String CATEGORY_KEY = "category";
 
 }

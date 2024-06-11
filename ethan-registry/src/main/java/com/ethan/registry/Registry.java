@@ -45,6 +45,6 @@ public interface Registry {
      * @param url Query condition
      * @return The registered information list
      */
-    com.ethan.common.URL lookup(URL url);
+    URL lookup(URL url);
 
 }

@@ -1,10 +1,10 @@
 package com.ethan.remoting.client.zookeeper;
 
 import com.ethan.common.URL;
+import com.ethan.common.util.ConcurrentHashSet;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.retry.RetryNTimes;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
@@ -12,6 +12,7 @@ import org.apache.zookeeper.KeeperException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static com.ethan.common.constant.CommonConstants.SESSION_KEY;
@@ -32,6 +33,8 @@ public class ZookeeperClient {
     protected int DEFAULT_SESSION_TIMEOUT_MS = 60 * 1000;
 
     private volatile boolean closed = false;
+    private final Set<String> persistentExistNodePath = new ConcurrentHashSet<>();
+
 
     private final URL url;
 
@@ -78,10 +81,49 @@ public class ZookeeperClient {
      */
     public static CuratorFramework getClient() {
         // If Zookeeper has been started, return directly
-        if (client != null && client.getState() == CuratorFrameworkState.STARTED) {
-            return client;
+        if (client != null) {
+            client.getState();
         }
         return client;
+    }
+
+    public void create(String path, boolean ephemeral) {
+        if (!ephemeral) {
+            if (persistentExistNodePath.contains(path)) {
+                return;
+            }
+            if (checkExists(path)) {
+                persistentExistNodePath.add(path);
+                return;
+            }
+        }
+        int i = path.lastIndexOf('/');
+        if (i > 0) {
+            create(path.substring(0, i), false);
+        }
+        if (ephemeral) {
+            createEphemeral(path);
+        } else {
+            createPersistent(path);
+            persistentExistNodePath.add(path);
+        }
+    }
+
+    public void createPersistent(String path) {
+        try {
+            client.create().forPath(path);
+        } catch (Exception e) {
+            log.warn("ZNode " + path + " already exists.", e);
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
+    public void createEphemeral(String path) {
+        try {
+            client.create().withMode(CreateMode.EPHEMERAL).forPath(path);
+        } catch (Exception e) {
+            log.warn("ZNode " + path + " already exists.", e);
+        }
     }
 
     /**

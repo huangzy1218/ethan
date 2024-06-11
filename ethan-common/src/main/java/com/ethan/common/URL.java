@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.ethan.common.constant.CommonConstants.GROUP_KEY;
+import static com.ethan.common.constant.CommonConstants.INTERFACE_KEY;
 
 /**
  * URL (Uniform Resource Locator).<br/>
@@ -202,6 +203,14 @@ public class URL implements Serializable {
 
     public String getAddress() {
         return urlAddress == null ? null : urlAddress.getAddress();
+    }
+
+    public String getServiceInterface() {
+        return getParameter(INTERFACE_KEY);
+    }
+
+    public String getCategory() {
+        return getParameter(CATEGORY_KEY);
     }
 
 }

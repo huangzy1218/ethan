@@ -4,9 +4,11 @@ import com.ethan.common.URL;
 import com.ethan.registry.NotifyListener;
 import com.ethan.registry.Registry;
 import com.ethan.remoting.client.zookeeper.ZookeeperClient;
+import com.ethan.remoting.client.zookeeper.ZookeeperTransporter;
+import com.ethan.rpc.RpcException;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
+import static com.ethan.common.constant.CommonConstants.*;
 
 /**
  * The implementation of {@link com.ethan.registry.Registry} using Zookeepr.
@@ -32,13 +34,28 @@ public class ZookeeperRegistry implements Registry {
             group = PATH_SEPARATOR + group;
         }
         this.root = group;
-        this.zkClient = zookeeperTransporter.connect(url);
+        this.zkClient = ZookeeperTransporter.connect(url);
 
+    }
+
+    public boolean isAvailable() {
+        return zkClient != null && zkClient.isConnected();
+    }
+
+    private void checkDestroyed() {
+        if (zkClient == null) {
+            throw new IllegalStateException("Registry is destroyed");
+        }
     }
 
     @Override
     public void register(URL url) {
-
+        try {
+            checkDestroyed();
+            zkClient.create(toUrlPath(url), url.getParameter(DYNAMIC_KEY, true), true);
+        } catch (Throwable e) {
+            throw new RpcException("Failed to register " + url + " to zookeeper " + getUrl() + ", cause: " + e.getMessage(), e);
+        }
     }
 
     @Override
@@ -61,29 +78,20 @@ public class ZookeeperRegistry implements Registry {
         return null;
     }
 
-
-    public ZookeeperClient connect(URL url) {
-        ZookeeperClient zookeeperClient;
-        // Address format: {[username:password@]address}
-        List<String> addressList = getURLBackupAddress(url);
-        // The field define the zookeeper server , including protocol, host, port, username, password
-        if ((zookeeperClient = fetchAndUpdateZookeeperClientCache(addressList)) != null
-                && zookeeperClient.isConnected()) {
-            log.info("find valid zookeeper client from the cache for address: " + url);
-            return zookeeperClient;
-        }
-        // Avoid creating too many connections， so add lock
-        synchronized (zookeeperClientMap) {
-            if ((zookeeperClient = fetchAndUpdateZookeeperClientCache(addressList)) != null
-                    && zookeeperClient.isConnected()) {
-                logger.info("find valid zookeeper client from the cache for address: " + url);
-                return zookeeperClient;
-            }
-
-            zookeeperClient = createZookeeperClient(url);
-            logger.info("No valid zookeeper client found from cache, therefore create a new client for url. " + url);
-            writeToClientMap(addressList, zookeeperClient);
-        }
-        return zookeeperClient;
+    private String toUrlPath(URL url) {
+        return toCategoryPath(url) + PATH_SEPARATOR + URL.encode(url.toFullString());
     }
+
+    private String toCategoryPath(URL url) {
+        return toServicePath(url) + PATH_SEPARATOR + url.getCategory(DEFAULT_CATEGORY);
+    }
+
+    private String toServicePath(URL url) {
+        String name = url.getServiceInterface();
+        if (ANY_VALUE.equals(name)) {
+            return toRootPath();
+        }
+        return toRootDir() + URL.encode(name);
+    }
+
 }

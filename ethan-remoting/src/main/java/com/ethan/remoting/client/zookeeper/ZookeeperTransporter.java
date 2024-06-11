@@ -14,9 +14,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class ZookeeperTransporter {
 
-    private final Map<String, ZookeeperClient> zookeeperClientMap = new ConcurrentHashMap<>();
+    private final static Map<String, ZookeeperClient> zookeeperClientMap = new ConcurrentHashMap<>();
 
-    public ZookeeperClient connect(URL url) {
+    public static ZookeeperClient connect(URL url) {
         ZookeeperClient zookeeperClient;
         // Address format: localhost:8080
         String address = url.getAddress();
@@ -26,7 +26,7 @@ public class ZookeeperTransporter {
             log.info("find valid zookeeper client from the cache for address: " + url);
             return zookeeperClient;
         }
-        // avoid creating too many connections， so add lock
+        // Avoid creating too many connections， so add lock
         synchronized (zookeeperClientMap) {
             if ((zookeeperClient = fetchAndUpdateZookeeperClientCache(address)) != null) {
                 log.info("Find valid zookeeper client from the cache for address: " + url);
@@ -40,11 +40,11 @@ public class ZookeeperTransporter {
         return zookeeperClient;
     }
 
-    public ZookeeperClient fetchAndUpdateZookeeperClientCache(String address) {
+    public static ZookeeperClient fetchAndUpdateZookeeperClientCache(String address) {
         return zookeeperClientMap.get(address);
     }
 
-    ZookeeperClient createZookeeperClient(URL url) {
+    public static ZookeeperClient createZookeeperClient(URL url) {
         return new ZookeeperClient(url);
     }
 
