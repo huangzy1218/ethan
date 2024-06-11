@@ -15,6 +15,11 @@ public class URLAddress {
     private int port;
     private String interfaceName;
     private URLParam urlParam;
+    /**
+     * Cache.
+     */
+    protected transient String rawAddress;
+
 
     public URLAddress(String protocol, String host, int port) {
         this.protocol = protocol;
@@ -47,6 +52,17 @@ public class URLAddress {
             sb.append("?").append(paramString.substring(1, paramString.length() - 1).replace(", ", "&"));
         }
         return sb.toString();
+    }
+
+    public String getAddress() {
+        if (rawAddress == null) {
+            rawAddress = getAddress(getHost(), getPort());
+        }
+        return rawAddress;
+    }
+
+    protected String getAddress(String host, int port) {
+        return port <= 0 ? host : host + ':' + port;
     }
 
 }

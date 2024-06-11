@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.ethan.common.constant.CommonConstants.GROUP_KEY;
+
 /**
  * URL (Uniform Resource Locator).<br/>
  * URL examples:
@@ -188,4 +190,18 @@ public class URL implements Serializable {
     public void addParameter(String key, int value) {
         urlParam.addParameter(key, value);
     }
+
+    public String getGroup() {
+        return getParameter(GROUP_KEY);
+    }
+
+    public String getGroup(String defaultValue) {
+        String value = getGroup();
+        return StringUtils.isEmpty(value) ? defaultValue : value;
+    }
+
+    public String getAddress() {
+        return urlAddress == null ? null : urlAddress.getAddress();
+    }
+
 }

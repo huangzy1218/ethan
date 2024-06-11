@@ -65,16 +65,13 @@ public class NettyChannel implements Channel {
                 throw cause;
             }
         } catch (Throwable e) {
-            throw new RemotingException(
-                    this, "Failed to send message " + PayloadDropper.getRequestWithoutData(message) + " to "
-                    + getRemoteAddress() + ", cause: " + e.getMessage(),
-                    e);
+            throw new RemotingException(this, "Failed to send message " + PayloadDropper.getRequestWithoutData(message)
+                    + " to " + getRemoteAddress() + ", cause: " + e.getMessage(), e);
         }
 
         if (!success) {
-            throw new RemotingException(this,
-                    "Failed to send message " + PayloadDropper.getRequestWithoutData(message) + " to "
-                            + getRemoteAddress());
+            throw new RemotingException(this, "Failed to send message " + PayloadDropper.getRequestWithoutData(message)
+                    + " to " + getRemoteAddress());
         }
     }
 

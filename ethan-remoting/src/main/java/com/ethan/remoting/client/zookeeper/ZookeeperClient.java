@@ -1,37 +1,75 @@
 package com.ethan.remoting.client.zookeeper;
 
-import com.ethan.common.context.BeanProvider;
-import com.ethan.rpc.RpcProperties;
+import com.ethan.common.URL;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.imps.CuratorFrameworkState;
-import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.curator.retry.RetryNTimes;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
-import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.ethan.common.constant.CommonConstants.SESSION_KEY;
+import static com.ethan.common.constant.CommonConstants.TIMEOUT_KEY;
+
 /**
- * {@link CuratorZookeeperClient} is a utility class for managing a Zookeeper client using the Curator framework.
+ * {@link ZookeeperClient} is a utility class for managing a Zookeeper client using the Curator framework.
  *
  * @author Huang Z.Y.
  */
-@Component
 @Slf4j
-public class CuratorZookeeperClient {
+public class ZookeeperClient {
 
     private static final Charset CHARSET = StandardCharsets.UTF_8;
     private static final int MAX_RETRIES = 3;
     private static CuratorFramework client;
+    protected int DEFAULT_CONNECTION_TIMEOUT_MS = 30 * 1000;
+    protected int DEFAULT_SESSION_TIMEOUT_MS = 60 * 1000;
 
-    private static RpcProperties rpcProperties
-            = BeanProvider.getBean(RpcProperties.class);
+    private volatile boolean closed = false;
+
+    private final URL url;
+
+    public ZookeeperClient(URL url) {
+        this.url = url;
+        try {
+            int timeout = url.getParameter(TIMEOUT_KEY, DEFAULT_CONNECTION_TIMEOUT_MS);
+            int sessionExpireMs = url.getParameter(SESSION_KEY, DEFAULT_SESSION_TIMEOUT_MS);
+            CuratorFrameworkFactory.Builder builder = CuratorFrameworkFactory.builder()
+                    .retryPolicy(new RetryNTimes(1, 1000))
+                    .connectionTimeoutMs(timeout)
+                    .sessionTimeoutMs(sessionExpireMs);
+            client = builder.build();
+            client.start();
+
+            boolean connected = client.blockUntilConnected(timeout, TimeUnit.MILLISECONDS);
+            if (!connected) {
+                IllegalStateException illegalStateException =
+                        new IllegalStateException("zookeeper not connected, the address is: " + url);
+
+                // 5-1 Failed to connect to configuration center.
+                log.error("Zookeeper server offline,Failed to connect with zookeeper.", illegalStateException);
+
+                throw illegalStateException;
+            }
+
+        } catch (Exception e) {
+            close();
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
+    public void close() {
+        if (closed) {
+            return;
+        }
+        closed = true;
+    }
 
     /**
      * Get the Zookeeper client.
@@ -43,30 +81,7 @@ public class CuratorZookeeperClient {
         if (client != null && client.getState() == CuratorFrameworkState.STARTED) {
             return client;
         }
-        initClient();
         return client;
-    }
-
-    private static void initClient() {
-        // Check if the user has set a Zookeeper address
-        // Properties properties = PropertiesFileUtils.readPropertiesFile(RPC_CONFIG_PATH);
-        String address = rpcProperties.getAddress();
-        int sleepTime = rpcProperties.getSleepTime();
-        // Retry 3 times, which will increase the sleep time between retries
-        RetryPolicy retryPolicy = new ExponentialBackoffRetry(sleepTime, MAX_RETRIES);
-        client = CuratorFrameworkFactory.builder()
-                // Server address to connect to
-                .connectString(address)
-                .retryPolicy(retryPolicy)
-                .build();
-        client.start();
-        try {
-            // Wait 30 seconds until Zookeeper is connected
-            if (!client.blockUntilConnected(30, TimeUnit.SECONDS)) {
-                throw new RuntimeException("Time out waiting to connect to Zookeeper!");
-            }
-        } catch (InterruptedException ignored) {
-        }
     }
 
     /**

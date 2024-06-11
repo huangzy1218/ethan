@@ -34,6 +34,9 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         this.url = url;
     }
 
+    /**
+     * Read the information returned from the server.
+     */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {

@@ -16,5 +16,9 @@
             <groupId>com.ethan</groupId>
             <artifactId>ethan-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-remoting</artifactId>
+        </dependency>
     </dependencies>
 </project>

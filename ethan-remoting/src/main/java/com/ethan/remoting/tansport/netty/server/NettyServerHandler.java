@@ -42,6 +42,9 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         this.url = url;
     }
 
+    /**
+     * Read the information returned from the clients.
+     */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         log.info("Invoke the channel read method");
@@ -58,6 +61,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
                 } else {
                     Request rpcRequest = (Request) ((Request) msg).getData();
                     // Execute the target method (the method the client needs to execute) and return the method result
+                    // todo
                     //Object result = requestHandler.handle(rpcRequest);
                     //log.info(String.format("server get result: %s", result.toString()));
                     message.setMessageType(RESPONSE_TYPE);
