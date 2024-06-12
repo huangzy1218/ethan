@@ -60,7 +60,7 @@ public class NettyServer extends AbstractEndpoint implements RemotingServer {
         bootstrap = new ServerBootstrap();
 
         String bindIp = getUrl().getParameter(BIND_IP_KEY, getUrl().getHost());
-        int bindPort = Integer.parseInt(getUrl().getParameter(BIND_PORT_KEY, String.valueOf(getUrl().getPort())));
+        int bindPort = getUrl().getParameter(BIND_PORT_KEY, getUrl().getPort());
         final NettyServerHandler nettyServerHandler = new NettyServerHandler(getUrl());
 
         bossGroup = NettyEventLoopFactory.eventLoopGroup(1, EVENT_LOOP_BOSS_POOL_NAME);

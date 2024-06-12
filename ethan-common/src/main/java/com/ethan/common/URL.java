@@ -12,8 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.ethan.common.constant.CommonConstants.GROUP_KEY;
-import static com.ethan.common.constant.CommonConstants.INTERFACE_KEY;
+import static com.ethan.common.constant.CommonConstants.*;
 
 /**
  * URL (Uniform Resource Locator).<br/>
@@ -65,13 +64,20 @@ public class URL implements Serializable {
         return serviceKey;
     }
 
+    public boolean getParameter(String key, boolean defaultValue) {
+        String value = getParameter(key);
+        return StringUtils.isEmpty(value) ? defaultValue : Boolean.parseBoolean(value);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(urlAddress.getProtocol()).append("://")
                 .append(urlAddress.getHost()).append(":")
-                .append(urlAddress.getPort()).append("/")
-                .append(urlAddress.getInterfaceName());
+                .append(urlAddress.getPort());
+        if (StringUtils.isNotEmpty(urlAddress.getInterfaceName())) {
+            sb.append("/").append(urlAddress.getInterfaceName());
+        }
 
         if (urlParam != null && !urlParam.toString().equals("{}")) {
             String paramString = urlParam.toString();
@@ -128,7 +134,7 @@ public class URL implements Serializable {
         if (defaultValue <= 0) {
             throw new IllegalArgumentException("defaultValue <= 0");
         }
-        int value = Integer.parseInt(getParameter(key, String.valueOf(defaultValue)));
+        int value = getParameter(key, defaultValue);
         return value <= 0 ? defaultValue : value;
     }
 
@@ -143,7 +149,6 @@ public class URL implements Serializable {
     }
 
     public static URL parseEncodedStr(String url) {
-        // Remove the protocol (e.g., "exchange://")
         int protocolEndIndex = url.indexOf("://");
         String protocol;
         if (protocolEndIndex == -1) {
@@ -156,20 +161,31 @@ public class URL implements Serializable {
 
         // Extract host and port
         int hostPortEndIndex = remainingUrl.indexOf('?');
-        String hostPort;
+        String hostPortAndPath;
         String paramString = "";
         if (hostPortEndIndex == -1) {
-            hostPort = remainingUrl;
+            hostPortAndPath = remainingUrl;
         } else {
-            hostPort = remainingUrl.substring(0, hostPortEndIndex);
+            hostPortAndPath = remainingUrl.substring(0, hostPortEndIndex);
             paramString = remainingUrl.substring(hostPortEndIndex + 1);
+        }
+
+        // Extract host, port, and interface
+        int pathStartIndex = hostPortAndPath.indexOf('/');
+        String hostPort;
+        String interfaceName = "";
+        if (pathStartIndex == -1) {
+            hostPort = hostPortAndPath;
+        } else {
+            hostPort = hostPortAndPath.substring(0, pathStartIndex);
+            interfaceName = hostPortAndPath.substring(pathStartIndex);
         }
 
         String[] hostPortArray = hostPort.split(":");
         String host = hostPortArray[0];
         int port = (hostPortArray.length > 1) ? Integer.parseInt(hostPortArray[1]) : -1;
 
-        URLAddress urlAddress = new URLAddress(protocol, host, port);
+        URLAddress urlAddress = new URLAddress(protocol, host, port, interfaceName);
 
         // Extract parameters
         URLParam urlParam = new URLParam();

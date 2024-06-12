@@ -25,6 +25,8 @@ public interface CommonConstants {
 
     String INTERFACE_KEY = "interface";
 
+    String VERSION_KEY = "version";
+
     String CATEGORY_KEY = "category";
 
 }

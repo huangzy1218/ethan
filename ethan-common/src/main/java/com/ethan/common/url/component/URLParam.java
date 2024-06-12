@@ -1,9 +1,13 @@
 package com.ethan.common.url.component;
 
+import com.ethan.common.util.StringUtils;
 import lombok.Data;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.ethan.common.constant.CommonConstants.GROUP_KEY;
+import static com.ethan.common.constant.CommonConstants.VERSION_KEY;
 
 /**
  * A class which store parameters for {@link com.ethan.common.URL}.
@@ -33,11 +37,11 @@ public class URLParam {
     }
 
     public String getServiceKey(String interfaceName) {
-        String group = parameters.get("group");
-        String version = parameters.get("version");
+        String group = parameters.get(GROUP_KEY);
+        String version = parameters.get(VERSION_KEY);
 
         StringBuilder serviceKey = new StringBuilder();
-        if (group != null && !group.isEmpty()) {
+        if (StringUtils.isNotEmpty(group)) {
             serviceKey.append(group).append("/");
         }
         serviceKey.append(interfaceName);

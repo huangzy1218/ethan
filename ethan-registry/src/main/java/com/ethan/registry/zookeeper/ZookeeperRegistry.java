@@ -1,6 +1,7 @@
 package com.ethan.registry.zookeeper;
 
 import com.ethan.common.URL;
+import com.ethan.common.util.StringUtils;
 import com.ethan.registry.NotifyListener;
 import com.ethan.registry.Registry;
 import com.ethan.remoting.client.zookeeper.ZookeeperClient;
@@ -23,6 +24,9 @@ public class ZookeeperRegistry implements Registry {
     private static final String DEFAULT_ROOT = "ethan";
 
     private final String root;
+    /**
+     * ethan://127.0.0.1:20880/com.example.DemoService?version=1.0.0&group=test-group"
+     */
     private URL registryUrl;
 
 
@@ -52,7 +56,7 @@ public class ZookeeperRegistry implements Registry {
     public void register(URL url) {
         try {
             checkDestroyed();
-            zkClient.create(toUrlPath(url), url.getParameter(DYNAMIC_KEY, true), true);
+            zkClient.create(toUrlPath(url), url.getParameter(DYNAMIC_KEY, true));
         } catch (Throwable e) {
             throw new RpcException("Failed to register " + url + " to zookeeper " + getUrl() + ", cause: " + e.getMessage(), e);
         }
@@ -78,20 +82,25 @@ public class ZookeeperRegistry implements Registry {
         return null;
     }
 
+
+    public URL getUrl() {
+        return registryUrl;
+    }
+
     private String toUrlPath(URL url) {
-        return toCategoryPath(url) + PATH_SEPARATOR + URL.encode(url.toFullString());
-    }
-
-    private String toCategoryPath(URL url) {
-        return toServicePath(url) + PATH_SEPARATOR + url.getCategory(DEFAULT_CATEGORY);
-    }
-
-    private String toServicePath(URL url) {
-        String name = url.getServiceInterface();
-        if (ANY_VALUE.equals(name)) {
-            return toRootPath();
+        String interfaceName = url.getServiceInterface();
+        String version = url.getParameter(VERSION_KEY);
+        String group = url.getParameter(GROUP_KEY);
+        StringBuilder path = new StringBuilder();
+        path.append(root).append("/");
+        if (StringUtils.isBlank(group)) {
+            path.append(group).append("/");
         }
-        return toRootDir() + URL.encode(name);
+        path.append(interfaceName);
+        if (version != null && !version.isEmpty()) {
+            path.append(":").append(version);
+        }
+        return path.toString();
     }
 
 }
