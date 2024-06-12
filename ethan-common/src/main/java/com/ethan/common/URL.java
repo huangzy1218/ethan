@@ -12,7 +12,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.ethan.common.constant.CommonConstants.*;
+import static com.ethan.common.constant.CommonConstants.CATEGORY_KEY;
+import static com.ethan.common.constant.CommonConstants.GROUP_KEY;
 
 /**
  * URL (Uniform Resource Locator).<br/>
@@ -40,11 +41,13 @@ public class URL implements Serializable {
         this.urlAddress = new URLAddress(protocol, host, port, interfaceName);
         this.urlParam = new URLParam();
         this.attributes = new HashMap<>();
+        serviceKey = interfaceName;
     }
 
     public URL(URLAddress urlAddress, URLParam urlParam) {
         this.urlAddress = urlAddress;
         this.urlParam = urlParam;
+        serviceKey = urlAddress.getServiceKey();
     }
 
     public void addParameter(String key, String value) {
@@ -76,14 +79,9 @@ public class URL implements Serializable {
                 .append(urlAddress.getHost()).append(":")
                 .append(urlAddress.getPort());
         if (StringUtils.isNotEmpty(urlAddress.getInterfaceName())) {
-            sb.append("/").append(urlAddress.getInterfaceName());
+            sb.append(urlAddress.getInterfaceName());
         }
-
-        if (urlParam != null && !urlParam.toString().equals("{}")) {
-            String paramString = urlParam.toString();
-            sb.append("?").append(paramString.substring(1, paramString.length() - 1).replace(", ", "&"));
-        }
-
+        sb.append(getParamString());
         return sb.toString();
     }
 
@@ -222,11 +220,25 @@ public class URL implements Serializable {
     }
 
     public String getServiceInterface() {
-        return getParameter(INTERFACE_KEY);
+        return serviceKey;
     }
 
-    public String getCategory() {
-        return getParameter(CATEGORY_KEY);
+    public String getCategory(String defaultValue) {
+        return getParameter(CATEGORY_KEY, defaultValue);
+    }
+
+    public String toFullString() {
+        return getServiceInterface() + getParamString();
+    }
+
+    private String getParamString() {
+        StringBuilder sb = new StringBuilder();
+        if (urlParam != null && !urlParam.toString().equals("{}")) {
+            String paramString = urlParam.toString();
+            sb.append("?").append(paramString.substring(1, paramString.length() - 1).replace(", ", "&"));
+        }
+
+        return sb.toString();
     }
 
 }

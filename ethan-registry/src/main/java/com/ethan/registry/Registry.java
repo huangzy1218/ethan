@@ -24,22 +24,6 @@ public interface Registry {
     void unregister(URL url);
 
     /**
-     * Subscribe to eligible registered data and react when data is changed.
-     *
-     * @param url      Subscription condition
-     * @param listener A listener of the change event
-     */
-    void subscribe(URL url, NotifyListener listener);
-
-    /**
-     * Unsubscribe.
-     *
-     * @param url      Subscription condition
-     * @param listener A listener of the change event
-     */
-    void unsubscribe(URL url, NotifyListener listener);
-
-    /**
      * Query the registered data that matches the conditions.
      *
      * @param url Query condition

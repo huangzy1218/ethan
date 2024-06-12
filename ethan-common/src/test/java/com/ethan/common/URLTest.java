@@ -19,4 +19,5 @@ class URLTest {
         URL url = URL.valueOf("exchange://localhost:" + 8080 + "?server=netty4");
         System.out.println(url);
     }
+    
 }

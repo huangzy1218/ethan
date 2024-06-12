@@ -13,6 +13,8 @@ public interface CommonConstants {
 
     String TIMEOUT_KEY = "timeout";
 
+    String PROVIDERS_CATEGORY = "providers";
+
     int DEFAULT_TIMEOUT = 1000;
 
     String SESSION_KEY = "session";
@@ -28,5 +30,8 @@ public interface CommonConstants {
     String VERSION_KEY = "version";
 
     String CATEGORY_KEY = "category";
+
+    String DEFAULT_CATEGORY = PROVIDERS_CATEGORY;
+
 
 }

@@ -241,4 +241,9 @@ public class ZookeeperClient {
         return client.getZookeeperClient().isConnected();
     }
 
+    public void delete(String path) {
+        // Never mind if ephemeral
+        persistentExistNodePath.remove(path);
+        deletePath(path);
+    }
 }
