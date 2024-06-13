@@ -33,5 +33,12 @@ public interface CommonConstants {
 
     String DEFAULT_CATEGORY = PROVIDERS_CATEGORY;
 
+    String CONSUMERS_CATEGORY = "consumers";
+
+    String DEFAULT_EXTENSION_PATH = "META-INF/ethan/";
+
+    String EXTENSION_INTERNAL_PATH = "META-INF/ethan/internal/";
+
+    String EXTENSION_SERVICE_PATH = "META-INF/ethan/internal/service/";
 
 }

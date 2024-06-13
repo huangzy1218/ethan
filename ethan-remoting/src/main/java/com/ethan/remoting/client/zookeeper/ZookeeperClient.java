@@ -217,7 +217,7 @@ public class ZookeeperClient {
         }
     }
 
-    public static List<String> getChildren(String path) {
+    public List<String> getChildren(String path) {
         try {
             return client.getChildren().forPath(path);
         } catch (KeeperException.NoNodeException e) {

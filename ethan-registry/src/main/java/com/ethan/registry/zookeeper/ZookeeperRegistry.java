@@ -1,11 +1,14 @@
 package com.ethan.registry.zookeeper;
 
 import com.ethan.common.URL;
-import com.ethan.registry.Registry;
+import com.ethan.registry.support.AbstractRegistry;
 import com.ethan.remoting.client.zookeeper.ZookeeperClient;
 import com.ethan.remoting.client.zookeeper.ZookeeperTransporter;
 import com.ethan.rpc.RpcException;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.ethan.common.constant.CommonConstants.*;
 
@@ -15,9 +18,9 @@ import static com.ethan.common.constant.CommonConstants.*;
  * @author Huang Z.Y.
  */
 @Slf4j
-public class ZookeeperRegistry implements Registry {
+public class ZookeeperRegistry extends AbstractRegistry {
 
-    private ZookeeperClient zkClient;
+    private final ZookeeperClient zkClient;
 
     private static final String DEFAULT_ROOT = "ethan";
 
@@ -71,8 +74,23 @@ public class ZookeeperRegistry implements Registry {
     }
 
     @Override
-    public URL lookup(URL url) {
-        return null;
+    public List<URL> lookup(URL url) {
+        if (url == null) {
+            throw new IllegalArgumentException("lookup url == null");
+        }
+        try {
+            checkDestroyed();
+            List<String> providers = new ArrayList<>();
+            for (String path : toCategoriesPath(url)) {
+                List<String> children = zkClient.getChildren(path);
+                if (children != null) {
+                    providers.addAll(children);
+                }
+            }
+            return toUrlsWithoutEmpty(providers);
+        } catch (Throwable e) {
+            throw new RpcException("Failed to lookup " + url + " from zookeeper " + getUrl() + ", cause: " + e.getMessage(), e);
+        }
     }
 
 
@@ -102,6 +120,31 @@ public class ZookeeperRegistry implements Registry {
 
     private String toRootDir() {
         return root;
+    }
+
+    private String[] toCategoriesPath(URL url) {
+        String[] categories;
+        if (ANY_VALUE.equals(url.getCategory())) {
+            categories = new String[]{PROVIDERS_CATEGORY, CONSUMERS_CATEGORY};
+        } else {
+            categories = url.getCategory(new String[]{DEFAULT_CATEGORY});
+        }
+        String[] paths = new String[categories.length];
+        for (int i = 0; i < categories.length; i++) {
+            paths[i] = toServicePath(url) + PATH_SEPARATOR + categories[i];
+        }
+        return paths;
+    }
+
+    private List<URL> toUrlsWithoutEmpty(List<String> providers) {
+        List<URL> urls = new ArrayList<>();
+        if (providers != null && !providers.isEmpty()) {
+            for (String provider : providers) {
+                URL url = URL.valueOf(provider);
+                urls.add(url);
+            }
+        }
+        return urls;
     }
 
 }

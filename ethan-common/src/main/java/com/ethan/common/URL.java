@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static com.ethan.common.constant.CommonConstants.CATEGORY_KEY;
 import static com.ethan.common.constant.CommonConstants.GROUP_KEY;
@@ -35,6 +36,8 @@ public class URL implements Serializable {
 
     private transient volatile String serviceKey;
     protected volatile Map<String, Object> attributes;
+
+    Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
 
 
     public URL(String protocol, String host, int port, String interfaceName) {
@@ -239,6 +242,15 @@ public class URL implements Serializable {
         }
 
         return sb.toString();
+    }
+
+    public String getCategory() {
+        return getParameter(CATEGORY_KEY);
+    }
+
+    public String[] getCategory(String[] defaultValue) {
+        String value = getCategory();
+        return StringUtils.isEmpty(value) ? defaultValue : COMMA_SPLIT_PATTERN.split(value);
     }
 
 }

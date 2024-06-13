@@ -16,6 +16,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
+import static com.ethan.common.constant.CommonConstants.*;
+
 /**
  * Load ethan extensions.
  *
@@ -30,8 +32,8 @@ public class ExtensionLoader<T> {
      * Directory path to store service configuration. <br/>
      * This is the agreed location of the configuration file for Ethan's extension point.
      */
-    private static final List<String> SERVICE_DIRECTORIES = List.of("META-INF/ethan/",
-            "META-INF/ethan/internal/", "META-INF/services/");
+    private static final String[] SERVICE_DIRECTORIES = new String[]
+            {DEFAULT_EXTENSION_PATH, EXTENSION_INTERNAL_PATH, EXTENSION_SERVICE_PATH};
 
     private final Class<?> type;
 

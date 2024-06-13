@@ -1,7 +1,7 @@
 package com.ethan.rpc;
 
 /**
- * Invoker (API/SPI, Prototype, ThreadSafe).
+ * Invoker, a executable service calls (API/SPI, Prototype, ThreadSafe).
  *
  * @author Huang Z.Y.
  */
