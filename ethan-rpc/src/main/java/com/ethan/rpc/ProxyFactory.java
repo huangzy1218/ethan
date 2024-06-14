@@ -34,4 +34,5 @@ public interface ProxyFactory {
      * @return invoker
      */
     <T> Invoker<T> getInvoker(T proxy, Class<T> type, URL url) throws RpcException;
+
 }

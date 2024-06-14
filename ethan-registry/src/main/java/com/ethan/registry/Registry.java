@@ -1,5 +1,6 @@
 package com.ethan.registry;
 
+import com.ethan.common.Node;
 import com.ethan.common.URL;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
  *
  * @author Huang Z.Y.
  */
-public interface Registry {
+public interface Registry extends Node {
 
     /**
      * Register data, such as provider service, consumer address.

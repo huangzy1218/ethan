@@ -1,13 +1,13 @@
 package com.ethan.remoting;
 
-import com.ethan.common.URL;
+import com.ethan.common.Node;
 
 import java.net.InetSocketAddress;
 
 /**
  * Network communication Channel (API/SPI, Prototype, ThreadSafe).
  */
-public interface Channel {
+public interface Channel extends Node {
 
 
     /**
@@ -66,9 +66,5 @@ public interface Channel {
      * @param value Value
      */
     void setAttribute(String key, Object value);
-
-
-    URL getUrl();
-    
 
 }

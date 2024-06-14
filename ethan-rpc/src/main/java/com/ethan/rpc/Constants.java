@@ -61,5 +61,9 @@ public interface Constants {
 
     int DEFAULT_TIMEOUT = 1000;
 
+    String INTERFACES = "interfaces";
+
+    String INTERFACE = "interface";
+
 }
     

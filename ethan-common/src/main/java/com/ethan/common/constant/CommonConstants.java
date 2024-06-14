@@ -1,5 +1,7 @@
 package com.ethan.common.constant;
 
+import java.util.regex.Pattern;
+
 /**
  * Common constants.
  *
@@ -40,5 +42,7 @@ public interface CommonConstants {
     String EXTENSION_INTERNAL_PATH = "META-INF/ethan/internal/";
 
     String EXTENSION_SERVICE_PATH = "META-INF/ethan/internal/service/";
+
+    Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
 
 }

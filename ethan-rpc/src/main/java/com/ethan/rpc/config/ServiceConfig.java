@@ -17,5 +17,4 @@ public class ServiceConfig {
     private ProxyFactory proxyFactory;
 
     private ProviderModel providerModel;
-    
 }

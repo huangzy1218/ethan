@@ -94,6 +94,7 @@ public class ZookeeperRegistry extends AbstractRegistry {
     }
 
 
+    @Override
     public URL getUrl() {
         return registryUrl;
     }
