@@ -10,6 +10,11 @@
     </parent>
 
     <artifactId>ethan-rpc</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>ethan-rpc-api</module>
+        <module>ethan-rpc-protocol</module>
+    </modules>
 
     <dependencies>
         <dependency>

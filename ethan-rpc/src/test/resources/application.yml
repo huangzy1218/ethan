@@ -1,6 +1,0 @@
-ethan:
-  rpc:
-    zookeeper:
-      address: localhost:2181
-      max-retries: 5
-      sleep-time: 2000

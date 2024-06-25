@@ -1,5 +1,11 @@
 package com.ethan.common.util;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.concurrent.Future;
+
 /**
  * Reflection utility.
  *
@@ -149,6 +155,30 @@ public class ReflectUtils {
         }
 
         return Class.forName(name, true, cl);
+    }
+
+    public static Type[] getReturnTypes(Method method) {
+        Class<?> returnType = method.getReturnType();
+        Type genericReturnType = method.getGenericReturnType();
+        if (Future.class.isAssignableFrom(returnType)) {
+            if (genericReturnType instanceof ParameterizedType) {
+                Type actualArgType = ((ParameterizedType) genericReturnType).getActualTypeArguments()[0];
+                if (actualArgType instanceof ParameterizedType) {
+                    returnType = (Class<?>) ((ParameterizedType) actualArgType).getRawType();
+                    genericReturnType = actualArgType;
+                } else if (actualArgType instanceof TypeVariable) {
+                    returnType = (Class<?>) ((TypeVariable<?>) actualArgType).getBounds()[0];
+                    genericReturnType = actualArgType;
+                } else {
+                    returnType = (Class<?>) actualArgType;
+                    genericReturnType = returnType;
+                }
+            } else {
+                returnType = null;
+                genericReturnType = null;
+            }
+        }
+        return new Type[]{returnType, genericReturnType};
     }
 
 }

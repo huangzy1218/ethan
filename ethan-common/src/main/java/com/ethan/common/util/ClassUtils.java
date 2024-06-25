@@ -44,4 +44,37 @@ public class ClassUtils {
         return false;
     }
 
+    public static ClassLoader getClassLoader() {
+        return getClassLoader(ClassUtils.class);
+    }
+
+    /**
+     * Get class loader.
+     *
+     * @param clazz Class type
+     * @return Class loader
+     */
+    public static ClassLoader getClassLoader(Class<?> clazz) {
+        ClassLoader cl = null;
+        try {
+            cl = Thread.currentThread().getContextClassLoader();
+        } catch (Exception ignored) {
+            // Cannot access thread context ClassLoader - falling back to system class loader...
+        }
+        if (cl == null) {
+            // No thread context class loader -> use class loader of this class.
+            cl = clazz.getClassLoader();
+            if (cl == null) {
+                // getClassLoader() returning null indicates the bootstrap ClassLoader
+                try {
+                    cl = ClassLoader.getSystemClassLoader();
+                } catch (Exception ignored) {
+                    // Cannot access system ClassLoader - oh well, maybe the caller can live with null...
+                }
+            }
+        }
+
+        return cl;
+    }
+
 }
