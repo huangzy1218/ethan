@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * A bean factory for internal sharing.
@@ -63,7 +62,8 @@ public class ScopeBeanFactory {
     }
 
     public <T> T getBean(Class<T> type) {
-        return this.getBean(null, type);
+        String beanName = type.getName();
+        return this.getBean(beanName, type);
     }
 
     /**
@@ -81,6 +81,7 @@ public class ScopeBeanFactory {
         return bean;
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T getBeanInternal(String name, Class<T> type) {
         checkDestroyed();
         // All classes are derived from java.lang.Object, cannot filter bean by it
@@ -111,7 +112,7 @@ public class ScopeBeanFactory {
                 return (T) candidates.get(0).instance;
             } else if (candidates.size() > 1) {
                 List<String> candidateBeanNames =
-                        candidates.stream().map(beanInfo -> beanInfo.name).collect(Collectors.toList());
+                        candidates.stream().map(beanInfo -> beanInfo.name).toList();
                 throw new ScopeBeanException("expected single matching bean but found " + candidates.size()
                         + " candidates for type [" + type.getName() + "]: " + candidateBeanNames);
             }

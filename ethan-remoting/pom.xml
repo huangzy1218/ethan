@@ -32,7 +32,7 @@
         </dependency>
         <dependency>
             <groupId>com.ethan</groupId>
-            <artifactId>ethan-rpc</artifactId>
+            <artifactId>ethan-rpc-protocol</artifactId>
         </dependency>
         <!--        <dependency>-->
         <!--            <groupId>com.ethan</groupId>-->
