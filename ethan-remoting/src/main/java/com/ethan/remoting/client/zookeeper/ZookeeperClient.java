@@ -35,15 +35,16 @@ public class ZookeeperClient {
     private volatile boolean closed = false;
     private final Set<String> persistentExistNodePath = new ConcurrentHashSet<>();
 
-
     private final URL url;
 
     public ZookeeperClient(URL url) {
         this.url = url;
         try {
+            String address = url.getAddress();
             int timeout = url.getParameter(TIMEOUT_KEY, DEFAULT_CONNECTION_TIMEOUT_MS);
             int sessionExpireMs = url.getParameter(SESSION_KEY, DEFAULT_SESSION_TIMEOUT_MS);
             CuratorFrameworkFactory.Builder builder = CuratorFrameworkFactory.builder()
+                    .connectString(address)
                     .retryPolicy(new RetryNTimes(1, 1000))
                     .connectionTimeoutMs(timeout)
                     .sessionTimeoutMs(sessionExpireMs);
@@ -111,7 +112,7 @@ public class ZookeeperClient {
 
     public void createPersistent(String path) {
         try {
-            client.create().forPath(path);
+            client.create().creatingParentsIfNeeded().forPath(path);
         } catch (Exception e) {
             log.warn("ZNode " + path + " already exists.", e);
             throw new IllegalStateException(e.getMessage(), e);
@@ -120,7 +121,7 @@ public class ZookeeperClient {
 
     public void createEphemeral(String path) {
         try {
-            client.create().withMode(CreateMode.EPHEMERAL).forPath(path);
+            client.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path);
         } catch (Exception e) {
             log.warn("ZNode " + path + " already exists.", e);
         }

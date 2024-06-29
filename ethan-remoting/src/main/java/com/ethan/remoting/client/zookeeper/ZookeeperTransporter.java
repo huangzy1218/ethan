@@ -22,7 +22,7 @@ public class ZookeeperTransporter {
         String address = url.getAddress();
         // The field define the zookeeper server , including protocol, host, port, username, password
         if ((zookeeperClient = fetchAndUpdateZookeeperClientCache(address)) != null
-                && zookeeperClient.isConnected()) {
+                && ZookeeperClient.isConnected()) {
             log.info("find valid zookeeper client from the cache for address: " + url);
             return zookeeperClient;
         }

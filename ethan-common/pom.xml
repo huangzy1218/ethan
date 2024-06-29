@@ -22,10 +22,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.ethan</groupId>
-            <artifactId>ethan-rpc-api</artifactId>
-        </dependency>
     </dependencies>
 
 </project>
