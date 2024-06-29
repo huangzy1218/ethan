@@ -1,7 +1,6 @@
 package com.ethan.registry.zookeeper;
 
 import com.ethan.common.URL;
-import com.ethan.registry.Registry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +8,7 @@ class ZookeeperRegistryTest {
 
     private URL registerUrl = URL.valueOf("zookeepr://39.107.235.5/ethan/default");
     private URL url = URL.valueOf("ethan://127.0.0.1:20880/com.example.DemoService?version=1.0.0&group=test-group");
-    private Registry registry;
+    private ZookeeperRegistry registry;
 
     @BeforeEach
     public void init() {
@@ -20,4 +19,15 @@ class ZookeeperRegistryTest {
     void register() {
         registry.register(url);
     }
+
+    @Test
+    void unregister() {
+        registry.unregister(url);
+    }
+
+    @Test
+    void toUrlPath() {
+        System.out.println(registry.toUrlPath(url));
+    }
+
 }

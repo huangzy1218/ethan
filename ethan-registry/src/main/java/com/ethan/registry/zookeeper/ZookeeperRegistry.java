@@ -33,7 +33,6 @@ public class ZookeeperRegistry extends AbstractRegistry {
 
     public ZookeeperRegistry(URL url) {
         this.registryUrl = url;
-        String PATH_SEPARATOR = "/";
         String group = url.getGroup(DEFAULT_ROOT);
         if (!group.startsWith(PATH_SEPARATOR)) {
             group = PATH_SEPARATOR + group;
@@ -99,8 +98,8 @@ public class ZookeeperRegistry extends AbstractRegistry {
         return registryUrl;
     }
 
-    private String toUrlPath(URL url) {
-        return PATH_SEPARATOR + toCategoryPath(url) + url.toFullString();
+    public String toUrlPath(URL url) {
+        return toCategoryPath(url) + url.toFullString();
     }
 
     private String toCategoryPath(URL url) {
