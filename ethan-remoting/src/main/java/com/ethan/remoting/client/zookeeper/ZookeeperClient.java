@@ -133,10 +133,10 @@ public class ZookeeperClient {
      * @param path Node path
      * @param data Real date
      */
-    public static void createPersistent(String path, String data) {
+    public void createPersistent(String path, String data) {
         byte[] dataBytes = data.getBytes(CHARSET);
         try {
-            if (!checkExists(path)) {
+            if (checkExists(path)) {
                 log.info("The node already exists. The node is:[{}]", path);
             } else {
                 // eg: /ethan-rpc/cn.edu.nwafu.HelloService/127.0.0.1:9999
@@ -154,10 +154,10 @@ public class ZookeeperClient {
      * @param path Node path
      * @param data Real date
      */
-    public static void createEphemeral(String path, String data) {
+    public void createEphemeral(String path, String data) {
         byte[] dataBytes = data.getBytes(CHARSET);
         try {
-            if (!checkExists(path)) {
+            if (checkExists(path)) {
                 log.info("The ephemeral node already exists. The node is:[{}]", path);
             } else {
                 // eg: /ethan-rpc/cn.edu.nwafu.HelloService/127.0.0.1:9999
@@ -175,7 +175,7 @@ public class ZookeeperClient {
      * @param path Node path
      * @param data Real date
      */
-    public static void update(String path, String data) {
+    public void update(String path, String data) {
         byte[] dataBytes = data.getBytes(CHARSET);
         try {
             client.setData().forPath(path, dataBytes);
@@ -184,7 +184,7 @@ public class ZookeeperClient {
         }
     }
 
-    public static void createOrUpdatePersistent(String path, String data) {
+    public void createOrUpdatePersistent(String path, String data) {
         try {
             if (checkExists(path)) {
                 update(path, data);
@@ -197,7 +197,7 @@ public class ZookeeperClient {
     }
 
 
-    protected static void createOrUpdateEphemeral(String path, String data) {
+    protected void createOrUpdateEphemeral(String path, String data) {
         try {
             if (checkExists(path)) {
                 update(path, data);

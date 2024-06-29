@@ -14,15 +14,19 @@ class ZookeeperClientTest {
 
     @Test
     void createPersistent() {
-        client.createPersistent("/ethan");
+        // client.createPersistent("/ethan/node1/node11");
+        client.createPersistent("/example/node2/node21", "node21");
     }
 
     @Test
     void createEphemeral() {
+        // client.createEphemeral("/ethan/node1/node21");
+        client.createEphemeral("/ethan/node21/node22", "node22");
     }
 
     @Test
     void update() {
+
     }
 
     @Test
