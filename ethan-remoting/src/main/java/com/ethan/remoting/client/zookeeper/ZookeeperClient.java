@@ -140,11 +140,11 @@ public class ZookeeperClient {
                 log.info("The node already exists. The node is:[{}]", path);
             } else {
                 // eg: /ethan-rpc/cn.edu.nwafu.HelloService/127.0.0.1:9999
-                client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(path, dataBytes);
+                client.create().creatingParentsIfNeeded().forPath(path, dataBytes);
                 log.info("The persistence node was created successfully. The node is:[{}]", path);
             }
         } catch (Exception e) {
-            log.error("Create persistent node for path [{}] fail", path);
+            log.error("Create persistent node for path [{}] failed", path);
         }
     }
 
@@ -165,7 +165,7 @@ public class ZookeeperClient {
                 log.info("The node was created successfully. The node is:[{}]", path);
             }
         } catch (Exception e) {
-            log.error("Create ephemeral node for path [{}] fail", path);
+            log.error("Create ephemeral node for path [{}] failed", path);
         }
     }
 
@@ -228,7 +228,7 @@ public class ZookeeperClient {
         }
     }
 
-    public static boolean checkExists(String path) {
+    public boolean checkExists(String path) {
         try {
             if (client.checkExists().forPath(path) != null) {
                 return true;
@@ -247,4 +247,5 @@ public class ZookeeperClient {
         persistentExistNodePath.remove(path);
         deletePath(path);
     }
+    
 }

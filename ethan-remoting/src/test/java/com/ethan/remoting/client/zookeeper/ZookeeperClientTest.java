@@ -26,11 +26,12 @@ class ZookeeperClientTest {
 
     @Test
     void update() {
-
+        client.update("/example/node2/node21", "node 21");
     }
 
     @Test
     void deletePath() {
+        client.delete("/example");
     }
 
     @Test
@@ -40,5 +41,12 @@ class ZookeeperClientTest {
 
     @Test
     void delete() {
+        client.delete("/ethan/node21/node22");
     }
+
+    @Test
+    void getChildren() {
+        System.out.println(client.getChildren("/ethan"));
+    }
+
 }
