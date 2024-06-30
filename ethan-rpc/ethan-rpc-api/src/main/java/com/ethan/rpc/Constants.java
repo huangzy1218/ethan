@@ -65,5 +65,7 @@ public interface Constants {
 
     String INTERFACE = "interface";
 
+    String PROVIDER_ASYNC_KEY = "PROVIDER_ASYNC";
+
 }
     

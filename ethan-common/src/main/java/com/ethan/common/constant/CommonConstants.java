@@ -45,4 +45,6 @@ public interface CommonConstants {
 
     Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
 
+    int MAX_PROXY_COUNT = 65535;
+
 }

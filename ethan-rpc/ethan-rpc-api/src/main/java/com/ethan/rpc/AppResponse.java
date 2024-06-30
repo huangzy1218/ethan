@@ -18,17 +18,23 @@ public class AppResponse implements Result {
 
     @Serial
     private static final long serialVersionUID = -6925924956850004727L;
-
     private Object result;
-
     @Setter
     @Getter
     private String requestId;
-
     private Throwable exception;
+    /**
+     * Used to receive future result.
+     */
+    private Invocation invocation;
+
 
     public AppResponse(Object result) {
         this.result = result;
+    }
+
+    public AppResponse(Invocation invocation) {
+        this.invocation = invocation;
     }
 
     public AppResponse(Throwable exception) {

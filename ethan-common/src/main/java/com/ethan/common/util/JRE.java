@@ -83,23 +83,38 @@ public enum JRE {
         try {
             Object javaRunTimeVersion = MethodUtils.invokeMethod(Runtime.getRuntime(), "version");
             int majorVersion = MethodUtils.invokeMethod(javaRunTimeVersion, "major");
-            return switch (majorVersion) {
-                case 9 -> JAVA_9;
-                case 10 -> JAVA_10;
-                case 11 -> JAVA_11;
-                case 12 -> JAVA_12;
-                case 13 -> JAVA_13;
-                case 14 -> JAVA_14;
-                case 15 -> JAVA_15;
-                case 16 -> JAVA_16;
-                case 17 -> JAVA_17;
-                case 18 -> JAVA_18;
-                case 19 -> JAVA_19;
-                case 20 -> JAVA_20;
-                case 21 -> JAVA_21;
-                case 22 -> JAVA_22;
-                default -> OTHER;
-            };
+            switch (majorVersion) {
+                case 9:
+                    return JAVA_9;
+                case 10:
+                    return JAVA_10;
+                case 11:
+                    return JAVA_11;
+                case 12:
+                    return JAVA_12;
+                case 13:
+                    return JAVA_13;
+                case 14:
+                    return JAVA_14;
+                case 15:
+                    return JAVA_15;
+                case 16:
+                    return JAVA_16;
+                case 17:
+                    return JAVA_17;
+                case 18:
+                    return JAVA_18;
+                case 19:
+                    return JAVA_19;
+                case 20:
+                    return JAVA_20;
+                case 21:
+                    return JAVA_21;
+                case 22:
+                    return JAVA_22;
+                default:
+                    return OTHER;
+            }
         } catch (Exception e) {
             log.debug("Can't determine current JRE version (maybe java.version is null), " +
                     "assuming that JRE version is 8.", e);

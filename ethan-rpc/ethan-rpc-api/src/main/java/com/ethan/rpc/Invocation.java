@@ -37,4 +37,10 @@ public interface Invocation {
      */
     Object[] getParameters();
 
+    Object put(Object key, Object value);
+    
+
+    Object get(Object key);
+
+
 }

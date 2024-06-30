@@ -1,9 +1,8 @@
 package com.ethan.common.util;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
+import javassist.NotFoundException;
+
+import java.lang.reflect.*;
 import java.util.concurrent.Future;
 
 /**
@@ -179,6 +178,113 @@ public class ReflectUtils {
             }
         }
         return new Type[]{returnType, genericReturnType};
+    }
+
+    public static String getName(final Constructor<?> c) {
+        StringBuilder ret = new StringBuilder("(");
+        Class<?>[] parameterTypes = c.getParameterTypes();
+        for (int i = 0; i < parameterTypes.length; i++) {
+            if (i > 0) {
+                ret.append(',');
+            }
+            ret.append(getName(parameterTypes[i]));
+        }
+        ret.append(')');
+        return ret.toString();
+    }
+
+    public static String getName(Class<?> c) {
+        if (c.isArray()) {
+            StringBuilder sb = new StringBuilder();
+            do {
+                sb.append("[]");
+                c = c.getComponentType();
+            } while (c.isArray());
+
+            return c.getName() + sb.toString();
+        }
+        return c.getName();
+    }
+
+    public static String getName(final Method m) {
+        StringBuilder ret = new StringBuilder();
+        ret.append(getName(m.getReturnType())).append(' ');
+        ret.append(m.getName()).append('(');
+        Class<?>[] parameterTypes = m.getParameterTypes();
+        for (int i = 0; i < parameterTypes.length; i++) {
+            if (i > 0) {
+                ret.append(',');
+            }
+            ret.append(getName(parameterTypes[i]));
+        }
+        ret.append(')');
+        return ret.toString();
+    }
+
+    /**
+     * get method desc.
+     * "(I)I", "()V", "(Ljava/lang/String;Z)V"
+     *
+     * @param m method.
+     * @return desc.
+     */
+    public static String getDescWithoutMethodName(Method m) {
+        StringBuilder ret = new StringBuilder();
+        ret.append('(');
+        Class<?>[] parameterTypes = m.getParameterTypes();
+        for (int i = 0; i < parameterTypes.length; i++) {
+            ret.append(getDesc(parameterTypes[i]));
+        }
+        ret.append(')').append(getDesc(m.getReturnType()));
+        return ret.toString();
+    }
+
+    /**
+     * Get class desc.
+     * <ul>
+     *     <li>boolean[].class => "[Z"</li>
+     *     <li>Object.class => "Ljava/lang/Object;"</li>
+     * </ul>
+     *
+     * @param c Class
+     * @return Desc
+     * @throws NotFoundException
+     */
+    public static String getDesc(Class<?> c) {
+        StringBuilder ret = new StringBuilder();
+
+        while (c.isArray()) {
+            ret.append('[');
+            c = c.getComponentType();
+        }
+
+        if (c.isPrimitive()) {
+            String t = c.getName();
+            if ("void".equals(t)) {
+                ret.append(JVM_VOID);
+            } else if ("boolean".equals(t)) {
+                ret.append(JVM_BOOLEAN);
+            } else if ("byte".equals(t)) {
+                ret.append(JVM_BYTE);
+            } else if ("char".equals(t)) {
+                ret.append(JVM_CHAR);
+            } else if ("double".equals(t)) {
+                ret.append(JVM_DOUBLE);
+            } else if ("float".equals(t)) {
+                ret.append(JVM_FLOAT);
+            } else if ("int".equals(t)) {
+                ret.append(JVM_INT);
+            } else if ("long".equals(t)) {
+                ret.append(JVM_LONG);
+            } else if ("short".equals(t)) {
+                ret.append(JVM_SHORT);
+            }
+        } else {
+            ret.append('L');
+            ret.append(c.getName().replace('.', '/'));
+            ret.append(';');
+        }
+        return ret.toString();
     }
 
 }

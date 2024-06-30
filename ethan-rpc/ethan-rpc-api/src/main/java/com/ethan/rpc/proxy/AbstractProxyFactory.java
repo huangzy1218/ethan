@@ -79,6 +79,6 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
         return ClassUtils.getClassLoader();
     }
 
-    public abstract <T> T getProxy(Invoker<T> invoker, Class<?>[] types);
+    public abstract <T> T getProxy(Invoker<T> invoker, Class<?>[] types) throws Exception;
 
 }
