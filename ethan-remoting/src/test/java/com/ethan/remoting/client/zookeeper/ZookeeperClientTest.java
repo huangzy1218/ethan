@@ -1,6 +1,8 @@
-package com.ethan.remoting.client.zookeeper;
+package com.ethan.remoting.zookeeper;
 
 import com.ethan.common.URL;
+import com.ethan.remoting.client.zookeeper.ZookeeperClient;
+import com.ethan.remoting.client.zookeeper.ZookeeperTransporter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

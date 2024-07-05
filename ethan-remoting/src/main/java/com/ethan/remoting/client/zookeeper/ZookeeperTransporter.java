@@ -23,13 +23,13 @@ public class ZookeeperTransporter {
         // The field define the zookeeper server , including protocol, host, port, username, password
         if ((zookeeperClient = fetchAndUpdateZookeeperClientCache(address)) != null
                 && ZookeeperClient.isConnected()) {
-            log.info("find valid zookeeper client from the cache for address: " + url);
+            log.info("Find valid zookeeper client from the cache for address: {}", url);
             return zookeeperClient;
         }
         // Avoid creating too many connections， so add lock
         synchronized (zookeeperClientMap) {
             if ((zookeeperClient = fetchAndUpdateZookeeperClientCache(address)) != null) {
-                log.info("Find valid zookeeper client from the cache for address: " + url);
+                log.info("Find valid zookeeper client from the cache for address: {}", url);
                 return zookeeperClient;
             }
 

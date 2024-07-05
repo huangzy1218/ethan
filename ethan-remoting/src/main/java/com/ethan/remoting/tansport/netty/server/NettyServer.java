@@ -7,9 +7,9 @@ import com.ethan.common.util.RuntimeUtils;
 import com.ethan.remoting.Channel;
 import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.RemotingServer;
-import com.ethan.remoting.com.ethan.remoting.tansport.AbstractEndpoint;
 import com.ethan.remoting.tansport.netty.NettyEventLoopFactory;
 import com.ethan.remoting.tansport.netty.codec.NettyCodecAdapter;
+import com.ethan.remoting.transport.AbstractEndpoint;
 import com.ethan.rpc.Constants;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -38,14 +38,11 @@ import static com.ethan.rpc.Constants.BIND_PORT_KEY;
 @Slf4j
 public class NettyServer extends AbstractEndpoint implements RemotingServer {
 
-    private ServerBootstrap bootstrap;
-
-    private io.netty.channel.Channel channel;
-
-    private InetSocketAddress bindAddress;
-
     EventLoopGroup bossGroup;
     EventLoopGroup workerGroup;
+    private ServerBootstrap bootstrap;
+    private io.netty.channel.Channel channel;
+    private InetSocketAddress bindAddress;
 
     public NettyServer(URL url) throws RemotingException {
         super(url);

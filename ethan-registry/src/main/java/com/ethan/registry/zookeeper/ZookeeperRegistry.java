@@ -20,13 +20,11 @@ import static com.ethan.common.constant.CommonConstants.*;
 @Slf4j
 public class ZookeeperRegistry extends AbstractRegistry {
 
-    private final ZookeeperClient zkClient;
-
     private static final String DEFAULT_ROOT = "ethan";
-
+    private final ZookeeperClient zkClient;
     private final String root;
     /**
-     * ethan://127.0.0.1:20880/com.example.DemoService?version=1.0.0&group=test-group"
+     * ethan://127.0.0.1:20880/com.example.DemoService?version=1.0.0&group=test-group
      */
     private URL registryUrl;
 

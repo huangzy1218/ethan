@@ -29,13 +29,11 @@ public class ZookeeperClient {
     private static final Charset CHARSET = StandardCharsets.UTF_8;
     private static final int MAX_RETRIES = 3;
     private static CuratorFramework client;
+    private final Set<String> persistentExistNodePath = new ConcurrentHashSet<>();
+    private final URL url;
     protected int DEFAULT_CONNECTION_TIMEOUT_MS = 30 * 1000;
     protected int DEFAULT_SESSION_TIMEOUT_MS = 60 * 1000;
-
     private volatile boolean closed = false;
-    private final Set<String> persistentExistNodePath = new ConcurrentHashSet<>();
-
-    private final URL url;
 
     public ZookeeperClient(URL url) {
         this.url = url;
@@ -68,13 +66,6 @@ public class ZookeeperClient {
         }
     }
 
-    public void close() {
-        if (closed) {
-            return;
-        }
-        closed = true;
-    }
-
     /**
      * Get the Zookeeper client.
      *
@@ -86,6 +77,26 @@ public class ZookeeperClient {
             client.getState();
         }
         return client;
+    }
+
+    public static void deletePath(String path) {
+        try {
+            client.delete().deletingChildrenIfNeeded().forPath(path);
+        } catch (KeeperException.NoNodeException ignored) {
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
+    public static boolean isConnected() {
+        return client.getZookeeperClient().isConnected();
+    }
+
+    public void close() {
+        if (closed) {
+            return;
+        }
+        closed = true;
     }
 
     public void create(String path, boolean ephemeral) {
@@ -114,7 +125,7 @@ public class ZookeeperClient {
         try {
             client.create().creatingParentsIfNeeded().forPath(path);
         } catch (Exception e) {
-            log.warn("ZNode " + path + " already exists.", e);
+            log.warn("ZNode {} already exists.", path, e);
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
@@ -123,7 +134,7 @@ public class ZookeeperClient {
         try {
             client.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path);
         } catch (Exception e) {
-            log.warn("ZNode " + path + " already exists.", e);
+            log.warn("ZNode {} already exists.", path, e);
         }
     }
 
@@ -196,7 +207,6 @@ public class ZookeeperClient {
         }
     }
 
-
     protected void createOrUpdateEphemeral(String path, String data) {
         try {
             if (checkExists(path)) {
@@ -204,15 +214,6 @@ public class ZookeeperClient {
             } else {
                 createEphemeral(path, data);
             }
-        } catch (Exception e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    }
-
-    public static void deletePath(String path) {
-        try {
-            client.delete().deletingChildrenIfNeeded().forPath(path);
-        } catch (KeeperException.NoNodeException ignored) {
         } catch (Exception e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
@@ -238,14 +239,10 @@ public class ZookeeperClient {
         return false;
     }
 
-    public static boolean isConnected() {
-        return client.getZookeeperClient().isConnected();
-    }
-
     public void delete(String path) {
         // Never mind if ephemeral
         persistentExistNodePath.remove(path);
         deletePath(path);
     }
-    
+
 }

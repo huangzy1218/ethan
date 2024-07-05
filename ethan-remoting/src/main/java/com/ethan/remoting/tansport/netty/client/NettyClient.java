@@ -4,11 +4,11 @@ import com.ethan.common.URL;
 import com.ethan.remoting.Channel;
 import com.ethan.remoting.RemotingClient;
 import com.ethan.remoting.RemotingException;
-import com.ethan.remoting.com.ethan.remoting.tansport.AbstractEndpoint;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.support.DefaultFuture;
 import com.ethan.remoting.tansport.netty.NettyChannel;
 import com.ethan.remoting.tansport.netty.codec.NettyCodecAdapter;
+import com.ethan.remoting.transport.AbstractEndpoint;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
@@ -43,12 +43,8 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
     private static final String DEFAULT_SOCKS_PROXY_PORT = "1080";
 
     private static final String DEFAULT_SOCKS_HOST = "127.0.0.1";
-
-    private Bootstrap bootstrap;
-
     private final EventLoopGroup eventLoopGroup;
-
-
+    private Bootstrap bootstrap;
     /**
      * Current channel. Each successful invocation of {@link NettyClient#doConnect()} will
      * replace this with new channel and close old channel.
@@ -60,6 +56,10 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
         eventLoopGroup = new NioEventLoopGroup();
         doOpen();
         doConnect();
+    }
+
+    public static Class<? extends SocketChannel> socketChannelClass() {
+        return shouldEpoll() ? EpollSocketChannel.class : NioSocketChannel.class;
     }
 
     @Override
@@ -164,10 +164,6 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
             doDisConnect();
         } catch (Throwable ignored) {
         }
-    }
-
-    public static Class<? extends SocketChannel> socketChannelClass() {
-        return shouldEpoll() ? EpollSocketChannel.class : NioSocketChannel.class;
     }
 
 }

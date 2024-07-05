@@ -3,6 +3,11 @@ package com.ethan.remoting.util;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.Response;
 
+/**
+ * Utility class for modifying request and response objects to remove sensitive data.
+ *
+ * @author Huang Z.Y.
+ */
 public class PayloadDropper {
 
     /**
