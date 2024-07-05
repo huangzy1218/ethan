@@ -13,14 +13,13 @@ import java.util.List;
 import static com.ethan.common.constant.CommonConstants.*;
 
 /**
- * The implementation of {@link com.ethan.registry.Registry} using Zookeepr.
+ * The implementation of {@link com.ethan.registry.Registry} using Zookeeper.
  *
  * @author Huang Z.Y.
  */
 @Slf4j
 public class ZookeeperRegistry extends AbstractRegistry {
 
-    private static final String DEFAULT_ROOT = "ethan";
     private final ZookeeperClient zkClient;
     private final String root;
     /**
@@ -31,7 +30,7 @@ public class ZookeeperRegistry extends AbstractRegistry {
 
     public ZookeeperRegistry(URL url) {
         this.registryUrl = url;
-        String group = url.getGroup(DEFAULT_ROOT);
+        String group = url.getGroup(ETHAN);
         if (!group.startsWith(PATH_SEPARATOR)) {
             group = PATH_SEPARATOR + group;
         }
