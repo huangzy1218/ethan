@@ -11,7 +11,7 @@ target/
 *.iws
 *.iml
 *.ipr
-
+.idea/sonarlint/issuestore/
 ### Eclipse ###
 .apt_generated
 .classpath

@@ -62,7 +62,7 @@ public class RpcInvocation implements Invocation, Serializable {
     }
 
     @Override
-    Object put(Object key, Object value) {
+    public Object put(Object key, Object value) {
         return attributes.put(key, value);
     }
 

@@ -33,11 +33,9 @@ public class URL implements Serializable {
 
     private final URLAddress urlAddress;
     private final URLParam urlParam;
-
-    private transient volatile String serviceKey;
     protected volatile Map<String, Object> attributes;
-
     Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
+    private transient volatile String serviceKey;
 
 
     public URL(String protocol, String host, int port, String interfaceName) {
@@ -51,92 +49,6 @@ public class URL implements Serializable {
         this.urlAddress = urlAddress;
         this.urlParam = urlParam;
         serviceKey = urlAddress.getServiceKey();
-    }
-
-    public void addParameter(String key, String value) {
-        urlParam.addParameter(key, value);
-        // Invalidate cached service key
-        this.serviceKey = null;
-    }
-
-    public String getServiceKey() {
-        if (serviceKey == null) {
-            synchronized (this) {
-                if (serviceKey == null) {
-                    serviceKey = urlParam.getServiceKey(urlAddress.getInterfaceName());
-                }
-            }
-        }
-        return serviceKey;
-    }
-
-    public boolean getParameter(String key, boolean defaultValue) {
-        String value = getParameter(key);
-        return StringUtils.isEmpty(value) ? defaultValue : Boolean.parseBoolean(value);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(urlAddress.getProtocol()).append("://")
-                .append(urlAddress.getHost()).append(":")
-                .append(urlAddress.getPort());
-        if (StringUtils.isNotEmpty(urlAddress.getInterfaceName())) {
-            sb.append(urlAddress.getInterfaceName());
-        }
-        sb.append(getParamString());
-        return sb.toString();
-    }
-
-    public String getParameter(String key, String defaultValue) {
-        String value = getParameter(key);
-        if (StringUtils.isEmpty(value)) {
-            return defaultValue;
-        }
-        return value;
-    }
-
-    public int getParameter(String key, int defaultValue) {
-        String value = getParameter(key);
-        if (value == null) {
-            return defaultValue;
-        }
-        return Integer.parseInt(value);
-    }
-
-    public String getParameter(String key) {
-        return urlParam.getParam(key);
-    }
-
-    public String getHost() {
-        return urlAddress.getHost();
-    }
-
-    public int getPort() {
-        return urlAddress.getPort();
-    }
-
-    public Map<String, Object> getAttributes() {
-        return attributes == null ? Collections.emptyMap() : attributes;
-    }
-
-    public URL addAttributes(Map<String, Object> attributeMap) {
-        if (attributeMap != null) {
-            attributes.putAll(attributeMap);
-        }
-        return this;
-    }
-
-    public Object getAttribute(String key) {
-        return attributes == null ? null : attributes.get(key);
-    }
-
-    public int getPositiveParameter(String key, int defaultValue) {
-        if (defaultValue <= 0) {
-            throw new IllegalArgumentException("defaultValue <= 0");
-        }
-        int value = getParameter(key, defaultValue);
-        return value <= 0 ? defaultValue : value;
     }
 
     /**
@@ -203,6 +115,92 @@ public class URL implements Serializable {
         }
 
         return new URL(urlAddress, urlParam);
+    }
+
+    public void addParameter(String key, String value) {
+        urlParam.addParameter(key, value);
+        // Invalidate cached service key
+        this.serviceKey = null;
+    }
+
+    public String getServiceKey() {
+        if (serviceKey == null) {
+            synchronized (this) {
+                if (serviceKey == null) {
+                    serviceKey = urlParam.getServiceKey(urlAddress.getInterfaceName());
+                }
+            }
+        }
+        return serviceKey;
+    }
+
+    public boolean getParameter(String key, boolean defaultValue) {
+        String value = getParameter(key);
+        return StringUtils.isEmpty(value) ? defaultValue : Boolean.parseBoolean(value);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(urlAddress.getProtocol()).append("://")
+                .append(urlAddress.getHost()).append(":")
+                .append(urlAddress.getPort());
+        if (StringUtils.isNotEmpty(urlAddress.getInterfaceName())) {
+            sb.append("/").append(urlAddress.getInterfaceName());
+        }
+        sb.append(getParamString());
+        return sb.toString();
+    }
+
+    public String getParameter(String key, String defaultValue) {
+        String value = getParameter(key);
+        if (StringUtils.isEmpty(value)) {
+            return defaultValue;
+        }
+        return value;
+    }
+
+    public int getParameter(String key, int defaultValue) {
+        String value = getParameter(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        return Integer.parseInt(value);
+    }
+
+    public String getParameter(String key) {
+        return urlParam.getParam(key);
+    }
+
+    public String getHost() {
+        return urlAddress.getHost();
+    }
+
+    public int getPort() {
+        return urlAddress.getPort();
+    }
+
+    public Map<String, Object> getAttributes() {
+        return attributes == null ? Collections.emptyMap() : attributes;
+    }
+
+    public URL addAttributes(Map<String, Object> attributeMap) {
+        if (attributeMap != null) {
+            attributes.putAll(attributeMap);
+        }
+        return this;
+    }
+
+    public Object getAttribute(String key) {
+        return attributes == null ? null : attributes.get(key);
+    }
+
+    public int getPositiveParameter(String key, int defaultValue) {
+        if (defaultValue <= 0) {
+            throw new IllegalArgumentException("defaultValue <= 0");
+        }
+        int value = getParameter(key, defaultValue);
+        return value <= 0 ? defaultValue : value;
     }
 
     public void addParameter(String key, int value) {

@@ -15,7 +15,7 @@ public interface ProxyFactory {
      * @param invoker A executable service calls
      * @return proxy
      */
-    <T> T getProxy(Invoker<T> invoker) throws RpcException;
+    <T> T getProxy(Invoker<T> invoker) throws Exception;
 
     /**
      * Create proxy.
@@ -23,7 +23,7 @@ public interface ProxyFactory {
      * @param invoker A executable service calls
      * @return proxy
      */
-    <T> T getProxy(Invoker<T> invoker, boolean generic) throws RpcException;
+    <T> T getProxy(Invoker<T> invoker, boolean generic) throws Exception;
 
     /**
      * Create invoker.

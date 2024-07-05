@@ -23,12 +23,12 @@ import static com.ethan.common.constant.CommonConstants.COMMA_SPLIT_PATTERN;
 public abstract class AbstractProxyFactory implements ProxyFactory {
 
     @Override
-    public <T> T getProxy(Invoker<T> invoker) throws RpcException {
+    public <T> T getProxy(Invoker<T> invoker) throws Exception {
         return getProxy(invoker, false);
     }
 
     @Override
-    public <T> T getProxy(Invoker<T> invoker, boolean generic) throws RpcException {
+    public <T> T getProxy(Invoker<T> invoker, boolean generic) throws Exception {
         // When compiling with native image, ensure that the order of the interfaces remains unchanged
         LinkedHashSet<Class<?>> interfaces = new LinkedHashSet<>();
         ClassLoader classLoader = getClassLoader(invoker);
@@ -70,7 +70,7 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
                         "Trying to create proxy without real interface class.", t);
                 return getProxy(invoker, interfaces.toArray(new Class<?>[0]));
             } else {
-                throw t;
+                throw new RpcException(t);
             }
         }
     }

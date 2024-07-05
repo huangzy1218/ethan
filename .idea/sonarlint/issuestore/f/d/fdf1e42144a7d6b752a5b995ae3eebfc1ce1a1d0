@@ -1,0 +1,12 @@
+
+z	java:S116%"^Rename this field "COMMA_SPLIT_PATTERN" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(—ÁÏä8¥ëµ†ˆ2
+I
+java:S1948"",Make "urlAddress" transient or serializable.(çõÃÔ8¦ëµ†ˆ2
+L
+java:S1948#"*Make "urlParam" transient or serializable.(Ø‹àïúÿÿÿÿ8¦ëµ†ˆ2
+N
+java:S1948$",Make "attributes" transient or serializable.(Ü•æíûÿÿÿÿ8¦ëµ†ˆ2
+y
+java:S3077$"WUse a thread-safe type; adding "volatile" is not enough to make this field thread-safe.(Ü•æíûÿÿÿÿ8§ëµ†ˆ2
+R
+java:S6397%"5Replace this character class by the character itself.(—ÁÏä8¨ëµ†ˆ2

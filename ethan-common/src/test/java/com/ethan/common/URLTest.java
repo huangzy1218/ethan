@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 class URLTest {
 
     @Test
-    public void generateURLTest() {
+    void generateURLTest() {
         URL url = new URL("http", "localhost", 8080, "greeting");
         url.addParameter("param1", "value1");
         url.addParameter("param2", "value2");
@@ -19,5 +19,5 @@ class URLTest {
         URL url = URL.valueOf("exchange://localhost:" + 8080 + "?server=netty4");
         System.out.println(url);
     }
-    
+
 }

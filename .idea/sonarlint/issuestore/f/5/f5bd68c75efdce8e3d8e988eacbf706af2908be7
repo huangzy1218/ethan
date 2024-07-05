@@ -1,0 +1,13 @@
+
+“
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(ñÄ÷ˆşÿÿÿÿJ$b133933b-d977-4734-a24f-bcbea7eaa3b2
+f
+java:S1181*"%Catch Exception instead of Throwable.(’¯í»ÿÿÿÿÿJ$f5372323-86a2-4a59-867e-cbdb16d929c4
+i	java:S108*")Either remove or fill this block of code.(’¯í»ÿÿÿÿÿJ$190e1513-1c64-4dea-bbfe-5e4e7ddd9295
+f
+java:S11816"%Catch Exception instead of Throwable.(’¯í»ÿÿÿÿÿJ$99105f36-ff34-49c3-a468-41f92576c56c
+i	java:S1086")Either remove or fill this block of code.(’¯í»ÿÿÿÿÿJ$a08a1474-e324-4e04-b1a7-f0814df9395f
+m
+java:S1181>"%Catch Exception instead of Throwable.(•”ø¾øÿÿÿÿ8¾¸†ˆ2J$5f64e42d-26d8-4296-b455-494c30a9ef07
+o
+java:S1172N".Remove this unused method parameter "invoker".(ë™ ÜÿÿÿÿÿJ$8a3d1d3c-f969-4cd0-ae67-c15fa520e41e
