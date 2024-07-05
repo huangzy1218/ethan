@@ -24,3 +24,21 @@ Fethan-rpc/ethan-rpc-api/src/main/java/com/ethan/rpc/RpcInvocation.java,a\8\a86
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
+ƒ
+Sethan-rpc/ethan-rpc-api/src/main/java/com/ethan/rpc/proxy/AbstractProxyInvoker.java,e\2\e2a5a5ecde9ce4e2113842975610472fa1003e4a
+‡
+Wethan-rpc/ethan-rpc-api/src/main/java/com/ethan/rpc/proxy/InvokerInvocationHandler.java,8\0\80f410b828b87ee40cd451490ad9e7f19149e186
+~
+Nethan-rpc/ethan-rpc-api/src/main/java/com/ethan/rpc/proxy/InvocationUtils.java,d\b\dba7ef506d9dcc1e2a7db8113a4dc83329e5dbb1
+Ž
+^ethan-rpc/ethan-rpc-api/src/main/java/com/ethan/rpc/proxy/javassist/JavassistProxyFactory.java,b\9\b9a6562e368cddeaaa3ecdf9bb40a4703199cf37
+{
+Kethan-common/src/main/java/com/ethan/common/javassist/JavassistWrapper.java,5\e\5efee9c8ae24cc3f690791c113700bf7a4118110
+’
+bethan-rpc/ethan-rpc-api/src/test/java/com/ethan/rpc/proxy/javassist/JavassistProxyFactoryTest.java,1\2\120c9ddf8e99b3bebbf3dc497dbabdf7c3bfd461
+y
+Iethan-common/src/main/java/com/ethan/common/javassist/JavassistProxy.java,c\e\ce27e9c3c4e415ff661aeca7243c08dd12556e15
+O
+ethan-rpc/ethan-rpc-api/pom.xml,3\d\3d2556c5638e1da82bff097fb1bb24eb4e77cc45
+A
+ethan-rpc/pom.xml,f\6\f64d5df80ad493114afe780ae35d5b5fcd80d4bd

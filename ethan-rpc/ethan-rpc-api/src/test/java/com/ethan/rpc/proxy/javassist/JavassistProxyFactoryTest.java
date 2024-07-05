@@ -1,5 +1,4 @@
-package com.ethan.rpc.proxy.jdk;
-
+package com.ethan.rpc.proxy.javassist;
 
 import com.ethan.common.URL;
 import com.ethan.rpc.Invoker;
@@ -8,12 +7,12 @@ import com.example.HelloServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class JdkProxyFactoryTest {
+public class JavassistProxyFactoryTest {
 
     @Test
     void proxy() throws Exception {
-        // Create JdkProxyFactory instance
-        JdkProxyFactory proxyFactory = new JdkProxyFactory();
+        // Create JavassistProxyFactory instance
+        JavassistProxyFactory proxyFactory = new JavassistProxyFactory();
         // Create UserService instance
         HelloService userService = new HelloServiceImpl();
 

@@ -21,7 +21,6 @@ public class InvocationUtils {
             // Handle exceptions during RPC calls
             throw e;
         }
-
         // Return call result
         return result.getValue();
     }

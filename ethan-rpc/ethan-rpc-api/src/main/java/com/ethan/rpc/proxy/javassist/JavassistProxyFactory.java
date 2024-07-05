@@ -2,6 +2,7 @@ package com.ethan.rpc.proxy.javassist;
 
 import com.ethan.common.URL;
 import com.ethan.common.javassist.JavassistProxy;
+import com.ethan.common.javassist.JavassistWrapper;
 import com.ethan.rpc.Invoker;
 import com.ethan.rpc.RpcException;
 import com.ethan.rpc.proxy.AbstractProxyFactory;
@@ -26,7 +27,8 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
             @Override
             protected Object doInvoke(T proxy, String methodName, Class<?>[] parameterTypes, Object[] arguments)
                     throws Throwable {
-                return null;
+                JavassistWrapper wrapper = JavassistWrapper.getWrapper(proxy.getClass());
+                return wrapper.invokeMethod(proxy, methodName, parameterTypes, arguments);
             }
         };
     }
@@ -37,14 +39,14 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
         try {
             return (T) JavassistProxy.newProxyInstance(
                     invoker.getInterface().getClassLoader(), interfaces, new InvokerInvocationHandler(invoker));
-        } catch (Throwable fromJavassist) {
+        } catch (Exception fromJavassist) {
             try {
                 // Try fall back to JDK proxy factory
                 T proxy = jdkProxyFactory.getProxy(invoker, interfaces);
-                log.error("Failed to generate proxy by Javassist failed.", fromJavassist);
+                log.error("Failed to generate proxy by Javassist.", fromJavassist);
                 return proxy;
             } catch (Exception fromJdk) {
-                log.error("Failed to generate proxy by JDK failed.", fromJdk);
+                log.error("Failed to generate proxy by JDK.", fromJdk);
                 throw fromJavassist;
             }
         }

@@ -46,7 +46,7 @@ public class JavassistProxy {
                 StringBuilder methodBody = new StringBuilder();
                 methodBody.append("{\n")
                         .append("  try {\n")
-                        .append("    Method m = ").append(iface.getName()).append(".class.getMethod(\"")
+                        .append("    java.lang.reflect.Method m = ").append(iface.getName()).append(".class.getMethod(\"")
                         .append(methodName).append("\", new Class[]{");
 
                 for (int i = 0; i < method.getParameterCount(); i++) {
