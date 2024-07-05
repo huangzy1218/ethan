@@ -50,3 +50,5 @@ p
 @ethan-rpc/ethan-rpc-api/src/main/java/com/ethan/rpc/Invoker.java,d\e\de89c698014d54aa28aa1072e8507b238e79a6c0
 s
 Cethan-common/src/main/java/com/ethan/common/cglib/CglibWrapper.java,d\6\d671c6727985646e9e633da9da1f19c320646145
+Š
+Zethan-rpc/ethan-rpc-api/src/test/java/com/ethan/rpc/proxy/cglib/CglibProxyFactoryTest.java,e\6\e6240c6d0ed82a1dc44c5a3d58d70709b2453e33

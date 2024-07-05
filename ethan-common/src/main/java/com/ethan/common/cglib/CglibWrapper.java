@@ -13,32 +13,30 @@ import java.lang.reflect.Method;
  */
 public class CglibWrapper {
 
-    private final Class<?> wrapperClass;
     private final Class<?> targetClass;
+    private final Object proxyInstance;
 
-    private CglibWrapper(Class<?> targetClass, Class<?> wrapperClass) {
+    private CglibWrapper(Class<?> targetClass, Object proxyInstance) {
         this.targetClass = targetClass;
-        this.wrapperClass = wrapperClass;
+        this.proxyInstance = proxyInstance;
     }
 
-    public static CglibWrapper getWrapper(Class<?> clazz) throws Exception {
+    public static CglibWrapper getWrapper(Class<?> clazz) {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clazz);
-        enhancer.setCallback(new MethodInterceptorImpl());
-        Class<?> proxyClass = enhancer.createClass();
-        return new CglibWrapper(clazz, proxyClass);
+        enhancer.setCallback(new MethodInterceptor() {
+            @Override
+            public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+                return proxy.invokeSuper(obj, args);
+            }
+        });
+        Object proxyInstance = enhancer.create();
+        return new CglibWrapper(clazz, proxyInstance);
     }
 
-    public Object invokeMethod(Object instance, String methodName, Class<?>[] parameterTypes, Object[] args) throws Throwable {
-        Method method = wrapperClass.getMethod(methodName, parameterTypes);
-        return method.invoke(instance, args);
-    }
-
-    private static class MethodInterceptorImpl implements MethodInterceptor {
-        @Override
-        public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-            return proxy.invokeSuper(obj, args);
-        }
+    public Object invokeMethod(String methodName, Class<?>[] parameterTypes, Object[] args) throws Throwable {
+        Method method = targetClass.getMethod(methodName, parameterTypes);
+        return method.invoke(proxyInstance, args);
     }
 
 }

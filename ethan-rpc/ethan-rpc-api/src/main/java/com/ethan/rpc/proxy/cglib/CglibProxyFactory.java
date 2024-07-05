@@ -47,7 +47,7 @@ public class CglibProxyFactory extends AbstractProxyFactory {
             protected Object doInvoke(T proxy, String methodName, Class<?>[] parameterTypes, Object[] arguments)
                     throws Throwable {
                 CglibWrapper wrapper = CglibWrapper.getWrapper(proxy.getClass());
-                return wrapper.invokeMethod(proxy, methodName, parameterTypes, arguments);
+                return wrapper.invokeMethod(methodName, parameterTypes, arguments);
             }
         };
     }
