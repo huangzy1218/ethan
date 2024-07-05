@@ -12,8 +12,8 @@ import java.security.ProtectionDomain;
  */
 public class JavassistWrapper {
 
-    private Class<?> targetClass;
     private final Class<?> wrapperClass;
+    private Class<?> targetClass;
 
     private JavassistWrapper(Class<?> targetClass, Class<?> wrapperClass) {
         this.targetClass = targetClass;
@@ -24,12 +24,12 @@ public class JavassistWrapper {
         ClassPool pool = ClassPool.getDefault();
         CtClass ctClass = pool.makeClass(c.getName() + "Wrapper" + System.currentTimeMillis());
 
-        // 添加构造方法
+        // Add constructor
         CtConstructor constructor = new CtConstructor(new CtClass[]{}, ctClass);
         constructor.setBody("{}");
         ctClass.addConstructor(constructor);
 
-        // 添加 invokeMethod 方法
+        // Add invokeMethod method
         CtMethod invokeMethod = new CtMethod(pool.get("java.lang.Object"), "invokeMethod",
                 new CtClass[]{
                         pool.get("java.lang.Object"),

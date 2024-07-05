@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 /**
- * Proxy.
+ * Javassist proxy references {@link java.lang.reflect.Proxy}.
  *
  * @author Huang Z.Y.
  */
