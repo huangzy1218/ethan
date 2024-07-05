@@ -96,3 +96,5 @@ y
 Iethan-common/src/main/java/com/ethan/common/constant/CommonConstants.java,d\9\d93c2c35163ee7d7628867d86098d930f880b4b1
 F
 ethan-registry/pom.xml,8\c\8cd02138c803076477c77d26835a07d7a76d81a3
+|
+Lethan-registry/src/test/java/com/ethan/registry/redis/RedisRegistryTest.java,b\b\bb2edd0bdfea476e89305a5b91380f940f6d4db3

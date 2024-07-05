@@ -41,34 +41,59 @@ public class RedisRegistry extends AbstractRegistry {
 
     @Override
     public URL getUrl() {
-        return null;
+        return registryUrl;
     }
 
     @Override
     public void register(URL url) {
         try {
             checkDestroyed();
-            redisClient.set(toUrlPath(url), url.getParameter(DYNAMIC_KEY, true));
+            String key = toCategoryPath(url);
+            String providerAddress = url.getAddress();
+            redisClient.set(key, providerAddress);
         } catch (Throwable e) {
-            throw new RpcException("Failed to register " + url + " to zookeeper " + getUrl() + ", cause: " + e.getMessage(), e);
+            throw new RpcException("Failed to register " + url + " to redis " + getUrl() + ", cause: " + e.getMessage(), e);
         }
     }
 
     @Override
     public void unregister(URL url) {
-        if (url == null) {
-            throw new IllegalArgumentException("unregister url == null");
+        try {
+            checkDestroyed();
+            redisClient.delete(toCategoryPath(url));
+        } catch (Throwable e) {
+            throw new RpcException("Failed to unregister " + url + " to redis " + getUrl() + ", cause: " + e.getMessage(), e);
         }
-        if (url.getPort() != 0) {
-            log.info("Unregister: {}", url);
-        }
-        registered.remove(url);
     }
 
     private void checkDestroyed() {
         if (redisClient == null) {
             throw new IllegalStateException("Registry is destroyed");
         }
+    }
+
+    public String toUrlPath(URL url) {
+        return toCategoryPath(url) + url.toFullString();
+    }
+
+    private String toCategoryPath(URL url) {
+        return toServicePath(url) + PATH_SEPARATOR + url.getCategory(DEFAULT_CATEGORY);
+    }
+
+    private String toServicePath(URL url) {
+        String name = url.getServiceInterface();
+        if (ANY_VALUE.equals(name)) {
+            return toRootPath();
+        }
+        return toRootDir() + name;
+    }
+
+    private String toRootPath() {
+        return root;
+    }
+
+    private String toRootDir() {
+        return root;
     }
 
 }
