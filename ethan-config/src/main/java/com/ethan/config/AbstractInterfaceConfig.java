@@ -3,7 +3,6 @@ package com.ethan.config;
 import com.ethan.rpc.model.ServiceMetadata;
 import lombok.Data;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -14,8 +13,7 @@ import java.io.Serializable;
 @Data
 public class AbstractInterfaceConfig implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = -1559314110797223229L;
+    private static final long serialVersionUID = -1035807325876392990L;
 
     /**
      * The interface name of the exported service.
@@ -33,7 +31,7 @@ public class AbstractInterfaceConfig implements Serializable {
     protected String group;
 
     protected ServiceMetadata serviceMetadata;
-    
+
     protected void initServiceMetadata(AbstractInterfaceConfig provider) {
         serviceMetadata.setVersion(version);
         serviceMetadata.setGroup(group);

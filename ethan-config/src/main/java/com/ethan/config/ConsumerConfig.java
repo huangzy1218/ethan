@@ -1,14 +1,11 @@
 package com.ethan.config;
 
-import java.io.Serial;
-
 /**
  * @author Huang Z.Y.
  */
 public class ConsumerConfig extends AbstractInterfaceConfig {
 
-    @Serial
-    private static final long serialVersionUID = 6913423882496634749L;
+    private static final long serialVersionUID = 7008400050736212669L;
 
     /**
      * Consumer thread pool type: cached, fixed, limit, eager

@@ -4,7 +4,6 @@ import com.ethan.common.url.component.URLAddress;
 import com.ethan.common.url.component.URLParam;
 import com.ethan.common.util.StringUtils;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -28,8 +27,7 @@ import static com.ethan.common.constant.CommonConstants.GROUP_KEY;
  */
 public class URL implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 2691386627L;
+    private static final long serialVersionUID = -4205514094465803451L;
 
     private final URLAddress urlAddress;
     private final URLParam urlParam;

@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serial;
-
 /**
  * Simply represents the business result.
  *
@@ -16,8 +14,7 @@ import java.io.Serial;
 @AllArgsConstructor
 public class AppResponse implements Result {
 
-    @Serial
-    private static final long serialVersionUID = -6925924956850004727L;
+    private static final long serialVersionUID = 4200477403478011425L;
     private Object result;
     @Setter
     @Getter

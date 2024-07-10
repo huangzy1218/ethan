@@ -4,7 +4,10 @@ import com.ethan.serialize.ObjectInput;
 import com.ethan.serialize.ObjectOutput;
 import com.ethan.serialize.Serialization;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
 
 /**
  * Hessian2 serialization implementation, Hessian2 is ethan's default serialization protocol.
@@ -13,8 +16,7 @@ import java.io.*;
  */
 public class Hessian2Serialization implements Serialization, Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 2691386627L;
+    private static final long serialVersionUID = 7548538779065353697L;
 
     @Override
     public byte getContentTypeId() {

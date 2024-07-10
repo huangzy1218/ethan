@@ -1,6 +1,5 @@
 package com.ethan.rpc;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,8 +12,7 @@ import java.util.Map;
  */
 public class RpcInvocation implements Invocation, Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 2691386627L;
+    private static final long serialVersionUID = 5785837690188300781L;
     private String methodName;
     private String interfaceName;
     private String serviceKey;

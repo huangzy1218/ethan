@@ -3,8 +3,6 @@ package com.ethan.config;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serial;
-
 /**
  * The service provider default configuration.
  *
@@ -14,8 +12,7 @@ import java.io.Serial;
 @Data
 public class ProviderConfig extends AbstractInterfaceConfig {
 
-    @Serial
-    private static final long serialVersionUID = 2827274711143680600L;
+    private static final long serialVersionUID = 2879828623346561932L;
 
     /**
      * Service ip addresses
