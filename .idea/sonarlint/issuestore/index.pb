@@ -112,3 +112,9 @@ p
 @ethan-rpc/ethan-rpc-api/src/main/java/com/ethan/rpc/Message.java,b\7\b7eca81fb09620536b97ee21fbf491e4734b7f43
 u
 Eethan-rpc/ethan-rpc-api/src/main/java/com/ethan/rpc/RpcException.java,c\c\ccc481d17472601d1152dd97598a4d6e67606e4b
+i
+9ethan-common/src/main/java/com/ethan/common/util/JRE.java,0\9\095332a43fe1ea5f8da487792f510177a781dcdd
+s
+Cethan-common/src/main/java/com/ethan/rpc/model/ServiceMetadata.java,6\3\63c6690d45d4a64af64d7d3ca71e36324c391843
+r
+Bethan-rpc/ethan-rpc-api/src/main/java/com/ethan/rpc/EthanStub.java,e\e\eeb10dee83d1355aec3fc38bae28b7a516714415

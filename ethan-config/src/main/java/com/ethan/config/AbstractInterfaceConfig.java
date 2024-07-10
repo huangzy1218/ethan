@@ -19,18 +19,19 @@ public class AbstractInterfaceConfig implements Serializable {
      * The interface name of the exported service.
      */
     protected String interfaceName;
-
     /**
      * The remote service version the customer/provider side will reference.
      */
     protected String version;
-
     /**
      * The remote service group the customer/provider side will reference.
      */
     protected String group;
-
     protected ServiceMetadata serviceMetadata;
+    /**
+     * Strategies for generating dynamic agents.
+     */
+    protected String proxy;
 
     protected void initServiceMetadata(AbstractInterfaceConfig provider) {
         serviceMetadata.setVersion(version);

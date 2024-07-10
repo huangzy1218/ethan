@@ -47,4 +47,6 @@ public interface CommonConstants {
 
     int MAX_PROXY_COUNT = 65535;
 
+    String NATIVE_STUB = "nativestub";
+
 }

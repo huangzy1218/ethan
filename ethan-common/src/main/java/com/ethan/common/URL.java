@@ -35,7 +35,6 @@ public class URL implements Serializable {
     Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
     private transient volatile String serviceKey;
 
-
     public URL(String protocol, String host, int port, String interfaceName) {
         this.urlAddress = new URLAddress(protocol, host, port, interfaceName);
         this.urlParam = new URLParam();
