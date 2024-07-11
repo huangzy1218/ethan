@@ -5,6 +5,7 @@ import com.ethan.common.util.StringUtils;
 import com.ethan.rpc.EthanStub;
 import com.ethan.rpc.Invoker;
 import com.ethan.rpc.descriptor.ServiceDescriptor;
+import com.ethan.rpc.model.ConsumerModel;
 import com.ethan.rpc.model.FrameworkServiceRepository;
 
 import java.util.Map;
@@ -28,6 +29,7 @@ public class ReferenceConfig<T> extends AbstractInterfaceConfig {
      * The consumer config (default).
      */
     protected ConsumerConfig consumer;
+    private ConsumerModel consumerModel;
     /**
      * The interface proxy reference.
      */
@@ -69,12 +71,6 @@ public class ReferenceConfig<T> extends AbstractInterfaceConfig {
                 setProxy(CommonConstants.NATIVE_STUB);
             }
 
-            // init serviceMetadata
-            initServiceMetadata(consumer);
-
-            serviceMetadata.setServiceType(getServiceInterfaceClass());
-            serviceMetadata.generateServiceKey();
-
             Map<String, String> referenceParameters = appendConfig();
 
             FrameworkServiceRepository repository = getScopeModel().getServiceRepository();
@@ -86,14 +82,7 @@ public class ReferenceConfig<T> extends AbstractInterfaceConfig {
             } else {
                 serviceDescriptor = repository.registerService(interfaceClass);
             }
-            consumerModel = new ConsumerModel(
-                    serviceMetadata.getServiceKey(),
-                    proxy,
-                    serviceDescriptor,
-                    getScopeModel(),
-                    serviceMetadata,
-                    createAsyncMethodInfo(),
-                    interfaceClassLoader);
+            consumerModel = new ConsumerModel(proxy, serviceKey);
 
             // Compatible with dependencies on ServiceModel#getReferenceConfig() , and will be removed in a future
             // version.
@@ -108,7 +97,6 @@ public class ReferenceConfig<T> extends AbstractInterfaceConfig {
             serviceMetadata.setTarget(ref);
             serviceMetadata.addAttribute(PROXY_CLASS_REF, ref);
 
-            consumerModel.setDestroyRunner(getDestroyRunner());
             consumerModel.setProxyObject(ref);
             consumerModel.initMethodModels();
 

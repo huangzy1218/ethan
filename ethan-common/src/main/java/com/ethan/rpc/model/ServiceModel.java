@@ -1,5 +1,6 @@
 package com.ethan.rpc.model;
 
+import com.ethan.common.util.ClassUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,37 +16,26 @@ public class ServiceModel {
     private String serviceKey;
     private Object proxyObject;
     private ClassLoader classLoader;
-    private final ServiceMetadata serviceMetadata;
 
     public ServiceModel(
             Object proxyObject,
-            String serviceKey,
-            ServiceMetadata serviceMetadata) {
+            String serviceKey) {
         this.proxyObject = proxyObject;
         this.serviceKey = serviceKey;
-        this.serviceMetadata = serviceMetadata;
-        if (serviceMetadata != null) {
-            serviceMetadata.setServiceModel(this);
-        }
-        this.classLoader = Thread.currentThread().getContextClassLoader();
+        this.classLoader = ClassUtils.getClassLoader();
     }
 
     public ServiceModel(
             Object proxyObject,
             String serviceKey,
-            ServiceMetadata serviceMetadata,
             ClassLoader interfaceClassLoader) {
         this.proxyObject = proxyObject;
         this.serviceKey = serviceKey;
-        this.serviceMetadata = serviceMetadata;
-        if (serviceMetadata != null) {
-            serviceMetadata.setServiceModel(this);
-        }
         if (interfaceClassLoader != null) {
             this.classLoader = interfaceClassLoader;
         }
         if (this.classLoader == null) {
-            this.classLoader = Thread.currentThread().getContextClassLoader();
+            this.classLoader = ClassUtils.getClassLoader();
         }
     }
 

@@ -25,43 +25,33 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
      */
     private transient volatile boolean exported;
 
-    /**
-     * For early init service metadata.
-     */
-    public void init() {
-        initServiceMetadata(provider);
-        serviceMetadata.setTarget(ref);
-        serviceMetadata.generateServiceKey();
-    }
-
-
     @Override
     public void export() {
         synchronized (this) {
             if (this.exported) {
                 return;
             }
-            init();
             doExport();
         }
     }
 
     private void doExport() {
+        if (exported) {
+            return;
+        }
+        
         FrameworkServiceRepository repository = new FrameworkServiceRepository();
         if (StringUtils.isEmpty(path)) {
             path = interfaceName;
         }
 
-        providerModel = new ProviderModel(
-                serviceMetadata.getServiceKey(),
-                ref,
-                serviceMetadata);
+        providerModel = new ProviderModel(serviceKey, ref);
 
     }
 
     @Override
     public boolean isExported() {
-        return false;
+        return exported;
     }
 
 }

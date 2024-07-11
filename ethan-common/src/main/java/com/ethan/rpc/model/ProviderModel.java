@@ -12,16 +12,15 @@ import lombok.EqualsAndHashCode;
 @Data
 public class ProviderModel extends ServiceModel {
 
-    public ProviderModel(Object proxyObject, String serviceKey, ServiceMetadata serviceMetadata, Object serviceInstance) {
-        super(proxyObject, serviceKey, serviceMetadata);
+    public ProviderModel(Object proxyObject, String serviceKey, Object serviceInstance) {
+        super(proxyObject, serviceKey);
     }
 
 
     public ProviderModel(
             String serviceKey,
-            Object serviceInstance,
-            ServiceMetadata serviceMetadata) {
-        super(serviceInstance, serviceKey, serviceMetadata);
+            Object serviceInstance) {
+        super(serviceInstance, serviceKey);
         if (serviceInstance == null) {
             throw new IllegalArgumentException("Service[" + serviceKey + "]Target is NULL.");
         }

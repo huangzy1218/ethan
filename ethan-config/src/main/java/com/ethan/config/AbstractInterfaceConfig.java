@@ -1,6 +1,6 @@
 package com.ethan.config;
 
-import com.ethan.rpc.model.ServiceMetadata;
+import com.ethan.common.util.StringUtils;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -27,16 +27,30 @@ public class AbstractInterfaceConfig implements Serializable {
      * The remote service group the customer/provider side will reference.
      */
     protected String group;
-    protected ServiceMetadata serviceMetadata;
     /**
      * Strategies for generating dynamic agents.
      */
     protected String proxy;
+    protected String serviceKey;
 
-    protected void initServiceMetadata(AbstractInterfaceConfig provider) {
-        serviceMetadata.setVersion(version);
-        serviceMetadata.setGroup(group);
-        serviceMetadata.setServiceInterfaceName(interfaceName);
+    private static String buildServiceKey(String path, String group, String version) {
+        int length = path == null ? 0 : path.length();
+        length += group == null ? 0 : group.length();
+        length += version == null ? 0 : version.length();
+        length += 2;
+        StringBuilder buf = new StringBuilder(length);
+        if (StringUtils.isNotEmpty(group)) {
+            buf.append(group).append('/');
+        }
+        buf.append(path);
+        if (StringUtils.isNotEmpty(version)) {
+            buf.append(':').append(version);
+        }
+        return buf.toString().intern();
+    }
+
+    public void generateServiceKey() {
+        this.serviceKey = buildServiceKey(interfaceName, group, version);
     }
 
 }

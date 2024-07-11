@@ -118,3 +118,17 @@ s
 Cethan-common/src/main/java/com/ethan/rpc/model/ServiceMetadata.java,6\3\63c6690d45d4a64af64d7d3ca71e36324c391843
 r
 Bethan-rpc/ethan-rpc-api/src/main/java/com/ethan/rpc/EthanStub.java,e\e\eeb10dee83d1355aec3fc38bae28b7a516714415
+~
+Nethan-common/src/main/java/com/ethan/rpc/model/FrameworkServiceRepository.java,1\3\13b220797eaf7bea2c96884ce22581750f1fbc8e
+q
+Aethan-common/src/main/java/com/ethan/rpc/model/ProviderModel.java,b\a\bacbaa0b58aa247f978f3f2036f4b1f28388ea1d
+p
+@ethan-common/src/main/java/com/ethan/rpc/model/ServiceModel.java,2\3\23e225dd403c22b126e0fb1dc350a8fd550af5b9
+p
+@ethan-common/src/main/java/com/ethan/common/util/ClassUtils.java,f\8\f8aa6c6e0567318f1fb08bff5ad5ef338b4c69a4
+z
+Jethan-common/src/main/java/com/ethan/rpc/descriptor/ServiceDescriptor.java,0\4\0471b6806e0160aa73d51dda6d603bfe84f28ef1
+q
+Aethan-common/src/main/java/com/ethan/rpc/model/ConsumerModel.java,3\1\31ef6548154bd136367820778cf57c9a16cb81b6
+r
+Bethan-common/src/main/java/com/ethan/rpc/model/FrameworkModel.java,3\2\32abf4c76baf5481f27bce933ecc4fe7ce8c3f0b
