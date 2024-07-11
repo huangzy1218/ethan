@@ -1,23 +1,23 @@
 package com.ethan.rpc.protocol.codec;
 
+import com.ethan.common.enumeration.CompressType;
+import com.ethan.common.enumeration.SerializationType;
+import com.ethan.remoting.exchange.Request;
+import com.ethan.remoting.exchange.Response;
 import com.ethan.rpc.AppResponse;
 import com.ethan.rpc.CodecSupport;
 import com.ethan.rpc.Invocation;
 import com.ethan.rpc.Message;
 import com.ethan.rpc.protocol.compressor.Compressor;
 import com.ethan.serialize.ObjectInput;
-import com.ethan.serialize.ObjectOutput;
 import com.ethan.serialize.Serialization;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static com.ethan.rpc.Constants.*;
 
 
 /**
@@ -28,49 +28,35 @@ import static com.ethan.rpc.Constants.*;
 @Slf4j
 public class EthanCodec implements Codec {
 
+    protected static final CompressType DEFAULT_REMOTING_COMPRESS = CompressType.GZIP;
+    protected static final SerializationType DEFAULT_REMOTING_SERIALIZATION = SerializationType.FASTJSON2;
+    protected static final int MAX_FRAME_LENGTH = 8 * 1024 * 1024;
+    protected static final byte TOTAL_LENGTH = 16;
+    protected static final int HEAD_LENGTH = 16;
+    protected static final short MAGIC = (short) 0xffff;
+    // Magic number to verify RpcMessage.
+    protected static final byte[] MAGIC_NUMBER = {(byte) 'g', (byte) 'r', (byte) 'p', (byte) 'c'};
+    protected static final byte VERSION = 1;
+    protected static final byte REQUEST_TYPE = 1;
+    protected static final byte RESPONSE_TYPE = 2;
+    // Ping.
+    protected static final byte HEARTBEAT_REQUEST_TYPE = 3;
+    // Pong.
+    protected static final byte HEARTBEAT_RESPONSE_TYPE = 4;
+    protected static final String PING = "ping";
+    protected static final String PONG = "pong";
     private static final AtomicInteger ATOMIC_INTEGER = new AtomicInteger(0);
+
+    public Short getMagicCode() {
+        return MAGIC;
+    }
 
     @Override
     public void encode(ByteBuf out, Object msg) throws IOException {
-        try {
-            Message message = (Message) msg;
-            out.writeBytes(MAGIC_NUMBER);
-            out.writeByte(VERSION);
-            // Leave a place to write the value of full length
-            out.writerIndex(out.writerIndex() + 4);
-            byte messageType = message.getMessageType();
-            out.writeByte(messageType);
-            out.writeByte(message.getCodec());
-            out.writeByte(message.getCompress());
-            out.writeInt(ATOMIC_INTEGER.getAndIncrement());
-            // Build full length
-            byte[] bodyBytes = null;
-            int fullLength = HEAD_LENGTH;
-            // If messageType is not heartbeat message, fullLength = head length + body length
-            if (messageType != HEARTBEAT_REQUEST_TYPE
-                    && messageType != HEARTBEAT_RESPONSE_TYPE) {
-                // Serialize the object
-                Serialization serializer = CodecSupport.getSerialization(message.getCodec());
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                ObjectOutput objectOutput = serializer.serialize(outputStream);
-                objectOutput.writeObject(message.getData());
-                objectOutput.flushBuffer();
-                bodyBytes = outputStream.toByteArray();
-                // Compress the bytes
-                Compressor compressor = CodecSupport.getCompressor(message.getCompress());
-                bodyBytes = compressor.compress(bodyBytes);
-                fullLength += bodyBytes.length;
-            }
-
-            if (bodyBytes != null) {
-                out.writeBytes(bodyBytes);
-            }
-            int writeIndex = out.writerIndex();
-            out.writerIndex(writeIndex - fullLength + MAGIC_NUMBER.length + 1);
-            out.writeInt(fullLength);
-            out.writerIndex(writeIndex);
-        } catch (Exception e) {
-            log.error("Encode request error!", e);
+        if (msg instanceof Request) {
+            encodeRequest(channel, buffer, (Request) msg);
+        } else if (msg instanceof Response) {
+            encodeResponse(channel, buffer, (Response) msg);
         }
     }
 
@@ -124,7 +110,7 @@ public class EthanCodec implements Codec {
         // Read the version and compare
         byte version = in.readByte();
         if (version != VERSION) {
-            throw new RuntimeException("version isn't compatible" + version);
+            throw new RuntimeException("Version isn't compatible" + version);
         }
     }
 

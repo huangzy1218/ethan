@@ -138,6 +138,16 @@
             </dependency>
             <dependency>
                 <groupId>com.ethan</groupId>
+                <artifactId>ethan-remoting-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ethan</groupId>
+                <artifactId>ethan-remoting-connector</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ethan</groupId>
                 <artifactId>ethan-rpc</artifactId>
                 <version>${revision}</version>
             </dependency>

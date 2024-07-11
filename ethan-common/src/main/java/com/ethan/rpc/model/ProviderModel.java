@@ -22,7 +22,7 @@ public class ProviderModel extends ServiceModel {
             Object serviceInstance) {
         super(serviceInstance, serviceKey);
         if (serviceInstance == null) {
-            throw new IllegalArgumentException("Service[" + serviceKey + "]Target is NULL.");
+            throw new IllegalArgumentException("Service[" + serviceKey + "] Target is NULL.");
         }
     }
 

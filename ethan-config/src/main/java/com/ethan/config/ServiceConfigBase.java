@@ -1,5 +1,7 @@
 package com.ethan.config;
 
+import com.ethan.common.util.StringUtils;
+
 /**
  * Base service configuration.
  *
@@ -28,11 +30,6 @@ public abstract class ServiceConfigBase<T> extends AbstractInterfaceConfig {
     protected transient T ref;
 
     /**
-     * The service name.
-     */
-    protected String path;
-
-    /**
      * The provider configuration.
      */
     protected ProviderConfig provider;
@@ -43,6 +40,22 @@ public abstract class ServiceConfigBase<T> extends AbstractInterfaceConfig {
     public abstract void export();
 
     public abstract boolean isExported();
+
+    public Class<?> getInterfaceClass() {
+        if (interfaceClass != null) {
+            return interfaceClass;
+        }
+        try {
+            if (StringUtils.isNotEmpty(interfaceName)) {
+                this.interfaceClass = Class.forName(
+                        interfaceName, true, Thread.currentThread().getContextClassLoader());
+            }
+        } catch (ClassNotFoundException t) {
+            throw new IllegalStateException(t.getMessage(), t);
+        }
+        return interfaceClass;
+    }
+
 
 }
     

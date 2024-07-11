@@ -7,6 +7,10 @@
     <file url="file://$PROJECT_DIR$/ethan-config/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ethan-registry/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ethan-registry/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ethan-remoting/ethan-remoting-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ethan-remoting/ethan-remoting-api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ethan-remoting/ethan-remoting-connector/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ethan-remoting/ethan-remoting-connector/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ethan-remoting/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ethan-remoting/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ethan-rpc/ethan-rpc-api/src/main/java" charset="UTF-8" />

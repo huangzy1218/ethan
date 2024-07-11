@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Merge {@link com.ethan.rpc.model.ServiceModel} and {@link com.ethan.rpc.model.ServiceMetadata}.
+ * Merge {@link com.ethan.rpc.model.ServiceModel}.
  *
  * @author Huang Z.Y.
  */

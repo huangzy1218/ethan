@@ -1,9 +1,13 @@
 package com.ethan.config;
 
-import com.ethan.common.util.StringUtils;
+import com.ethan.common.URL;
 import com.ethan.rpc.ProxyFactory;
+import com.ethan.rpc.descriptor.ServiceDescriptor;
+import com.ethan.rpc.model.FrameworkModel;
 import com.ethan.rpc.model.FrameworkServiceRepository;
 import com.ethan.rpc.model.ProviderModel;
+
+import java.util.List;
 
 /**
  * Service configuration, which encapsulates service information.
@@ -39,13 +43,27 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
         if (exported) {
             return;
         }
-        
-        FrameworkServiceRepository repository = new FrameworkServiceRepository();
-        if (StringUtils.isEmpty(path)) {
-            path = interfaceName;
+
+        FrameworkServiceRepository repository = FrameworkModel.getServiceRepository();
+        ServiceDescriptor serviceDescriptor = repository.registerService(getInterfaceClass());
+        providerModel = new ProviderModel(serviceKey, ref);
+
+        repository.registerProvider(providerModel);
+
+        List<URL> registryURLs = ConfigValidationUtils.loadRegistries(this, true);
+
+        for (ProtocolConfig protocolConfig : protocols) {
+            String pathKey = URL.buildKey(
+                    getContextPath(protocolConfig).map(p -> p + "/" + path).orElse(path), group, version);
+            // stub service will use generated service name
+            if (!serverService) {
+                // In case user specified path, register service one more time to map it to path.
+                repository.registerService(pathKey, interfaceClass);
+            }
+            doExportUrlsFor1Protocol(protocolConfig, registryURLs, registerType);
         }
 
-        providerModel = new ProviderModel(serviceKey, ref);
+        providerModel.setServiceUrls(urls);
 
     }
 

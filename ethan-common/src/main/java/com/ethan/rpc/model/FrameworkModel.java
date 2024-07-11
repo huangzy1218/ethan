@@ -17,41 +17,20 @@ import java.util.Set;
 @Getter
 public class FrameworkModel implements ExtensionAccessor {
 
-    private static volatile FrameworkModel defaultInstance;
-
     private static final Object globalLock = new Object();
-
+    private static volatile FrameworkModel defaultInstance;
+    private static FrameworkServiceRepository serviceRepository = new FrameworkServiceRepository();
     protected final Object instLock = new Object();
-
-    private volatile ScopeBeanFactory beanFactory;
-
     private final Set<ClassLoader> classLoaders = new ConcurrentHashSet<>();
-
+    private volatile ScopeBeanFactory beanFactory;
     private volatile ExtensionDirector extensionDirector;
 
     public FrameworkModel() {
         initialize();
     }
 
-    /**
-     * NOTE:
-     * <ol>
-     *  <li>The initialize method only be called in subclass.</li>
-     * <li>
-     * In subclass, the extensionDirector and beanFactory are available in initialize but not available in constructor.
-     * </li>
-     * </ol>
-     */
-    protected void initialize() {
-        synchronized (instLock) {
-            this.beanFactory = new ScopeBeanFactory(null);
-            this.extensionDirector = new ExtensionDirector();
-            // Add Framework's ClassLoader by default
-            ClassLoader ethanClassLoader = FrameworkModel.class.getClassLoader();
-            if (ethanClassLoader != null) {
-                this.addClassLoader(ethanClassLoader);
-            }
-        }
+    public static FrameworkServiceRepository getServiceRepository() {
+        return serviceRepository;
     }
 
     /**
@@ -73,6 +52,27 @@ public class FrameworkModel implements ExtensionAccessor {
         }
         Assert.notNull(instance, "Default FrameworkModel is null");
         return instance;
+    }
+
+    /**
+     * NOTE:
+     * <ol>
+     *  <li>The initialize method only be called in subclass.</li>
+     * <li>
+     * In subclass, the extensionDirector and beanFactory are available in initialize but not available in constructor.
+     * </li>
+     * </ol>
+     */
+    protected void initialize() {
+        synchronized (instLock) {
+            this.beanFactory = new ScopeBeanFactory(null);
+            this.extensionDirector = new ExtensionDirector();
+            // Add Framework's ClassLoader by default
+            ClassLoader ethanClassLoader = FrameworkModel.class.getClassLoader();
+            if (ethanClassLoader != null) {
+                this.addClassLoader(ethanClassLoader);
+            }
+        }
     }
 
     public void addClassLoader(ClassLoader classLoader) {

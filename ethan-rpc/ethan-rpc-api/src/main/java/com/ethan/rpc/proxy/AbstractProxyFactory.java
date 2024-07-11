@@ -3,7 +3,6 @@ package com.ethan.rpc.proxy;
 import com.ethan.common.util.ClassUtils;
 import com.ethan.common.util.ReflectUtils;
 import com.ethan.common.util.StringUtils;
-import com.ethan.rpc.Constants;
 import com.ethan.rpc.Invoker;
 import com.ethan.rpc.ProxyFactory;
 import com.ethan.rpc.RpcException;
@@ -12,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.LinkedHashSet;
 
 import static com.ethan.common.constant.CommonConstants.COMMA_SPLIT_PATTERN;
+import static com.ethan.common.constant.CommonConstants.INTERFACES;
 
 
 /**
@@ -33,7 +33,7 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
         LinkedHashSet<Class<?>> interfaces = new LinkedHashSet<>();
         ClassLoader classLoader = getClassLoader(invoker);
 
-        String config = invoker.getUrl().getParameter(Constants.INTERFACES);
+        String config = invoker.getUrl().getParameter(INTERFACES);
         if (StringUtils.isNotEmpty(config)) {
             String[] types = COMMA_SPLIT_PATTERN.split(config);
             for (String type : types) {

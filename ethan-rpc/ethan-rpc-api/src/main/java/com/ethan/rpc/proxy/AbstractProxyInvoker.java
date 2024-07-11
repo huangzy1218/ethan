@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
-import static com.ethan.rpc.Constants.PROVIDER_ASYNC_KEY;
-
 /**
  * This Invoker works on provider side, delegates RPC to interface implementation.
  *

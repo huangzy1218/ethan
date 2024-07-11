@@ -16,6 +16,13 @@ public class ReflectionServiceDescriptor implements ServiceDescriptor {
         this.serviceInterfaceClass = interfaceClass;
     }
 
+    public ReflectionServiceDescriptor(Class<?> interfaceClass) {
+        this.serviceInterfaceClass = interfaceClass;
+        this.interfaceName = interfaceClass.getName();
+        // todo
+        initMethods();
+    }
+
     @Override
     public String getInterfaceName() {
         return interfaceName;
@@ -33,10 +40,13 @@ public class ReflectionServiceDescriptor implements ServiceDescriptor {
         return methodModels;
     }
 
-
     @Override
     public List<MethodDescriptor> getMethods(String methodName) {
         return methods.get(methodName);
+    }
+
+    private void initMethods() {
+        // todo
     }
 
 }

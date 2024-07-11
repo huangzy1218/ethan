@@ -5,20 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.ethan</groupId>
-        <artifactId>ethan</artifactId>
+        <artifactId>ethan-remoting</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>ethan-registry</artifactId>
+    <artifactId>ethan-remoting-api</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.ethan</groupId>
-            <artifactId>ethan-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ethan</groupId>
-            <artifactId>ethan-remoting</artifactId>
-        </dependency>
-    </dependencies>
 </project>

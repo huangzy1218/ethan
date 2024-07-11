@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.ethan</groupId>
+        <artifactId>ethan-remoting</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>ethan-remoting-connector</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-remoting-api</artifactId>
+        </dependency>
+        <!-- Curator (Zookeeper client) -->
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+            <version>${curator.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-serialization</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-rpc-protocol</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

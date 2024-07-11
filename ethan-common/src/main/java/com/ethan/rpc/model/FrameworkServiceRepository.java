@@ -1,6 +1,7 @@
 package com.ethan.rpc.model;
 
 import com.ethan.common.util.ConcurrentHashMapUtils;
+import com.ethan.rpc.descriptor.ReflectionServiceDescriptor;
 import com.ethan.rpc.descriptor.ServiceDescriptor;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class FrameworkServiceRepository {
 
 
     /**
-     * Consumers ( key - group/interface:version value - consumerModel list).
+     * Consumers (key - group/interface:version value - consumerModel list).
      */
     private final ConcurrentMap<String, List<ConsumerModel>> consumers = new ConcurrentHashMap<>();
 
@@ -46,6 +47,11 @@ public class FrameworkServiceRepository {
 
     public ServiceDescriptor registerService(ServiceDescriptor serviceDescriptor) {
         return registerService(serviceDescriptor.getServiceInterfaceClass(), serviceDescriptor);
+    }
+
+    public ServiceDescriptor registerService(Class<?> interfaceClazz) {
+        ServiceDescriptor serviceDescriptor = new ReflectionServiceDescriptor(interfaceClazz);
+        return registerService(interfaceClazz, serviceDescriptor);
     }
 
     public ServiceDescriptor registerService(Class<?> interfaceClazz, ServiceDescriptor serviceDescriptor) {
