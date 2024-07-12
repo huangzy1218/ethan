@@ -182,3 +182,5 @@ Vethan-remoting/ethan-remoting-api/src/main/java/com/ethan/remoting/RemotingServ
 oethan-remoting/ethan-remoting-connector/src/main/java/com/ethan/remoting/tansport/netty/server/NettyServer.java,1\c\1cabb79e74ba5a3353c88f531159a62619ac0b0a
 T
 $ethan-rpc/ethan-rpc-protocol/pom.xml,5\f\5fddd854c39a8a8e1c74691ace60d16cb29c9d65
+t
+Dethan-common/src/main/java/com/ethan/rpc/model/ApplicationModel.java,f\f\ff68ebc9238b63398b37c0e8f1f5c9f287b8ef8b

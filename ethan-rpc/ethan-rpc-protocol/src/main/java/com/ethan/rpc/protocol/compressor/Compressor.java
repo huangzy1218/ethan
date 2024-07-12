@@ -1,7 +1,7 @@
 package com.ethan.rpc.protocol.compressor;
 
 import com.ethan.common.extension.SPI;
-import com.ethan.rpc.model.FrameworkModel;
+import com.ethan.rpc.model.ApplicationModel;
 import com.ethan.rpc.protocol.compressor.support.Identity;
 
 /**
@@ -14,17 +14,17 @@ public interface Compressor extends MessageEncoding {
 
     Compressor NONE = Identity.IDENTITY;
 
-    byte getContentTypeId();
-
-    static Compressor getCompressor(FrameworkModel frameworkModel, String compressorStr) {
+    static Compressor getCompressor(ApplicationModel ApplicationModel, String compressorStr) {
         if (null == compressorStr) {
             return null;
         }
         if (compressorStr.equals(Identity.MESSAGE_ENCODING)) {
             return NONE;
         }
-        return frameworkModel.getExtensionLoader(Compressor.class).getExtension(compressorStr);
+        return ApplicationModel.getExtensionLoader(Compressor.class).getExtension(compressorStr);
     }
+
+    byte getContentTypeId();
 
     /**
      * Compress payload.

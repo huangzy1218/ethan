@@ -3,7 +3,7 @@ package com.ethan.serialize.jdk;
 
 import com.ethan.common.extension.ExtensionLoader;
 import com.ethan.example.TestPojo;
-import com.ethan.rpc.model.FrameworkModel;
+import com.ethan.rpc.model.ApplicationModel;
 import com.ethan.serialize.ObjectInput;
 import com.ethan.serialize.ObjectOutput;
 import com.ethan.serialize.Serialization;
@@ -49,7 +49,7 @@ public class JavaSerializationTest {
     @Test
     void testReadObject2() throws Exception {
         ExtensionLoader<Serialization> extensionLoader =
-                FrameworkModel.defaultModel().getExtensionLoader(Serialization.class);
+                ApplicationModel.defaultModel().getExtensionLoader(Serialization.class);
         Serialization serialization = extensionLoader.getExtension("jdk");
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ObjectOutput objectOutput = serialization.serialize(outputStream);

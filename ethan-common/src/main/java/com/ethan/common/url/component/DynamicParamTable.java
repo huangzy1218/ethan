@@ -1,6 +1,6 @@
 package com.ethan.common.url.component;
 
-import com.ethan.rpc.model.FrameworkModel;
+import com.ethan.rpc.model.ApplicationModel;
 
 import java.util.*;
 
@@ -11,20 +11,19 @@ import java.util.*;
  */
 public class DynamicParamTable {
 
+    private static final Map<String, Integer> KEY2INDEX = new HashMap<>(64);
     /**
      * Keys array, value is string
      */
     private static String[] ORIGIN_KEYS;
-
     private static ParamValue[] VALUES;
-    private static final Map<String, Integer> KEY2INDEX = new HashMap<>(64);
-
-    private DynamicParamTable() {
-        throw new IllegalStateException();
-    }
 
     static {
         init();
+    }
+
+    private DynamicParamTable() {
+        throw new IllegalStateException();
     }
 
     public static int getKeyIndex(String key) {
@@ -56,7 +55,7 @@ public class DynamicParamTable {
         keys.add("");
         values.add(new ParamValue(null));
 
-        FrameworkModel.defaultModel()
+        ApplicationModel.defaultModel()
                 .getExtensionLoader(DynamicParamSource.class)
                 .getSupportedExtensionInstances()
                 .forEach(source -> source.init(keys, values));

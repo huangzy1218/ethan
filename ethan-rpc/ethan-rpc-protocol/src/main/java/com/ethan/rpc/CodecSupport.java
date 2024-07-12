@@ -1,7 +1,7 @@
 package com.ethan.rpc;
 
 import com.ethan.common.extension.ExtensionLoader;
-import com.ethan.rpc.model.FrameworkModel;
+import com.ethan.rpc.model.ApplicationModel;
 import com.ethan.rpc.protocol.compressor.Compressor;
 import com.ethan.serialize.Serialization;
 
@@ -26,7 +26,7 @@ public class CodecSupport {
 
     static {
         ExtensionLoader<Serialization> serializationExtensionLoader =
-                FrameworkModel.defaultModel().getExtensionLoader(Serialization.class);
+                ApplicationModel.defaultModel().getExtensionLoader(Serialization.class);
         Set<String> serializationSupportedExtensions = serializationExtensionLoader.getSupportedExtensions();
         for (String name : serializationSupportedExtensions) {
             Serialization serialization = serializationExtensionLoader.getExtension(name);
@@ -34,7 +34,7 @@ public class CodecSupport {
             ID_SERIALIZATION_MAP.put(idByte, serialization);
         }
         ExtensionLoader<Compressor> compressorExtensionLoader =
-                FrameworkModel.defaultModel().getExtensionLoader(Compressor.class);
+                ApplicationModel.defaultModel().getExtensionLoader(Compressor.class);
         Set<String> compressorSupportedExtensions = compressorExtensionLoader.getSupportedExtensions();
         for (String name : compressorSupportedExtensions) {
             Compressor compressor = compressorExtensionLoader.getExtension(name);

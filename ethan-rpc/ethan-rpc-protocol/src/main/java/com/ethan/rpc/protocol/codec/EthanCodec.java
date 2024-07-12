@@ -1,8 +1,5 @@
 package com.ethan.rpc.protocol.codec;
 
-import com.ethan.common.enumeration.CompressType;
-import com.ethan.common.enumeration.SerializationType;
-import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.Response;
 import com.ethan.rpc.AppResponse;
 import com.ethan.rpc.CodecSupport;
@@ -17,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -27,25 +23,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Slf4j
 public class EthanCodec implements Codec {
-
-    protected static final CompressType DEFAULT_REMOTING_COMPRESS = CompressType.GZIP;
-    protected static final SerializationType DEFAULT_REMOTING_SERIALIZATION = SerializationType.FASTJSON2;
-    protected static final int MAX_FRAME_LENGTH = 8 * 1024 * 1024;
-    protected static final byte TOTAL_LENGTH = 16;
-    protected static final int HEAD_LENGTH = 16;
-    protected static final short MAGIC = (short) 0xffff;
-    // Magic number to verify RpcMessage.
-    protected static final byte[] MAGIC_NUMBER = {(byte) 'g', (byte) 'r', (byte) 'p', (byte) 'c'};
-    protected static final byte VERSION = 1;
-    protected static final byte REQUEST_TYPE = 1;
-    protected static final byte RESPONSE_TYPE = 2;
-    // Ping.
-    protected static final byte HEARTBEAT_REQUEST_TYPE = 3;
-    // Pong.
-    protected static final byte HEARTBEAT_RESPONSE_TYPE = 4;
-    protected static final String PING = "ping";
-    protected static final String PONG = "pong";
-    private static final AtomicInteger ATOMIC_INTEGER = new AtomicInteger(0);
 
     public Short getMagicCode() {
         return MAGIC;

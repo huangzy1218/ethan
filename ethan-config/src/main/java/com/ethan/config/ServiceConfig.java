@@ -3,7 +3,7 @@ package com.ethan.config;
 import com.ethan.common.URL;
 import com.ethan.rpc.ProxyFactory;
 import com.ethan.rpc.descriptor.ServiceDescriptor;
-import com.ethan.rpc.model.FrameworkModel;
+import com.ethan.rpc.model.ApplicationModel;
 import com.ethan.rpc.model.FrameworkServiceRepository;
 import com.ethan.rpc.model.ProviderModel;
 
@@ -44,7 +44,7 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
             return;
         }
 
-        FrameworkServiceRepository repository = FrameworkModel.getServiceRepository();
+        FrameworkServiceRepository repository = ApplicationModel.getServiceRepository();
         ServiceDescriptor serviceDescriptor = repository.registerService(getInterfaceClass());
         providerModel = new ProviderModel(serviceKey, ref);
 

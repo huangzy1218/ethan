@@ -1,7 +1,7 @@
 package com.ethan.serialize.fastjson2;
 
 import com.ethan.common.bean.ScopeBeanFactory;
-import com.ethan.rpc.model.FrameworkModel;
+import com.ethan.rpc.model.ApplicationModel;
 import com.ethan.serialize.ObjectInput;
 import com.ethan.serialize.ObjectOutput;
 import com.ethan.serialize.Serialization;
@@ -23,12 +23,10 @@ import java.io.OutputStream;
 @Slf4j
 public class FastJson2Serialization implements Serialization {
 
-    private static final FrameworkModel frameworkModel = FrameworkModel.defaultModel();
-
     static {
-        ScopeBeanFactory beanFactory = frameworkModel.getBeanFactory();
+        ScopeBeanFactory beanFactory = ApplicationModel.getBeanFactory();
         beanFactory.registerBean(new Fastjson2CreatorManager());
-    }
+    }    private static final ApplicationModel ApplicationModel = ApplicationModel.defaultModel();
 
     @Override
     public byte getContentTypeId() {
@@ -37,17 +35,19 @@ public class FastJson2Serialization implements Serialization {
 
     @Override
     public ObjectOutput serialize(OutputStream output) throws IOException {
-        Fastjson2CreatorManager fastjson2CreatorManager = frameworkModel
+        Fastjson2CreatorManager fastjson2CreatorManager = ApplicationModel
                 .getBeanFactory().getBean(Fastjson2CreatorManager.class);
         return new FastJson2ObjectOutput(fastjson2CreatorManager, output);
     }
 
     @Override
     public ObjectInput deserialize(InputStream input) throws IOException {
-        Fastjson2CreatorManager fastjson2CreatorManager = frameworkModel
+        Fastjson2CreatorManager fastjson2CreatorManager = ApplicationModel
                 .getBeanFactory().getBean(Fastjson2CreatorManager.class);
         return new FastJson2ObjectInput(fastjson2CreatorManager, input);
     }
+
+
 
 }
 
