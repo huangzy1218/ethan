@@ -19,6 +19,7 @@ public class ApplicationModel implements ExtensionAccessor {
 
     private static final Object globalLock = new Object();
     private static volatile ApplicationModel defaultInstance;
+    @Getter
     private static FrameworkServiceRepository serviceRepository = new FrameworkServiceRepository();
     protected final Object instLock = new Object();
     private final Set<ClassLoader> classLoaders = new ConcurrentHashSet<>();
@@ -27,10 +28,6 @@ public class ApplicationModel implements ExtensionAccessor {
 
     public ApplicationModel() {
         initialize();
-    }
-
-    public static FrameworkServiceRepository getServiceRepository() {
-        return serviceRepository;
     }
 
     /**

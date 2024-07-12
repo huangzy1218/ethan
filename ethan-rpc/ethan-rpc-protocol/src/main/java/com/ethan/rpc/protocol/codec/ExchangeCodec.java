@@ -1,11 +1,11 @@
 package com.ethan.rpc.protocol.codec;
 
-import com.ethan.common.enumeration.CompressType;
-import com.ethan.common.enumeration.SerializationType;
+import com.ethan.common.util.ByteUtils;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.Response;
 import io.netty.buffer.ByteBuf;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,24 +14,17 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ExchangeCodec implements Codec {
 
-    protected static final CompressType DEFAULT_REMOTING_COMPRESS = CompressType.GZIP;
-    protected static final SerializationType DEFAULT_REMOTING_SERIALIZATION = SerializationType.FASTJSON2;
+    // Header length
     protected static final int HEADER_LENGTH = 16;
-    protected static final int MAX_FRAME_LENGTH = 8 * 1024 * 1024;
-    protected static final byte TOTAL_LENGTH = 16;
-    protected static final int HEAD_LENGTH = 16;
-    protected static final short MAGIC = (short) 0xffff;
-    // Magic number to verify RpcMessage.
-    protected static final byte[] MAGIC_NUMBER = {(byte) 'g', (byte) 'r', (byte) 'p', (byte) 'c'};
-    protected static final byte VERSION = 1;
-    protected static final byte REQUEST_TYPE = 1;
-    protected static final byte RESPONSE_TYPE = 2;
-    // Ping.
-    protected static final byte HEARTBEAT_REQUEST_TYPE = 3;
-    // Pong.
-    protected static final byte HEARTBEAT_RESPONSE_TYPE = 4;
-    protected static final String PING = "ping";
-    protected static final String PONG = "pong";
+    // Magic header
+    protected static final short MAGIC = (short) 0xdabb;
+    protected static final byte MAGIC_HIGH = ByteUtils.short2bytes(MAGIC)[0];
+    protected static final byte MAGIC_LOW = ByteUtils.short2bytes(MAGIC)[1];
+    // Message flag
+    protected static final byte FLAG_REQUEST = (byte) 0x80;
+    protected static final byte FLAG_TWOWAY = (byte) 0x40;
+    protected static final byte FLAG_EVENT = (byte) 0x20;
+    protected static final int SERIALIZATION_MASK = 0x1f;
     private static final AtomicInteger ATOMIC_INTEGER = new AtomicInteger(0);
 
 
@@ -53,34 +46,16 @@ public class ExchangeCodec implements Codec {
     }
 
     private Object decode(ByteBuf buffer, int readable, byte[] header) throws IOException {
-        // check magic number
+        // Check magic number
         if (readable > 0 && header[0] != MAGIC_HIGH || readable > 1 && header[1] != MAGIC_LOW) {
-            int length = header.length;
-            if (header.length < readable) {
-                header = Bytes.copyOf(header, readable);
-                buffer.readBytes(header, length, readable - length);
-            }
-            for (int i = 1; i < header.length - 1; i++) {
-                if (header[i] == MAGIC_HIGH && header[i + 1] == MAGIC_LOW) {
-                    buffer.readerIndex(buffer.readerIndex() - header.length + i);
-                    header = Bytes.copyOf(header, i);
-                    break;
-                }
-            }
-            return super.decode(channel, buffer, readable, header);
+            return DecodeResult.NEED_MAGIC_NUMBER;
         }
         // Check length
         if (readable < HEADER_LENGTH) {
             return DecodeResult.NEED_MORE_INPUT;
         }
         // Get data length
-        int len = Bytes.bytes2int(header, 12);
-        // When receiving response, how to exceed the length, then directly construct a response to the client.
-        // see more detail from https://github.com/apache/dubbo/issues/7021.
-        Object obj = finishRespWhenOverPayload(channel, len, header);
-        if (null != obj) {
-            return obj;
-        }
+        int len = ByteUtils.bytes2int(header, 12);
 
         int tt = len + HEADER_LENGTH;
         if (readable < tt) {
@@ -88,5 +63,87 @@ public class ExchangeCodec implements Codec {
         }
 
         return decodeBody(buffer, header);
+    }
+
+    protected Object decodeBody(ByteBuf is, byte[] header) throws IOException {
+        byte flag = header[2], proto = (byte) (flag & SERIALIZATION_MASK);
+        // get request id.
+        long id = ByteUtils.bytes2long(header, 4);
+        if ((flag & FLAG_REQUEST) == 0) {
+            // decode response.
+            Response res = new Response(id);
+            if ((flag & FLAG_EVENT) != 0) {
+                res.setEvent(true);
+            }
+            // get status.
+            byte status = header[3];
+            res.setStatus(status);
+            try {
+                if (status == Response.OK) {
+                    Object data;
+                    if (res.isEvent()) {
+                        byte[] eventPayload = CodecSupport.getPayload(is);
+                        if (CodecSupport.isHeartBeat(eventPayload, proto)) {
+                            // heart beat response data is always null;
+                            data = null;
+                        } else {
+                            data = decodeEventData(
+                                    channel,
+                                    CodecSupport.deserialize(
+                                            channel.getUrl(), new ByteArrayInputStream(eventPayload), proto),
+                                    eventPayload);
+                        }
+                    } else {
+                        data = decodeResponseData(
+                                channel,
+                                CodecSupport.deserialize(channel.getUrl(), is, proto),
+                                getRequestData(channel, res, id));
+                    }
+                    res.setResult(data);
+                } else {
+                    res.setErrorMessage(CodecSupport.deserialize(channel.getUrl(), is, proto)
+                            .readUTF());
+                }
+            } catch (Throwable t) {
+                res.setStatus(Response.CLIENT_ERROR);
+                res.setErrorMessage(StringUtils.toString(t));
+            }
+            return res;
+        } else {
+            // decode request.
+            Request req;
+            try {
+                Object data;
+                if ((flag & FLAG_EVENT) != 0) {
+                    byte[] eventPayload = CodecSupport.getPayload(is);
+                    if (CodecSupport.isHeartBeat(eventPayload, proto)) {
+                        // heart beat response data is always null;
+                        req = new HeartBeatRequest(id);
+                        ((HeartBeatRequest) req).setProto(proto);
+                        data = null;
+                    } else {
+                        req = new Request(id);
+                        data = decodeEventData(
+                                channel,
+                                CodecSupport.deserialize(
+                                        channel.getUrl(), new ByteArrayInputStream(eventPayload), proto),
+                                eventPayload);
+                    }
+                    req.setEvent(true);
+                } else {
+                    req = new Request(id);
+                    data = decodeRequestData(channel, CodecSupport.deserialize(channel.getUrl(), is, proto));
+                }
+                req.setData(data);
+            } catch (Throwable t) {
+                // bad request
+                req = new Request(id);
+                req.setBroken(true);
+                req.setData(t);
+            }
+            req.setVersion(Version.getProtocolVersion());
+            req.setTwoWay((flag & FLAG_TWOWAY) != 0);
+            return req;
+        }
     }
 }

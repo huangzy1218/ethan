@@ -1,6 +1,7 @@
 package com.ethan.config;
 
 import com.ethan.common.URL;
+import com.ethan.rpc.Exporter;
 import com.ethan.rpc.ProxyFactory;
 import com.ethan.rpc.descriptor.ServiceDescriptor;
 import com.ethan.rpc.model.ApplicationModel;
@@ -8,6 +9,7 @@ import com.ethan.rpc.model.FrameworkServiceRepository;
 import com.ethan.rpc.model.ProviderModel;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Service configuration, which encapsulates service information.
@@ -17,13 +19,15 @@ import java.util.List;
 public class ServiceConfig<T> extends ServiceConfigBase<T> {
 
     /**
+     * The exported services.
+     */
+    private final List<Exporter<?>> exporters = new CopyOnWriteArrayList<>();
+    /**
      * A {@link com.ethan.rpc.ProxyFactory} implementation that will generate a exported service proxy,
      * the JavassistProxyFactory is its default implementation.
      */
     private ProxyFactory proxyFactory;
-
     private ProviderModel providerModel;
-
     /**
      * Whether the provider has been exported.
      */
@@ -65,6 +69,18 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
 
         providerModel.setServiceUrls(urls);
 
+    }
+
+    private void exportLocal(URL url) {
+        URL local = URLBuilder.from(url)
+                .setProtocol(LOCAL_PROTOCOL)
+                .setHost(LOCALHOST_VALUE)
+                .setPort(0)
+                .build();
+        local = local.setScopeModel(getScopeModel()).setServiceModel(providerModel);
+        local = local.addParameter(EXPORTER_LISTENER_KEY, LOCAL_PROTOCOL);
+        doExportUrl(local, false, RegisterTypeEnum.AUTO_REGISTER);
+        logger.info("Export dubbo service " + interfaceClass.getName() + " to local registry url : " + local);
     }
 
     @Override

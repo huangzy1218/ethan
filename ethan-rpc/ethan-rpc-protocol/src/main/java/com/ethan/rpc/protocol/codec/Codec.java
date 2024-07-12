@@ -17,4 +17,10 @@ public interface Codec {
 
     Object decode(ByteBuf buffer) throws Exception;
 
+    enum DecodeResult {
+        NEED_MAGIC_NUMBER,
+        NEED_MORE_INPUT,
+        SKIP_SOME_INPUT
+    }
+
 }
