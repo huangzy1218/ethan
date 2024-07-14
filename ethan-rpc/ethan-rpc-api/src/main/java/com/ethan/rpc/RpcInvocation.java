@@ -1,5 +1,8 @@
 package com.ethan.rpc;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,6 +16,7 @@ import java.util.Map;
 public class RpcInvocation implements Invocation, Serializable {
 
     private static final long serialVersionUID = 5785837690188300781L;
+    @Setter
     private String methodName;
     private String interfaceName;
     private String serviceKey;
@@ -23,6 +27,9 @@ public class RpcInvocation implements Invocation, Serializable {
      * Only used on the caller side, will not appear on the wire.
      */
     private transient Map<Object, Object> attributes = Collections.synchronizedMap(new HashMap<>());
+    @Getter
+    @Setter
+    private transient InvokeMode invokeMode;
 
     public RpcInvocation(String methodName, String interfaceName,
                          String serviceKey, Class<?>[] parameterTypes,
@@ -32,6 +39,18 @@ public class RpcInvocation implements Invocation, Serializable {
         this.serviceKey = serviceKey;
         this.parameterTypes = parameterTypes;
         this.parameters = parameters;
+        this.invokeMode = InvokeMode.ASYNC;
+    }
+
+    public RpcInvocation(String methodName, String interfaceName,
+                         String serviceKey, Class<?>[] parameterTypes,
+                         Object[] parameters, InvokeMode invokeMode) {
+        this.methodName = methodName;
+        this.interfaceName = interfaceName;
+        this.serviceKey = serviceKey;
+        this.parameterTypes = parameterTypes;
+        this.parameters = parameters;
+        this.invokeMode = invokeMode;
     }
 
     @Override

@@ -5,6 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 /**
  * Simply represents the business result.
  *
@@ -61,6 +65,13 @@ public class AppResponse implements Result {
     @Override
     public boolean hasException() {
         return exception != null;
+    }
+
+    @Override
+    public Result get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+        throw new UnsupportedOperationException(
+                "AppResponse represents an concrete business response, there will be no status changes, " +
+                        "you should get internal values directly.");
     }
 
 }

@@ -1,6 +1,9 @@
 package com.ethan.rpc;
 
 import java.io.Serializable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Invoke result.
@@ -33,5 +36,8 @@ public interface Result extends Serializable {
      * @return Has exception
      */
     boolean hasException();
+
+
+    Result get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException;
 
 }

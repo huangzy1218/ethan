@@ -118,10 +118,11 @@ public class URL implements Serializable {
         return new URL(urlAddress, urlParam);
     }
 
-    public void addParameter(String key, String value) {
+    public URL addParameter(String key, String value) {
         urlParam.addParameter(key, value);
         // Invalidate cached service key
         this.serviceKey = null;
+        return this;
     }
 
     public String getServiceKey() {

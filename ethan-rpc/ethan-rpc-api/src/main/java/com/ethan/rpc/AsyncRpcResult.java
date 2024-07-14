@@ -3,6 +3,9 @@ package com.ethan.rpc;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * This class represents an unfinished RPC call, it will hold some context information for this call, for example RpcContext and Invocation,
@@ -16,10 +19,13 @@ public class AsyncRpcResult implements Result {
 
     private final Invocation invocation;
     private final CompletableFuture<AppResponse> responseFuture;
+    private final boolean async;
 
     public AsyncRpcResult(CompletableFuture<AppResponse> future, Invocation invocation) {
         this.responseFuture = future;
         this.invocation = invocation;
+        RpcInvocation rpcInvocation = (RpcInvocation) invocation;
+        async = InvokeMode.SYNC != rpcInvocation.getInvokeMode();
     }
 
     @Override
@@ -70,6 +76,25 @@ public class AsyncRpcResult implements Result {
         return getAppResponse().hasException();
     }
 
+    @Override
+    public Result get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+        long deadline = System.nanoTime() + unit.toNanos(timeout);
+
+        while (!responseFuture.isDone()) {
+            long restTime = deadline - System.nanoTime();
+            if (restTime <= 0) {
+                throw new TimeoutException("Timeout after " + unit.toMillis(timeout) + "ms waiting for result.");
+            }
+            try {
+                return responseFuture.get(restTime, TimeUnit.NANOSECONDS);
+            } catch (TimeoutException e) {
+                // Ignore
+            }
+        }
+
+        return responseFuture.get();
+    }
+
     public Result getAppResponse() {
         try {
             if (responseFuture.isDone()) {
@@ -84,6 +109,18 @@ public class AsyncRpcResult implements Result {
 
     private static Result createDefaultValue() {
         return new AppResponse();
+    }
+
+    public static AsyncRpcResult newDefaultAsyncResult(Object value, Throwable t, Invocation invocation) {
+        CompletableFuture<AppResponse> future = new CompletableFuture<>();
+        AppResponse result = new AppResponse(invocation);
+        if (t != null) {
+            result.setException(t);
+        } else {
+            result.setValue(value);
+        }
+        future.complete(result);
+        return new AsyncRpcResult(future, invocation);
     }
 
 }

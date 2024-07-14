@@ -15,6 +15,8 @@ public class RpcException extends RuntimeException {
     public static final int UNKNOWN_EXCEPTION = 0;
     public static final int NETWORK_EXCEPTION = 1;
     public static final int TIMEOUT_EXCEPTION = 2;
+    public static final int BIZ_EXCEPTION = 3;
+
 
     private static final long serialVersionUID = 8350498255142199397L;
 
@@ -43,6 +45,10 @@ public class RpcException extends RuntimeException {
     public RpcException(int code) {
         super();
         this.code = code;
+    }
+
+    public boolean isBiz() {
+        return code == BIZ_EXCEPTION;
     }
 
 }
