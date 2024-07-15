@@ -3,6 +3,7 @@ package com.ethan.rpc.protocol.codec;
 import com.ethan.common.util.ByteUtils;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.Response;
+import com.ethan.rpc.CodecSupport;
 import io.netty.buffer.ByteBuf;
 
 import java.io.ByteArrayInputStream;
@@ -22,7 +23,7 @@ public class ExchangeCodec implements Codec {
     protected static final byte MAGIC_LOW = ByteUtils.short2bytes(MAGIC)[1];
     // Message flag
     protected static final byte FLAG_REQUEST = (byte) 0x80;
-    protected static final byte FLAG_TWOWAY = (byte) 0x40;
+    protected static final byte FLAG_TWO_WAY = (byte) 0x40;
     protected static final byte FLAG_EVENT = (byte) 0x20;
     protected static final int SERIALIZATION_MASK = 0x1f;
     private static final AtomicInteger ATOMIC_INTEGER = new AtomicInteger(0);

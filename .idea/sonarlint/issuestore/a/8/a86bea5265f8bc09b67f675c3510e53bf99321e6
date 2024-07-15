@@ -1,5 +1,15 @@
 
-r
-java:S1068"1Remove this unused "interfaceName" private field.(üÌƒ‡ÿÿÿÿÿJ$d9040b38-7fbc-4d29-8865-2b05f5efe793
-i
-java:S1068".Remove this unused "returnType" private field.(öŸ.J$eebeb775-0de7-4706-86ea-3206b5bdf489
+L
+java:S2065"0Remove the "transient" modifier from this field.(Š¿­p8‚ÌÅ©‹2
+M
+java:S2065"0Remove the "transient" modifier from this field.(ÜÉĞ“8„ÌÅ©‹2
+L
+java:S2065"0Remove the "transient" modifier from this field.(öŸ.8„ÌÅ©‹2
+M
+java:S2065"0Remove the "transient" modifier from this field.(ÁÏâ8„ÌÅ©‹2
+R
+java:S2065"0Remove the "transient" modifier from this field.(º‡”Óøÿÿÿÿ8…ÌÅ©‹2
+y
+java:S1068"1Remove this unused "interfaceName" private field.(üÌƒ‡ÿÿÿÿÿ8³ÚÁ©‹2J$43e833a6-db95-4a1e-8758-da76ca342b2e
+p
+java:S1068".Remove this unused "returnType" private field.(öŸ.8³ÚÁ©‹2J$3c66e93c-f67f-45c1-844f-05a3c5efed19

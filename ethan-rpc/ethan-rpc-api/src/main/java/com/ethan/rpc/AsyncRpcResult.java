@@ -28,6 +28,26 @@ public class AsyncRpcResult implements Result {
         async = InvokeMode.SYNC != rpcInvocation.getInvokeMode();
     }
 
+    private static Result createDefaultValue() {
+        return new AppResponse();
+    }
+
+    public static AsyncRpcResult newDefaultAsyncResult(Throwable t, Invocation invocation) {
+        return newDefaultAsyncResult(null, t, invocation);
+    }
+
+    public static AsyncRpcResult newDefaultAsyncResult(Object value, Throwable t, Invocation invocation) {
+        CompletableFuture<AppResponse> future = new CompletableFuture<>();
+        AppResponse result = new AppResponse(invocation);
+        if (t != null) {
+            result.setException(t);
+        } else {
+            result.setValue(value);
+        }
+        future.complete(result);
+        return new AsyncRpcResult(future, invocation);
+    }
+
     @Override
     public Object getValue() {
         return getAppResponse().getValue();
@@ -105,22 +125,6 @@ public class AsyncRpcResult implements Result {
             throw new RpcException(e);
         }
         return createDefaultValue();
-    }
-
-    private static Result createDefaultValue() {
-        return new AppResponse();
-    }
-
-    public static AsyncRpcResult newDefaultAsyncResult(Object value, Throwable t, Invocation invocation) {
-        CompletableFuture<AppResponse> future = new CompletableFuture<>();
-        AppResponse result = new AppResponse(invocation);
-        if (t != null) {
-            result.setException(t);
-        } else {
-            result.setValue(value);
-        }
-        future.complete(result);
-        return new AsyncRpcResult(future, invocation);
     }
 
 }

@@ -3,7 +3,6 @@ package com.ethan.rpc;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.Map;
  *
  * @author Huang Z.Y.
  */
-public class RpcInvocation implements Invocation, Serializable {
+public class RpcInvocation implements Invocation {
 
     private static final long serialVersionUID = 5785837690188300781L;
     @Setter
@@ -30,6 +29,10 @@ public class RpcInvocation implements Invocation, Serializable {
     @Getter
     @Setter
     private transient InvokeMode invokeMode;
+    /**
+     * Passed to the remote server during RPC call.
+     */
+    private Map<String, String> attachments = new HashMap<>();
 
     public RpcInvocation(String methodName, String interfaceName,
                          String serviceKey, Class<?>[] parameterTypes,
@@ -76,6 +79,16 @@ public class RpcInvocation implements Invocation, Serializable {
     @Override
     public Object get(Object key) {
         return attributes.get(key);
+    }
+
+    @Override
+    public String getAttachment(String key) {
+        return attachments.get(key);
+    }
+
+    @Override
+    public void setAttachment(String key, String value) {
+        attachments.put(key, value);
     }
 
     @Override

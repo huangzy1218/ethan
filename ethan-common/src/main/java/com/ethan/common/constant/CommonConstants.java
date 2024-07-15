@@ -10,35 +10,22 @@ import java.util.regex.Pattern;
 public interface CommonConstants {
 
     String ETHAN = "ethan";
-
     String PATH_SEPARATOR = "/";
-
     String TIMEOUT_KEY = "timeout";
-
     String PROVIDERS_CATEGORY = "providers";
-
     String SESSION_KEY = "session";
-
     String DYNAMIC_KEY = "dynamic";
-
     String ANY_VALUE = "*";
-
     String GROUP_KEY = "group";
-
     String INTERFACE_KEY = "interface";
-
     String VERSION_KEY = "version";
-
+    String SIDE_KEY = "side";
     String CATEGORY_KEY = "category";
-
     String CONSUMERS_CATEGORY = "consumers";
-
+    String CONSUMER_SIDE = "consumer";
     Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
-
     int MAX_PROXY_COUNT = 65535;
-
     String NATIVE_STUB = "nativestub";
-
     String ETHAN_PROTOCOL = "ethan";
     String BIND_IP_KEY = "bind.ip";
     String COMPRESS_KEY = "message.compress";
@@ -53,12 +40,13 @@ public interface CommonConstants {
     String INTERFACES = "interfaces";
     String INTERFACE = "interface";
     String PROVIDER_ASYNC_KEY = "PROVIDER_ASYNC";
+    String ASYNC_KEY = "async";
+    String THREAD_NAME_KEY = "threadname";
 
 
     /*=======================================================================================
      * Default configuration
      *======================================================================================*/
-    String DEFAULT_PROTOCOL = ETHAN_PROTOCOL;
     String DEFAULT_SERIALIZATION = "fastjson2";
     String DEFAULT_COMPRESS = "gzip";
     int DEFAULT_IO_THREADS = Math.min(Runtime.getRuntime().availableProcessors() + 1, 32);
@@ -68,6 +56,7 @@ public interface CommonConstants {
     String DEFAULT_EXTENSION_PATH = "META-INF/ethan/";
     String EXTENSION_INTERNAL_PATH = "META-INF/ethan/internal/";
     String EXTENSION_SERVICE_PATH = "META-INF/ethan/internal/service/";
-
+    int DEFAULT_CORE_POOL_SIZE = Runtime.getRuntime().availableProcessors();
+    int DEFAULT_KEEP_ALIVE_TIME = 60;
 
 }

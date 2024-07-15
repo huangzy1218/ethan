@@ -1,12 +1,14 @@
 package com.ethan.rpc;
 
+import java.io.Serializable;
+
 /**
  * Invocation (API, Prototype, NonThreadSafe).
  *
  * @author Huang Z.Y.
  * @see Invoker#invoke(Invocation)
  */
-public interface Invocation {
+public interface Invocation extends Serializable {
 
     /**
      * Get method name.
@@ -38,9 +40,21 @@ public interface Invocation {
     Object[] getParameters();
 
     Object put(Object key, Object value);
-    
+
 
     Object get(Object key);
 
+    /**
+     * Get attachment by key.
+     *
+     * @return Attachment value.
+     * @serial
+     */
+    String getAttachment(String key);
+
+    /**
+     * For supporting Object transmission.
+     */
+    void setAttachment(String key, String value);
 
 }

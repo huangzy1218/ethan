@@ -1,5 +1,8 @@
 package com.ethan.rpc.support;
 
+import com.ethan.common.URL;
+import com.ethan.rpc.Invocation;
+
 /**
  * @author Huang Z.Y.
  */
@@ -24,6 +27,15 @@ public class RpcUtils {
             // ignore
         }
         return timeout;
+    }
+
+    public static int calculateTimeout(URL url, int defaultTimeout) {
+        int timeout = Integer.parseInt(url.getParameter("timeout"));
+        return Math.min(defaultTimeout, timeout);
+    }
+
+    public static String getMethodName(Invocation invocation) {
+        return invocation.getMethodName();
     }
 
 }

@@ -15,8 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.ethan.common.constant.CommonConstants.CATEGORY_KEY;
-import static com.ethan.common.constant.CommonConstants.GROUP_KEY;
+import static com.ethan.common.constant.CommonConstants.*;
 
 /**
  * URL (Uniform Resource Locator).<br/>
@@ -37,8 +36,8 @@ public class URL implements Serializable {
 
     private final URLAddress urlAddress;
     private final URLParam urlParam;
+    private final Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
     protected volatile Map<String, Object> attributes;
-    Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
     private transient volatile String serviceKey;
 
     public URL(String protocol, String host, int port, String interfaceName) {
@@ -125,6 +124,11 @@ public class URL implements Serializable {
         // Invalidate cached service key
         this.serviceKey = null;
         return this;
+    }
+
+    public boolean hasParameter(String key) {
+        String value = getParameter(key);
+        return StringUtils.isNotEmpty(value);
     }
 
     public String getServiceKey() {
@@ -215,6 +219,10 @@ public class URL implements Serializable {
         return getParameter(GROUP_KEY);
     }
 
+    public String getVersion() {
+        return getParameter(VERSION_KEY);
+    }
+
     public String getGroup(String defaultValue) {
         String value = getGroup();
         return StringUtils.isEmpty(value) ? defaultValue : value;
@@ -222,6 +230,10 @@ public class URL implements Serializable {
 
     public String getAddress() {
         return urlAddress == null ? null : urlAddress.getAddress();
+    }
+
+    public String getSide() {
+        return getParameter(SIDE_KEY);
     }
 
     public String getServiceInterface() {
