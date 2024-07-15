@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
 
+import static com.ethan.common.constant.CommonConstants.DEFAULT_CONNECT_TIMEOUT;
 import static com.ethan.remoting.tansport.netty.NettyEventLoopFactory.shouldEpoll;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 

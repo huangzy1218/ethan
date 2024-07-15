@@ -1,0 +1,3 @@
+cglib=com.ethan.rpc.proxy.cglib.CglibProxyFactory
+javassist=com.ethan.rpc.proxy.javassist.JavassistProxyFactory
+jdk=com.ethan.rpc.proxy.jdk.JdkProxyFactory

@@ -42,7 +42,8 @@ public interface CommonConstants {
     String PROVIDER_ASYNC_KEY = "PROVIDER_ASYNC";
     String ASYNC_KEY = "async";
     String THREAD_NAME_KEY = "threadname";
-
+    String SERVER_THREAD_POOL_NAME = "EthanServerHandler";
+    String LOCAL_PROTOCOL = "native";
 
     /*=======================================================================================
      * Default configuration
@@ -58,5 +59,7 @@ public interface CommonConstants {
     String EXTENSION_SERVICE_PATH = "META-INF/ethan/internal/service/";
     int DEFAULT_CORE_POOL_SIZE = Runtime.getRuntime().availableProcessors();
     int DEFAULT_KEEP_ALIVE_TIME = 60;
+    String DEFAULT_PROXY = "javassist";
+
 
 }

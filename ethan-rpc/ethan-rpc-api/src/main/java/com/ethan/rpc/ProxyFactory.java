@@ -1,12 +1,14 @@
 package com.ethan.rpc;
 
 import com.ethan.common.URL;
+import com.ethan.common.extension.SPI;
 
 /**
  * Proxy factory.
  *
  * @author Huang Z.Y.
  */
+@SPI
 public interface ProxyFactory {
 
     /**

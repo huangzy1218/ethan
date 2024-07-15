@@ -1,38 +1,56 @@
 package com.ethan.rpc.protocol.local;
 
 import com.ethan.common.URL;
+import com.ethan.common.threadpool.AdaptiveExecuteService;
 import com.ethan.common.url.component.ServiceAddressURL;
+import com.ethan.common.util.ExecutorUtils;
 import com.ethan.rpc.*;
 import com.ethan.rpc.protocol.AbstractInvoker;
 import com.ethan.rpc.support.RpcUtils;
+import lombok.Setter;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 import static com.ethan.common.constant.CommonConstants.*;
 
 /**
+ * Invoker in local JVM.
+ *
  * @author Huang Z.Y.
  */
 public class NativeInvoker<T> extends AbstractInvoker<T> {
 
-    private volatile Exporter<?> exporter;
-
+    /**
+     * Service key.
+     */
+    private final String key;
+    private final Map<String, Exporter<?>> exporterMap;
+    @Setter
+    private volatile Exporter<?> exporter = null;
     private volatile URL consumerUrl = null;
 
-    public NativeInvoker(Class<T> type, URL url, Exporter<?> exporter) {
+    public NativeInvoker(Class<T> type, URL url, String key, Map<String, Exporter<?>> exporterMap) {
         super(type, url);
-        this.exporter = exporter;
+        this.key = key;
+        this.exporterMap = exporterMap;
     }
 
     @Override
     protected Result doInvoke(Invocation invocation) throws Throwable {
+        if (exporter == null) {
+            exporter = NativeProtocol.getExporter(exporterMap, getUrl());
+            if (exporter == null) {
+                throw new RpcException("Service [" + key + "] not found.");
+            }
+        }
         // Solve local exposure, the server opens the token, and the client call fails.
         Invoker<?> invoker = exporter.getInvoker();
+        // Solve local exposure, the server opens the token, and the client call fails
         URL serverURL = invoker.getUrl();
         if (consumerUrl == null) {
-            // no need to sync, multi-objects is acceptable and will be gc-ed.
+            // No need to sync, multi-objects is acceptable and will be gc-ed.
             consumerUrl =
                     new ServiceAddressURL(serverURL.getUrlAddress(), serverURL.getUrlParam(), getUrl());
         }
@@ -47,75 +65,34 @@ public class NativeInvoker<T> extends AbstractInvoker<T> {
 
         if (isAsync(invoker.getUrl(), getUrl())) {
             ((RpcInvocation) invocation).setInvokeMode(InvokeMode.ASYNC);
-            ExecutorService executor = ExecutorService
+            ExecutorService executor = AdaptiveExecuteService.newDefaultExecutor(ExecutorUtils.setThreadName(getUrl(),
+                    SERVER_THREAD_POOL_NAME));
+            Invoker<?> finalInvoker = invoker;
             CompletableFuture<AppResponse> appResponseFuture = CompletableFuture.supplyAsync(
                     () -> {
-                        // clear thread local before child invocation, prevent context pollution
-                        InternalThreadLocalMap originTL = InternalThreadLocalMap.getAndRemove();
-                        try {
-                            RpcContext.getServiceContext().setRemoteAddress(LOCALHOST_VALUE, 0);
-                            RpcContext.getServiceContext().setRemoteApplicationName(getUrl().getApplication());
-                            Result result = invoker.invoke(copiedInvocation);
-                            if (result.hasException()) {
-                                AppResponse appResponse = new AppResponse(result.getException());
-                                appResponse.setObjectAttachments(new HashMap<>(result.getObjectAttachments()));
-                                return appResponse;
-                            } else {
-                                rebuildValue(invocation, invoker, result);
-                                AppResponse appResponse = new AppResponse(result.getValue());
-                                appResponse.setObjectAttachments(new HashMap<>(result.getObjectAttachments()));
-                                return appResponse;
-                            }
-                        } finally {
-                            InternalThreadLocalMap.set(originTL);
+                        Result result = finalInvoker.invoke(invocation);
+                        if (result.hasException()) {
+                            return new AppResponse(result.getException());
+                        } else {
+                            return new AppResponse(result.getValue());
                         }
-                    },
-                    executor);
-            // save for 2.6.x compatibility, for example, TraceFilter in Zipkin uses com.alibaba.xxx.FutureAdapter
-            if (setFutureWhenSync || ((RpcInvocation) invocation).getInvokeMode() != InvokeMode.SYNC) {
-                FutureContext.getContext().setCompatibleFuture(appResponseFuture);
-            }
-            AsyncRpcResult result = new AsyncRpcResult(appResponseFuture, copiedInvocation);
+                    }, executor);
+            AsyncRpcResult result = new AsyncRpcResult(appResponseFuture, invocation);
             result.setExecutor(executor);
             return result;
         } else {
             Result result;
-            // clear thread local before child invocation, prevent context pollution
-            InternalThreadLocalMap originTL = InternalThreadLocalMap.getAndRemove();
-            try {
-                RpcContext.getServiceContext().setRemoteAddress(LOCALHOST_VALUE, 0);
-                RpcContext.getServiceContext().setRemoteApplicationName(getUrl().getApplication());
-                result = invoker.invoke(copiedInvocation);
-            } finally {
-                InternalThreadLocalMap.set(originTL);
-            }
+            // Clear thread local before child invocation, prevent context pollution
+            result = invoker.invoke(invocation);
             CompletableFuture<AppResponse> future = new CompletableFuture<>();
-            AppResponse rpcResult = new AppResponse(copiedInvocation);
-            if (result instanceof AsyncRpcResult) {
-                result.whenCompleteWithContext((r, t) -> {
-                    if (t != null) {
-                        rpcResult.setException(t);
-                    } else {
-                        if (r.hasException()) {
-                            rpcResult.setException(r.getException());
-                        } else {
-                            Object rebuildValue = rebuildValue(invocation, invoker, r.getValue());
-                            rpcResult.setValue(rebuildValue);
-                        }
-                    }
-                    rpcResult.setObjectAttachments(new HashMap<>(r.getObjectAttachments()));
-                    future.complete(rpcResult);
-                });
+            AppResponse rpcResult = new AppResponse(invocation);
+
+            if (result.hasException()) {
+                rpcResult.setException(result.getException());
             } else {
-                if (result.hasException()) {
-                    rpcResult.setException(result.getException());
-                } else {
-                    Object rebuildValue = rebuildValue(invocation, invoker, result.getValue());
-                    rpcResult.setValue(rebuildValue);
-                }
-                rpcResult.setObjectAttachments(new HashMap<>(result.getObjectAttachments()));
-                future.complete(rpcResult);
+                rpcResult.setValue(result.getValue());
             }
+            future.complete(rpcResult);
             return new AsyncRpcResult(future, invocation);
         }
     }

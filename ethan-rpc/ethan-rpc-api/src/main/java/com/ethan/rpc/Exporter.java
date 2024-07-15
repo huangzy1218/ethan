@@ -7,13 +7,12 @@ package com.ethan.rpc;
  */
 public interface Exporter<T> {
 
-    // todo
-
     /**
      * get invoker.
      *
      * @return invoker
      */
     Invoker<T> getInvoker();
-    
+
+    void unexport();
 }

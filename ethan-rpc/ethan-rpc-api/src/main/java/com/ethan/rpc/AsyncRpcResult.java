@@ -2,10 +2,7 @@ package com.ethan.rpc;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 /**
  * This class represents an unfinished RPC call, it will hold some context information for this call, for example RpcContext and Invocation,
@@ -20,6 +17,7 @@ public class AsyncRpcResult implements Result {
     private final Invocation invocation;
     private final CompletableFuture<AppResponse> responseFuture;
     private final boolean async;
+    private Executor executor;
 
     public AsyncRpcResult(CompletableFuture<AppResponse> future, Invocation invocation) {
         this.responseFuture = future;
@@ -68,6 +66,10 @@ public class AsyncRpcResult implements Result {
             log.error("Get exception when trying to fetch the underlying result.");
             throw new RpcException(e);
         }
+    }
+
+    public void setExecutor(Executor executor) {
+        this.executor = executor;
     }
 
     @Override

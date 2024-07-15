@@ -33,6 +33,7 @@ public class JavassistProxy {
         ctClass.addConstructor(constructor);
 
         // Add method implementations for each interface method
+        // Add method implementations for each interface method
         for (Class<?> iface : interfaces) {
             for (Method method : iface.getMethods()) {
                 String methodName = method.getName();
@@ -57,9 +58,23 @@ public class JavassistProxy {
                 }
 
                 methodBody.append("});\n")
-                        .append("    return (").append(method.getReturnType().getName()).append(") ")
-                        .append("handler.invoke(this, m, $args);\n")
-                        .append("  } catch (Throwable t) {\n")
+                        .append("    Object result = handler.invoke(this, m, $args);\n");
+
+                // Check if the return type is a primitive type
+                if (returnType.isPrimitive()) {
+                    if (returnType.getName().equals("int")) {
+                        methodBody.append("    return (").append(returnType.getName()).append(") ((Integer) result).intValue();\n");
+                    } else if (returnType.getName().equals("boolean")) {
+                        methodBody.append("    return (").append(returnType.getName()).append(") ((Boolean) result).booleanValue();\n");
+                    } else if (returnType.getName().equals("long")) {
+                        methodBody.append("    return (").append(returnType.getName()).append(") ((Long) result).longValue();\n");
+                    }
+                    // Add other primitive types as needed
+                } else {
+                    methodBody.append("    return (").append(method.getReturnType().getName()).append(") result;\n");
+                }
+
+                methodBody.append("  } catch (Throwable t) {\n")
                         .append("    throw new RuntimeException(t);\n")
                         .append("  }\n")
                         .append("}");

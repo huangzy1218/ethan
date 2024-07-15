@@ -3,7 +3,7 @@ package com.example;
 /**
  * @author Huang Z.Y.
  */
-class DemoServiceImpl implements DemoService {
+public class DemoServiceImpl implements DemoService {
 
     @Override
     public String sayHello(String name) {
@@ -14,7 +14,12 @@ class DemoServiceImpl implements DemoService {
     public int plus(int a, int b) {
         return 0;
     }
-    
+
+
+    public Object invoke(String service, String method) throws Exception {
+        System.out.println(service + ":" + method);
+        return service + ":" + method;
+    }
 }
 
     

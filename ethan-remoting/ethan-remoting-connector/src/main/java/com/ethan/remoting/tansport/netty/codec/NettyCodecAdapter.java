@@ -10,9 +10,6 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.ethan.rpc.Constants.MAX_FRAME_LENGTH;
-import static com.ethan.rpc.Constants.TOTAL_LENGTH;
-
 /**
  * Netty codec adapter.
  *
@@ -26,6 +23,12 @@ public class NettyCodecAdapter {
     private final ChannelHandler decoder = new InternalDecoder();
 
     private final URL url;
+    private final Codec codec;
+
+    public NettyCodecAdapter(Codec codec, URL url) {
+        this.codec = codec;
+        this.url = url;
+    }
 
     public ChannelHandler getEncoder() {
         return encoder;
@@ -33,13 +36,6 @@ public class NettyCodecAdapter {
 
     public ChannelHandler getDecoder() {
         return decoder;
-    }
-
-    private final Codec codec;
-
-    public NettyCodecAdapter(Codec codec, URL url) {
-        this.codec = codec;
-        this.url = url;
     }
 
     private class InternalEncoder extends MessageToByteEncoder<Message> {

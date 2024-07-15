@@ -1,15 +1,15 @@
 
-L
-java:S2065"0Remove the "transient" modifier from this field.(Š¿­p8‚ÌÅ©‹2
-M
-java:S2065"0Remove the "transient" modifier from this field.(ÜÉĞ“8„ÌÅ©‹2
-L
-java:S2065"0Remove the "transient" modifier from this field.(öŸ.8„ÌÅ©‹2
-M
-java:S2065"0Remove the "transient" modifier from this field.(ÁÏâ8„ÌÅ©‹2
-R
-java:S2065"0Remove the "transient" modifier from this field.(º‡”Óøÿÿÿÿ8…ÌÅ©‹2
+r
+java:S2065"0Remove the "transient" modifier from this field.(Š¿­p8‚ÌÅ©‹2J$9757419b-a375-480f-9b4b-8e5fb31e759c
+s
+java:S2065"0Remove the "transient" modifier from this field.(ÜÉĞ“8„ÌÅ©‹2J$7ffcd941-16fd-408f-93bf-ccd59d13bd89
+r
+java:S2065"0Remove the "transient" modifier from this field.(öŸ.8„ÌÅ©‹2J$cc4e8f5e-1939-4319-bfc1-9fe641845965
+s
+java:S2065"0Remove the "transient" modifier from this field.(ÁÏâ8„ÌÅ©‹2J$48289767-029d-4d3a-a76a-51fda05fe22b
+x
+java:S2065"0Remove the "transient" modifier from this field.(º‡”Óøÿÿÿÿ8…ÌÅ©‹2J$065a96a8-8cf0-4b9d-9208-fc4df25ffa40
 y
-java:S1068"1Remove this unused "interfaceName" private field.(üÌƒ‡ÿÿÿÿÿ8³ÚÁ©‹2J$43e833a6-db95-4a1e-8758-da76ca342b2e
+java:S1068"1Remove this unused "interfaceName" private field.(üÌƒ‡ÿÿÿÿÿ8³ÚÁ©‹2J$e3efa6de-4ca8-4972-a25a-48846c950560
 p
-java:S1068".Remove this unused "returnType" private field.(öŸ.8³ÚÁ©‹2J$3c66e93c-f67f-45c1-844f-05a3c5efed19
+java:S1068".Remove this unused "returnType" private field.(öŸ.8³ÚÁ©‹2J$db9b8cee-0286-48ae-a89b-3d68a993a686
