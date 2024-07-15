@@ -33,7 +33,6 @@ public class JavassistProxy {
         ctClass.addConstructor(constructor);
 
         // Add method implementations for each interface method
-        // Add method implementations for each interface method
         for (Class<?> iface : interfaces) {
             for (Method method : iface.getMethods()) {
                 String methodName = method.getName();

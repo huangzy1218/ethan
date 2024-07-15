@@ -12,6 +12,8 @@ public class JavassistProxyFactoryTest {
     @Test
     void proxy() throws Exception {
         // Create JavassistProxyFactory instance
+//        ProxyFactory proxyFactory = ApplicationModel.defaultModel()
+//                .getExtensionLoader(ProxyFactory.class).getExtension(DEFAULT_PROXY);
         JavassistProxyFactory proxyFactory = new JavassistProxyFactory();
         // Create UserService instance
         HelloService userService = new HelloServiceImpl();

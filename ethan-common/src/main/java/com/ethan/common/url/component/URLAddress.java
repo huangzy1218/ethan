@@ -10,15 +10,15 @@ import lombok.Data;
 @Data
 public class URLAddress {
 
+    /**
+     * Cache.
+     */
+    protected transient String rawAddress;
     private String protocol;
     private String host;
     private int port;
     private String interfaceName;
     private URLParam urlParam;
-    /**
-     * Cache.
-     */
-    protected transient String rawAddress;
 
 
     public URLAddress(String protocol, String host, int port) {
@@ -46,7 +46,7 @@ public class URLAddress {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(protocol).append("://").append(host).append(":").append(port).append("/").append(interfaceName);
+        sb.append(protocol).append("://").append(host).append(":").append(port).append(interfaceName);
         String paramString = urlParam.toString();
         if (!paramString.equals("{}")) {
             sb.append("?").append(paramString.substring(1, paramString.length() - 1).replace(", ", "&"));

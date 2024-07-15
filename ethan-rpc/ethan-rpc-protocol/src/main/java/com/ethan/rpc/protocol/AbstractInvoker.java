@@ -5,6 +5,8 @@ import com.ethan.remoting.RemotingException;
 import com.ethan.rpc.*;
 import com.ethan.rpc.support.RpcUtils;
 import com.ethan.serialize.SerializationException;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
@@ -31,6 +33,13 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
      * Url.
      */
     private final URL url;
+
+    /**
+     * Available.
+     */
+    @Getter
+    @Setter
+    private volatile boolean available = true;
 
     public AbstractInvoker(Class<T> type, URL url) {
         this.type = type;
@@ -128,6 +137,10 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
     }
 
     protected abstract Result doInvoke(Invocation invocation) throws Throwable;
+
+    public boolean isAvailable() {
+        return available;
+    }
 
 }
     

@@ -47,14 +47,13 @@ public class NativeInvoker<T> extends AbstractInvoker<T> {
         }
         // Solve local exposure, the server opens the token, and the client call fails.
         Invoker<?> invoker = exporter.getInvoker();
-        // Solve local exposure, the server opens the token, and the client call fails
         URL serverURL = invoker.getUrl();
         if (consumerUrl == null) {
             // No need to sync, multi-objects is acceptable and will be gc-ed.
             consumerUrl =
                     new ServiceAddressURL(serverURL.getUrlAddress(), serverURL.getUrlParam(), getUrl());
         }
-
+        
         int timeout = RpcUtils.calculateTimeout(consumerUrl, DEFAULT_TIMEOUT);
         if (timeout <= 0) {
             return AsyncRpcResult.newDefaultAsyncResult(
@@ -103,6 +102,16 @@ public class NativeInvoker<T> extends AbstractInvoker<T> {
             return localUrl.getParameter(ASYNC_KEY, false);
         }
         return remoteUrl.getParameter(ASYNC_KEY, false);
+    }
+
+    @Override
+    public boolean isAvailable() {
+        NativeExporter<?> exporter = (NativeExporter<?>) exporterMap.get(key);
+        if (exporter == null) {
+            return false;
+        } else {
+            return super.isAvailable();
+        }
     }
 
 }

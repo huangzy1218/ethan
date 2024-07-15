@@ -1,27 +1,30 @@
 package com.ethan.rpc.protocol.local;
 
 import com.ethan.common.URL;
-import com.ethan.rpc.Exporter;
-import com.ethan.rpc.Invoker;
-import com.ethan.rpc.Protocol;
-import com.ethan.rpc.ProxyFactory;
+import com.ethan.rpc.*;
 import com.ethan.rpc.model.ApplicationModel;
+import com.ethan.rpc.proxy.jdk.JdkProxyFactory;
 import com.example.DemoService;
 import com.example.DemoServiceImpl;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
-import static com.ethan.common.constant.CommonConstants.*;
+import static com.ethan.common.constant.CommonConstants.INTERFACE_KEY;
+import static com.ethan.common.constant.CommonConstants.LOCAL_PROTOCOL;
 
 public class NativeProtocolTest {
     private final Protocol protocol = ApplicationModel.defaultModel()
             .getExtensionLoader(Protocol.class).getExtension(LOCAL_PROTOCOL);
-    private final ProxyFactory proxy = ApplicationModel.defaultModel()
-            .getExtensionLoader(ProxyFactory.class).getExtension(DEFAULT_PROXY);
-    private final List<Exporter<?>> exporters = new ArrayList<>();
+    //    private final ProxyFactory proxy = ApplicationModel.defaultModel()
+//            .getExtensionLoader(ProxyFactory.class).getExtension(DEFAULT_PROXY);
+    private final ProxyFactory proxy = new JdkProxyFactory();
+    Class<?>[] types = new Class[]{String.class};
+    Object[] args = new Object[]{(String) "Huang Z.Y."};
+    Invocation invocation = new RpcInvocation("sayHello", DemoService.class.getName(),
+            "default/DemoService:1.0", types, args);
+    private Map<String, Exporter<?>> exporters = new HashMap<>();
 
     @Test
     void testLocalProtocol() throws Exception {
@@ -31,16 +34,17 @@ public class NativeProtocolTest {
                 URL.valueOf("native://127.0.0.1:8080/DemoService")
                         .addParameter(INTERFACE_KEY, DemoService.class.getName()));
         Exporter<?> exporter = protocol.export(invoker);
-        exporters.add(exporter);
         Invoker<DemoService> refer = protocol.refer(
                 DemoService.class,
                 URL.valueOf("native://127.0.0.1:8080/DemoService")
                         .addParameter(INTERFACE_KEY, DemoService.class.getName()));
         service = proxy.getProxy(refer);
-        service.invoke("native://127.0.0.1:8080/DemoService", "invoke");
-
+        Object result = service.invoke("native://127.0.0.1:8080/DemoService", "invoke");
+//        Assertions.assertEquals("native://127.0.0.1:8080/DemoService:invoke", result);
+        URL serviceUrl = URL.valueOf("native://127.0.0.1/TestService");
+        exporters.put(serviceUrl.getServiceKey(), exporter);
         NativeInvoker<?> nativeInvoker = new NativeInvoker<>(
-                DemoService.class, URL.valueOf("native://127.0.0.1/TestService"), null, new HashMap<>());
-
+                DemoService.class, serviceUrl, serviceUrl.getServiceKey(), exporters);
+        Result res = nativeInvoker.invoke(invocation);
     }
 }

@@ -1,7 +1,10 @@
 package com.ethan.rpc.support;
 
 import com.ethan.common.URL;
+import com.ethan.common.util.StringUtils;
 import com.ethan.rpc.Invocation;
+
+import static com.ethan.common.constant.CommonConstants.TIMEOUT_KEY;
 
 /**
  * @author Huang Z.Y.
@@ -30,8 +33,11 @@ public class RpcUtils {
     }
 
     public static int calculateTimeout(URL url, int defaultTimeout) {
-        int timeout = Integer.parseInt(url.getParameter("timeout"));
-        return Math.min(defaultTimeout, timeout);
+        String timeout = url.getParameter(TIMEOUT_KEY);
+        if (StringUtils.isNotEmpty(timeout)) {
+            return Math.min(Integer.parseInt(timeout), defaultTimeout);
+        }
+        return defaultTimeout;
     }
 
     public static String getMethodName(Invocation invocation) {
