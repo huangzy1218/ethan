@@ -1,4 +1,0 @@
-hessian=com.ethan.serialize.hessian2.Hessian2Serialization
-fastjson2=com.ethan.serialize.fastjson2.FastJson2Serialization
-jdk=com.ethan.serialize.jdk.JavaSerialization
-kryo=com.ethan.serialize.kryo.KryoSerialization

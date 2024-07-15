@@ -3,6 +3,7 @@ package com.ethan.common;
 import com.ethan.common.url.component.URLAddress;
 import com.ethan.common.url.component.URLParam;
 import com.ethan.common.util.StringUtils;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -29,6 +30,7 @@ import static com.ethan.common.constant.CommonConstants.GROUP_KEY;
  */
 @Data
 @Builder
+@AllArgsConstructor
 public class URL implements Serializable {
 
     private static final long serialVersionUID = -4205514094465803451L;

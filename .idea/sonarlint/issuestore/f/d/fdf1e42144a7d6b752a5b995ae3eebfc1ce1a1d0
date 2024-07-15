@@ -1,12 +1,12 @@
 
- 	java:S116'"^Rename this field "COMMA_SPLIT_PATTERN" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(—ÁÏä8¼´·å‰2J$64cda09b-e4a8-400f-aefc-ec57e556f0f3
+ 	java:S116)"^Rename this field "COMMA_SPLIT_PATTERN" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(—ÁÏä8¼´·å‰2J$9bc2d26d-b1e7-4085-9860-069fe5c97608
 o
-java:S1948$",Make "urlAddress" transient or serializable.(çõÃÔ8½´·å‰2J$6af4ffd4-3e24-446a-b02c-05249dcb5bb0
+java:S1948&",Make "urlAddress" transient or serializable.(çõÃÔ8½´·å‰2J$f5f65be6-67b7-45ee-9bb1-1d2dfc639e0c
 r
-java:S1948%"*Make "urlParam" transient or serializable.(Ø‹àïúÿÿÿÿ8½´·å‰2J$f109653d-bee5-4a5f-9a7e-5ec207132674
+java:S1948'"*Make "urlParam" transient or serializable.(Ø‹àïúÿÿÿÿ8½´·å‰2J$ddc208be-e107-4be6-a243-e62e5a300b27
 t
-java:S1948&",Make "attributes" transient or serializable.(Ü•æíûÿÿÿÿ8½´·å‰2J$6390dfda-8624-4c02-9e37-d6f3ca174edc
+java:S1948(",Make "attributes" transient or serializable.(Ü•æíûÿÿÿÿ8½´·å‰2J$43018ec9-4989-45ff-ae68-bb82068f5ade
 Ÿ
-java:S3077&"WUse a thread-safe type; adding "volatile" is not enough to make this field thread-safe.(Ü•æíûÿÿÿÿ8¾´·å‰2J$252a56f3-6f56-4027-8b9d-9c2ac6b4655f
+java:S3077("WUse a thread-safe type; adding "volatile" is not enough to make this field thread-safe.(Ü•æíûÿÿÿÿ8¾´·å‰2J$1c9a3815-5df3-4864-8a6d-a76c1516a2db
 x
-java:S6397'"5Replace this character class by the character itself.(—ÁÏä8¿´·å‰2J$6a15aec5-ceba-44bd-bb83-7ad332d8bb3a
+java:S6397)"5Replace this character class by the character itself.(—ÁÏä8¿´·å‰2J$76c1bb5e-3660-45c2-8943-fffee43c13db

@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>ethan-rpc-api</artifactId>
-
+    
     <build>
         <plugins>
             <plugin>

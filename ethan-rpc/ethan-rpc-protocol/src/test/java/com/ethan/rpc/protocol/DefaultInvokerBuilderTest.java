@@ -22,15 +22,6 @@ class DefaultInvokerBuilderTest {
 
     // Mocked Invocation
     private RpcInvocation invocation;
-
-    @BeforeEach
-    public void setUp() throws Exception {
-        Class<?>[] types = new Class[]{String.class};
-        Object[] args = new Object[]{(String) "Huang Z.Y."};
-        invocation = new RpcInvocation("sayHello", DemoService.class.getName(),
-                "default/DemoService:1.0", types, args);
-    }
-
     // Test class extending AbstractInvoker for testing purposes
     private AbstractInvoker<DemoService> invoker = new AbstractInvoker<>(DemoService.class, url) {
         @Override
@@ -49,7 +40,6 @@ class DefaultInvokerBuilderTest {
                             Thread.sleep(100); // Simulate processing time
                             result.setValue("Async response");
                             // You can set other attributes of result as needed
-                            // For example, result.setException(new Exception("Async exception"));
                         } catch (InterruptedException e) {
                             result.setException(e);
                         }
@@ -60,6 +50,14 @@ class DefaultInvokerBuilderTest {
             return null;
         }
     };
+
+    @BeforeEach
+    void setUp() {
+        Class<?>[] types = new Class[]{String.class};
+        Object[] args = new Object[]{(String) "Huang Z.Y."};
+        invocation = new RpcInvocation("sayHello", DemoService.class.getName(),
+                "default/DemoService:1.0", types, args);
+    }
 
     @Test
     void testSyncInvoke() {
@@ -75,7 +73,7 @@ class DefaultInvokerBuilderTest {
     }
 
     @Test
-    public void testAsyncInvoke() {
+    void testAsyncInvoke() {
         // Prepare invocation for asynchronous call
         invocation.setInvokeMode(InvokeMode.ASYNC);
 

@@ -12,7 +12,7 @@ import java.util.HashMap;
 class BeanProviderTest {
 
     @Test
-    public void testGetBeanFromContext() {
+    void testGetBeanFromContext() {
         URLParam bean = BeanProvider.getBean(URLParam.class);
         HashMap<String, String> map = new HashMap<>();
         map.put("key", "value");

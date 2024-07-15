@@ -1,13 +1,14 @@
 
+ˆ	java:S112Q"FDefine and throw a dedicated exception instead of using a generic one.(æ®ğŠ8 ï¡‹2J$2cf941b1-fcac-48f9-bc52-203bf5cd5172
 “
-java:S3776"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(ñÄ÷ˆşÿÿÿÿJ$b133933b-d977-4734-a24f-bcbea7eaa3b2
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(ñÄ÷ˆşÿÿÿÿJ$1bd0d043-91bc-4310-ab5a-046149b1d184
 f
-java:S1181*"%Catch Exception instead of Throwable.(’¯í»ÿÿÿÿÿJ$f5372323-86a2-4a59-867e-cbdb16d929c4
-i	java:S108*")Either remove or fill this block of code.(’¯í»ÿÿÿÿÿJ$190e1513-1c64-4dea-bbfe-5e4e7ddd9295
+java:S1181)"%Catch Exception instead of Throwable.(’¯í»ÿÿÿÿÿJ$f0af355c-9ab1-4d0a-a5f3-fd61f7f5b531
+i	java:S108)")Either remove or fill this block of code.(’¯í»ÿÿÿÿÿJ$862cc32b-994b-41c8-a43a-a8e4304860ea
 f
-java:S11816"%Catch Exception instead of Throwable.(’¯í»ÿÿÿÿÿJ$99105f36-ff34-49c3-a468-41f92576c56c
-i	java:S1086")Either remove or fill this block of code.(’¯í»ÿÿÿÿÿJ$a08a1474-e324-4e04-b1a7-f0814df9395f
+java:S11815"%Catch Exception instead of Throwable.(’¯í»ÿÿÿÿÿJ$623769f9-0d88-44bd-b8ef-bb1c1ace9196
+i	java:S1085")Either remove or fill this block of code.(’¯í»ÿÿÿÿÿJ$7f4ec21a-a858-4cd8-8aba-55a673d1766f
 m
-java:S1181>"%Catch Exception instead of Throwable.(•”ø¾øÿÿÿÿ8¾¸†ˆ2J$5f64e42d-26d8-4296-b455-494c30a9ef07
+java:S1181="%Catch Exception instead of Throwable.(•”ø¾øÿÿÿÿ8¾¸†ˆ2J$30c82131-dd47-4160-a52d-972589c51940
 o
-java:S1172N".Remove this unused method parameter "invoker".(ë™ ÜÿÿÿÿÿJ$8a3d1d3c-f969-4cd0-ae67-c15fa520e41e
+java:S1172M".Remove this unused method parameter "invoker".(ë™ ÜÿÿÿÿÿJ$c261e389-aac1-4938-82a4-7d3061c4a5d8

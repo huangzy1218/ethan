@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>com.ethan</groupId>
-            <artifactId>ethan-serialization</artifactId>
+            <artifactId>ethan-serialization-hub</artifactId>
         </dependency>
         <dependency>
             <groupId>com.ethan</groupId>

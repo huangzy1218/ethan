@@ -26,7 +26,7 @@ public class FastJson2Serialization implements Serialization {
     static {
         ScopeBeanFactory beanFactory = ApplicationModel.getBeanFactory();
         beanFactory.registerBean(new Fastjson2CreatorManager());
-    }    private static final ApplicationModel ApplicationModel = ApplicationModel.defaultModel();
+    }
 
     @Override
     public byte getContentTypeId() {
@@ -46,7 +46,6 @@ public class FastJson2Serialization implements Serialization {
                 .getBeanFactory().getBean(Fastjson2CreatorManager.class);
         return new FastJson2ObjectInput(fastjson2CreatorManager, input);
     }
-
 
 
 }

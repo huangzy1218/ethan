@@ -9,9 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.ethan.rpc.Constants.DEFAULT_REMOTING_COMPRESS;
-import static com.ethan.rpc.Constants.DEFAULT_REMOTING_SERIALIZATION;
-
 
 /**
  * Default support of codec.
@@ -44,13 +41,11 @@ public class CodecSupport {
     }
 
     public static Compressor getCompressor(byte id) {
-        return ID_COMPRESSOR_MAP.getOrDefault(id,
-                ID_COMPRESSOR_MAP.get(DEFAULT_REMOTING_COMPRESS.getCode()));
+        return ID_COMPRESSOR_MAP.get(id);
     }
 
     public static Serialization getSerialization(byte id) {
-        return ID_SERIALIZATION_MAP.getOrDefault(id,
-                ID_SERIALIZATION_MAP.get(DEFAULT_REMOTING_SERIALIZATION.getCode()));
+        return ID_SERIALIZATION_MAP.get(id);
     }
 
 }

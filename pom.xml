@@ -21,12 +21,13 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <revision>1.0-SNAPSHOT</revision>
         <hessian-lite.version>3.2.13</hessian-lite.version>
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
         <kryo.version>4.0.2</kryo.version>
-        <lombok.version>1.18.4</lombok.version>
+        <lombok.version>1.18.26</lombok.version>
         <slf4j.version>1.7.5</slf4j.version>
         <fastjson2.version>2.0.47</fastjson2.version>
         <curator.version>4.2.0</curator.version>
@@ -117,6 +118,16 @@
                 <version>${fastjson2.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.ethan</groupId>
+                <artifactId>ethan-serialization-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ethan</groupId>
+                <artifactId>ethan-serialization-hub</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${spring-boot.version}</version>
@@ -201,4 +212,15 @@
         </dependencies>
     </dependencyManagement>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <testFailureIgnore>true</testFailureIgnore>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -12,8 +12,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.*;
 
-import static com.ethan.rpc.Constants.DEFAULT_TIMEOUT;
-import static com.ethan.rpc.Constants.TIMEOUT_KEY;
+import static com.ethan.common.constant.CommonConstants.DEFAULT_TIMEOUT;
+import static com.ethan.common.constant.CommonConstants.TIMEOUT_KEY;
+
 
 /**
  * Custom future.
@@ -22,23 +23,18 @@ import static com.ethan.rpc.Constants.TIMEOUT_KEY;
  */
 public class DefaultFuture extends CompletableFuture<Object> {
 
-    private long id;
     private static final Map<Long, DefaultFuture> FUTURES = new ConcurrentHashMap<>();
-
-    @Getter
-    private final Channel channel;
-
-    private final Request request;
-
-    private volatile long sent;
-
-
     private static final ScheduledExecutorService TIMEOUT_EXECUTOR =
             Executors.newScheduledThreadPool(1);
+    private static final Map<Long, Channel> CHANNELS = new ConcurrentHashMap<>();
+    @Getter
+    private final Channel channel;
+    private final Request request;
     @Getter
     private final int timeout;
-    private static final Map<Long, Channel> CHANNELS = new ConcurrentHashMap<>();
     private final long start = System.currentTimeMillis();
+    private long id;
+    private volatile long sent;
 
 
     private DefaultFuture(Channel channel, Request request, int timeout) {
@@ -76,43 +72,6 @@ public class DefaultFuture extends CompletableFuture<Object> {
         task.run();
     }
 
-    private static class TimeoutCheckTask {
-
-        private final Long requestID;
-
-        TimeoutCheckTask(Long requestID) {
-            this.requestID = requestID;
-        }
-
-        public void run() {
-            DefaultFuture future = DefaultFuture.getFuture(requestID);
-            if (future == null || future.isDone()) {
-                return;
-            }
-
-
-            notifyTimeout(future);
-        }
-
-        private void notifyTimeout(DefaultFuture future) {
-            // Create exception response.
-            Response timeoutResponse = new Response(future.getId());
-            // Set timeout status
-            timeoutResponse.setStatus(future.isSent() ? Response.SERVER_TIMEOUT : Response.CLIENT_TIMEOUT);
-            timeoutResponse.setErrorMsg(future.getTimeoutMessage(true));
-            // Handle response
-            DefaultFuture.received(future.getChannel(), timeoutResponse);
-        }
-    }
-
-    private boolean isSent() {
-        return sent > 0;
-    }
-
-    private void doSent() {
-        sent = System.currentTimeMillis();
-    }
-
     public static void sent(Channel channel, Request request) {
         DefaultFuture future = FUTURES.get(request.getId());
         if (future != null) {
@@ -129,6 +88,18 @@ public class DefaultFuture extends CompletableFuture<Object> {
         } finally {
             CHANNELS.remove(response.getId());
         }
+    }
+
+    public static DefaultFuture getFuture(long id) {
+        return FUTURES.get(id);
+    }
+
+    private boolean isSent() {
+        return sent > 0;
+    }
+
+    private void doSent() {
+        sent = System.currentTimeMillis();
     }
 
     private void doReceived(Response res) {
@@ -169,8 +140,33 @@ public class DefaultFuture extends CompletableFuture<Object> {
         return id;
     }
 
-    public static DefaultFuture getFuture(long id) {
-        return FUTURES.get(id);
+    private static class TimeoutCheckTask {
+
+        private final Long requestID;
+
+        TimeoutCheckTask(Long requestID) {
+            this.requestID = requestID;
+        }
+
+        public void run() {
+            DefaultFuture future = DefaultFuture.getFuture(requestID);
+            if (future == null || future.isDone()) {
+                return;
+            }
+
+
+            notifyTimeout(future);
+        }
+
+        private void notifyTimeout(DefaultFuture future) {
+            // Create exception response.
+            Response timeoutResponse = new Response(future.getId());
+            // Set timeout status
+            timeoutResponse.setStatus(future.isSent() ? Response.SERVER_TIMEOUT : Response.CLIENT_TIMEOUT);
+            timeoutResponse.setErrorMsg(future.getTimeoutMessage(true));
+            // Handle response
+            DefaultFuture.received(future.getChannel(), timeoutResponse);
+        }
     }
 
 }

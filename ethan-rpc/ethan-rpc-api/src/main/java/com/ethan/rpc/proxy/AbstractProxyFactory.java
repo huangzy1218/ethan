@@ -10,8 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedHashSet;
 
-import static com.ethan.common.constant.CommonConstants.COMMA_SPLIT_PATTERN;
-import static com.ethan.common.constant.CommonConstants.INTERFACES;
+import static com.ethan.common.constant.CommonConstants.*;
 
 
 /**
@@ -48,7 +47,7 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
         if (generic) {
             try {
                 // Find the real interface from url
-                String realInterface = invoker.getUrl().getParameter(Constants.INTERFACE);
+                String realInterface = invoker.getUrl().getParameter(INTERFACE);
                 realInterfaceClass = ReflectUtils.forName(classLoader, realInterface);
                 interfaces.add(realInterfaceClass);
             } catch (Throwable ignored) {

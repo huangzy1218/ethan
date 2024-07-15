@@ -10,5 +10,10 @@
     </parent>
 
     <artifactId>ethan-remoting-api</artifactId>
-
+    <dependencies>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-serialization-api</artifactId>
+        </dependency>
+    </dependencies>
 </project>

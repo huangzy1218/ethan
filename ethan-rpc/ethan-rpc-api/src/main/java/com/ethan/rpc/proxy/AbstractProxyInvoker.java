@@ -1,6 +1,7 @@
 package com.ethan.rpc.proxy;
 
 import com.ethan.common.URL;
+import com.ethan.common.constant.CommonConstants;
 import com.ethan.rpc.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,7 +60,7 @@ public abstract class AbstractProxyInvoker<T> implements Invoker<T> {
     @SuppressWarnings("unchecked")
     private CompletableFuture<Object> wrapWithFuture(Object value, Invocation invocation) {
         if (value instanceof CompletableFuture) {
-            invocation.put(PROVIDER_ASYNC_KEY, Boolean.TRUE);
+            invocation.put(CommonConstants.PROVIDER_ASYNC_KEY, Boolean.TRUE);
             return (CompletableFuture<Object>) value;
         }
         return CompletableFuture.completedFuture(value);

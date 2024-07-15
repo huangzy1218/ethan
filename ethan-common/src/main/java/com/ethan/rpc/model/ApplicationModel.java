@@ -14,20 +14,23 @@ import java.util.Set;
  *
  * @author Huang Z.Y.
  */
-@Getter
 public class ApplicationModel implements ExtensionAccessor {
 
     private static final Object globalLock = new Object();
     private static volatile ApplicationModel defaultInstance;
     @Getter
     private static FrameworkServiceRepository serviceRepository = new FrameworkServiceRepository();
+    private static volatile ScopeBeanFactory beanFactory = new ScopeBeanFactory();
     protected final Object instLock = new Object();
     private final Set<ClassLoader> classLoaders = new ConcurrentHashSet<>();
-    private volatile ScopeBeanFactory beanFactory;
     private volatile ExtensionDirector extensionDirector;
 
     public ApplicationModel() {
         initialize();
+    }
+
+    public static ScopeBeanFactory getBeanFactory() {
+        return beanFactory;
     }
 
     /**

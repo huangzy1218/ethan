@@ -5,24 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.ethan</groupId>
-        <artifactId>ethan-rpc</artifactId>
+        <artifactId>ethan-serialization</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>ethan-rpc-protocol</artifactId>
+    <artifactId>ethan-serialization-api</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.ethan</groupId>
-            <artifactId>ethan-rpc-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ethan</groupId>
-            <artifactId>ethan-serialization-hub</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ethan</groupId>
-            <artifactId>ethan-remoting-api</artifactId>
+            <artifactId>ethan-common</artifactId>
         </dependency>
     </dependencies>
 

@@ -24,6 +24,10 @@ public class ScopeBeanFactory {
 
     private final ConcurrentHashMap<Class<?>, AtomicInteger> beanNameIdCounterMap = new ConcurrentHashMap<>();
 
+    public ScopeBeanFactory() {
+        this(null);
+    }
+    
     public ScopeBeanFactory(ScopeBeanFactory parent) {
         this.parent = parent;
     }
