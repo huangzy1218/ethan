@@ -91,4 +91,10 @@ public class ConfigManager implements ApplicationExt {
         return ConfigurationUtils.getSubIds(environment.getConfigurationMaps(), prefix);
     }
 
+    private <T extends AbstractConfig> T createConfig(Class<T> cls)
+            throws ReflectiveOperationException {
+        T config = cls.getDeclaredConstructor().newInstance();
+        return config;
+    }
+
 }
