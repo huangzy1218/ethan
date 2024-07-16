@@ -1,6 +1,8 @@
 package com.ethan.rpc.model;
 
 import com.ethan.common.bean.ScopeBeanFactory;
+import com.ethan.common.config.ConfigManager;
+import com.ethan.common.context.ApplicationExt;
 import com.ethan.common.extension.ExtensionAccessor;
 import com.ethan.common.extension.ExtensionDirector;
 import com.ethan.common.util.Assert;
@@ -20,9 +22,10 @@ public class ApplicationModel implements ExtensionAccessor {
     private static volatile ApplicationModel defaultInstance;
     @Getter
     private static FrameworkServiceRepository serviceRepository = new FrameworkServiceRepository();
-    private static volatile ScopeBeanFactory beanFactory = new ScopeBeanFactory();
+    private static volatile ScopeBeanFactory scopeBeanFactory = new ScopeBeanFactory();
     protected final Object instLock = new Object();
     private final Set<ClassLoader> classLoaders = new ConcurrentHashSet<>();
+    private volatile ConfigManager configManager;
     private volatile ExtensionDirector extensionDirector;
 
     public ApplicationModel() {
@@ -30,7 +33,7 @@ public class ApplicationModel implements ExtensionAccessor {
     }
 
     public static ScopeBeanFactory getBeanFactory() {
-        return beanFactory;
+        return scopeBeanFactory;
     }
 
     /**
@@ -65,7 +68,7 @@ public class ApplicationModel implements ExtensionAccessor {
      */
     protected void initialize() {
         synchronized (instLock) {
-            this.beanFactory = new ScopeBeanFactory(null);
+            this.scopeBeanFactory = new ScopeBeanFactory(null);
             this.extensionDirector = new ExtensionDirector();
             // Add Framework's ClassLoader by default
             ClassLoader ethanClassLoader = ApplicationModel.class.getClassLoader();
@@ -84,6 +87,14 @@ public class ApplicationModel implements ExtensionAccessor {
     @Override
     public ExtensionDirector getExtensionDirector() {
         return extensionDirector;
+    }
+
+    public ConfigManager getApplicationConfigManager() {
+        if (configManager == null) {
+            configManager = (ConfigManager)
+                    this.getExtensionLoader(ApplicationExt.class).getExtension(ConfigManager.NAME);
+        }
+        return configManager;
     }
 
 }

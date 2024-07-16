@@ -1,5 +1,7 @@
 package com.ethan.config;
 
+import com.ethan.common.config.AbstractInterfaceConfig;
+import com.ethan.common.config.ConsumerConfig;
 import com.ethan.common.constant.CommonConstants;
 import com.ethan.common.util.StringUtils;
 import com.ethan.rpc.EthanStub;

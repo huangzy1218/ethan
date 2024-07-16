@@ -23,6 +23,7 @@ public interface CommonConstants {
     String CATEGORY_KEY = "category";
     String CONSUMERS_CATEGORY = "consumers";
     String CONSUMER_SIDE = "consumer";
+    String LOCALHOST_VALUE = "127.0.0.1";
     Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
     int MAX_PROXY_COUNT = 65535;
     String NATIVE_STUB = "nativestub";

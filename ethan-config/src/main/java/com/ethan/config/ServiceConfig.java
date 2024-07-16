@@ -1,21 +1,27 @@
 package com.ethan.config;
 
 import com.ethan.common.URL;
+import com.ethan.common.config.ProtocolConfig;
 import com.ethan.rpc.Exporter;
 import com.ethan.rpc.ProxyFactory;
 import com.ethan.rpc.descriptor.ServiceDescriptor;
 import com.ethan.rpc.model.ApplicationModel;
 import com.ethan.rpc.model.FrameworkServiceRepository;
 import com.ethan.rpc.model.ProviderModel;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import static com.ethan.common.constant.CommonConstants.LOCALHOST_VALUE;
+import static com.ethan.common.constant.CommonConstants.LOCAL_PROTOCOL;
 
 /**
  * Service configuration, which encapsulates service information.
  *
  * @author Huang Z.Y.
  */
+@Slf4j
 public class ServiceConfig<T> extends ServiceConfigBase<T> {
 
     /**
@@ -77,10 +83,10 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
                 .setHost(LOCALHOST_VALUE)
                 .setPort(0)
                 .build();
-        local = local.setScopeModel(getScopeModel()).setServiceModel(providerModel);
+        local = local.setServiceModel(providerModel);
         local = local.addParameter(EXPORTER_LISTENER_KEY, LOCAL_PROTOCOL);
         doExportUrl(local, false, RegisterTypeEnum.AUTO_REGISTER);
-        logger.info("Export dubbo service " + interfaceClass.getName() + " to local registry url : " + local);
+        log.info("Export dubbo service " + interfaceClass.getName() + " to local registry url : " + local);
     }
 
     @Override

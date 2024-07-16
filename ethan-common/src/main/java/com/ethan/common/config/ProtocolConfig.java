@@ -1,8 +1,6 @@
-package com.ethan.config;
+package com.ethan.common.config;
 
 import com.ethan.common.util.StringUtils;
-
-import java.io.Serializable;
 
 import static com.ethan.common.constant.CommonConstants.DEFAULT_SERIALIZATION;
 import static com.ethan.common.constant.CommonConstants.ETHAN_PROTOCOL;
@@ -12,7 +10,7 @@ import static com.ethan.common.constant.CommonConstants.ETHAN_PROTOCOL;
  *
  * @author Huang Z.Y.
  */
-public class ProtocolConfig implements Serializable {
+public class ProtocolConfig extends AbstractConfig {
 
     private static final long serialVersionUID = -3298984911642858706L;
 

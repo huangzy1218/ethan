@@ -1,5 +1,7 @@
 package com.ethan.config;
 
+import com.ethan.common.config.AbstractInterfaceConfig;
+import com.ethan.common.config.ProviderConfig;
 import com.ethan.common.util.StringUtils;
 
 /**
@@ -55,7 +57,6 @@ public abstract class ServiceConfigBase<T> extends AbstractInterfaceConfig {
         }
         return interfaceClass;
     }
-
-
+    
 }
     
