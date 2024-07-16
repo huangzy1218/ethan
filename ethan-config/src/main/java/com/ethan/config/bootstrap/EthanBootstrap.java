@@ -11,6 +11,11 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
 
 /**
+ * The bootstrap class of Ethan.<br/>
+ * Get singleton instance by calling static method {@link #getInstance()}.
+ * Designed as singleton because some classes inside Ethan, such as {@link com.ethan.common.extension.ExtensionLoader}, are designed only for one instance
+ * per process.
+ *
  * @author Huang Z.Y.
  */
 public final class EthanBootstrap {
@@ -19,6 +24,8 @@ public final class EthanBootstrap {
     private static volatile EthanBootstrap instance;
     private final ApplicationModel applicationModel;
     private final ConfigManager configManager;
+    private final Object startLock = new Object();
+    protected volatile boolean initialized = false;
 
     public EthanBootstrap(ApplicationModel applicationModel) {
         this.applicationModel = applicationModel;
@@ -38,7 +45,7 @@ public final class EthanBootstrap {
 
     public static EthanBootstrap getInstance(ApplicationModel applicationModel) {
         return ConcurrentHashMapUtils.computeIfAbsent(
-                instanceMap, applicationModel, _k -> new EthanBootstrap(applicationModel));
+                instanceMap, applicationModel, k -> new EthanBootstrap(applicationModel));
     }
 
     /**
@@ -79,6 +86,41 @@ public final class EthanBootstrap {
     public EthanBootstrap application(ApplicationConfig applicationConfig) {
         configManager.setApplication(applicationConfig);
         return this;
+    }
+
+    public void initialize() {
+        if (initialized) {
+            return;
+        }
+        // Ensure that the initialization is completed when concurrent calls
+        synchronized (startLock) {
+            if (initialized) {
+                return;
+            }
+            onInitialize();
+
+            // register shutdown hook
+            registerShutdownHook();
+
+            startConfigCenter();
+
+            loadApplicationConfigs();
+
+            initModuleDeployers();
+
+            initMetricsReporter();
+
+            initMetricsService();
+
+            // @since 2.7.8
+            startMetadataCenter();
+
+            initialized = true;
+        }
+    }
+
+    private void startConfigCenter() {
+        configManager.loadConfigsOfTypeFromProps(ApplicationConfig.class);
     }
 
 }

@@ -2,6 +2,7 @@ package com.ethan.rpc.model;
 
 import com.ethan.common.bean.ScopeBeanFactory;
 import com.ethan.common.config.ConfigManager;
+import com.ethan.common.config.Environment;
 import com.ethan.common.context.ApplicationExt;
 import com.ethan.common.extension.ExtensionAccessor;
 import com.ethan.common.extension.ExtensionDirector;
@@ -25,6 +26,7 @@ public class ApplicationModel implements ExtensionAccessor {
     private static volatile ScopeBeanFactory scopeBeanFactory = new ScopeBeanFactory();
     protected final Object instLock = new Object();
     private final Set<ClassLoader> classLoaders = new ConcurrentHashSet<>();
+    private volatile Environment environment;
     private volatile ConfigManager configManager;
     private volatile ExtensionDirector extensionDirector;
 
@@ -95,6 +97,14 @@ public class ApplicationModel implements ExtensionAccessor {
                     this.getExtensionLoader(ApplicationExt.class).getExtension(ConfigManager.NAME);
         }
         return configManager;
+    }
+
+    public Environment modelEnvironment() {
+        if (environment == null) {
+            environment =
+                    (Environment) this.getExtensionLoader(ApplicationExt.class).getExtension(Environment.NAME);
+        }
+        return environment;
     }
 
 }
