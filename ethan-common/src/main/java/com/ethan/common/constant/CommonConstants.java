@@ -19,6 +19,7 @@ public interface CommonConstants {
     String GROUP_KEY = "group";
     String INTERFACE_KEY = "interface";
     String VERSION_KEY = "version";
+    String PATH_KEY = "path";
     String SIDE_KEY = "side";
     String CATEGORY_KEY = "category";
     String CONSUMERS_CATEGORY = "consumers";

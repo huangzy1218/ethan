@@ -1,4 +1,4 @@
-package com.ethan.remoting.tansport.netty;
+package com.ethan.remoting.transport.netty;
 
 import com.ethan.common.URL;
 import com.ethan.remoting.Channel;
@@ -15,24 +15,44 @@ import java.util.concurrent.ConcurrentMap;
  * Netty Channel, a encapsulation for {@link io.netty.channel.Channel}.
  *
  * @author Huang Z.Y.
- * @see org.jboss.netty.channel.Channel
+ * @see java.nio.channels.Channel
  */
 @Slf4j
 public class NettyChannel implements Channel {
 
+    private static final ConcurrentMap<io.netty.channel.Channel, NettyChannel> CHANNEL_MAP =
+            new ConcurrentHashMap<>();
+    private final io.netty.channel.Channel channel;
+    private final URL url;
     private volatile boolean closed;
 
 
-    private static final ConcurrentMap<io.netty.channel.Channel, NettyChannel> CHANNEL_MAP =
-            new ConcurrentHashMap<>();
-
-    private final io.netty.channel.Channel channel;
-    private final URL url;
-
-
-    private NettyChannel(io.netty.channel.Channel channel, URL url) {
+    public NettyChannel(io.netty.channel.Channel channel, URL url) {
         this.channel = channel;
         this.url = url;
+    }
+
+    public static void removeChannelIfDisconnected(io.netty.channel.Channel ch) {
+        if (ch != null && !ch.isActive()) {
+            CHANNEL_MAP.remove(ch);
+        }
+    }
+
+    public static NettyChannel getOrAddChannel(io.netty.channel.Channel ch, URL url) {
+        if (ch == null) {
+            return null;
+        }
+        NettyChannel ret = CHANNEL_MAP.get(ch);
+        if (ret == null) {
+            NettyChannel nc = new NettyChannel(ch, url);
+            if (ch.isActive()) {
+                ret = CHANNEL_MAP.putIfAbsent(ch, nc);
+            }
+            if (ret == null) {
+                ret = nc;
+            }
+        }
+        return ret;
     }
 
     @Override
@@ -113,29 +133,6 @@ public class NettyChannel implements Channel {
     @Override
     public URL getUrl() {
         return url;
-    }
-
-    public static void removeChannelIfDisconnected(io.netty.channel.Channel ch) {
-        if (ch != null && !ch.isActive()) {
-            CHANNEL_MAP.remove(ch);
-        }
-    }
-
-    public static NettyChannel getOrAddChannel(io.netty.channel.Channel ch, URL url) {
-        if (ch == null) {
-            return null;
-        }
-        NettyChannel ret = CHANNEL_MAP.get(ch);
-        if (ret == null) {
-            NettyChannel nc = new NettyChannel(ch, url);
-            if (ch.isActive()) {
-                ret = CHANNEL_MAP.putIfAbsent(ch, nc);
-            }
-            if (ret == null) {
-                ret = nc;
-            }
-        }
-        return ret;
     }
 
 }

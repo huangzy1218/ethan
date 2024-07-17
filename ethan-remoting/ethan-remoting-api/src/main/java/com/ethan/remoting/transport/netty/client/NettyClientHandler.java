@@ -1,10 +1,10 @@
-package com.ethan.remoting.tansport.netty.client;
+package com.ethan.remoting.transport.netty.client;
 
 import com.ethan.common.URL;
 import com.ethan.common.context.BeanProvider;
 import com.ethan.remoting.exchange.Response;
 import com.ethan.remoting.exchange.support.DefaultFuture;
-import com.ethan.remoting.tansport.netty.NettyChannel;
+import com.ethan.remoting.transport.netty.NettyChannel;
 import com.ethan.rpc.Message;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

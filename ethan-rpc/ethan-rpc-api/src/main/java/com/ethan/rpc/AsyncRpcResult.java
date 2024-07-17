@@ -34,6 +34,10 @@ public class AsyncRpcResult implements Result {
         return newDefaultAsyncResult(null, t, invocation);
     }
 
+    public static AsyncRpcResult newDefaultAsyncResult(Invocation invocation) {
+        return newDefaultAsyncResult(null, null, invocation);
+    }
+
     public static AsyncRpcResult newDefaultAsyncResult(Object value, Throwable t, Invocation invocation) {
         CompletableFuture<AppResponse> future = new CompletableFuture<>();
         AppResponse result = new AppResponse(invocation);

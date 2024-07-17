@@ -1,4 +1,4 @@
-package com.ethan.remoting.tansport.netty.client;
+package com.ethan.remoting.transport.netty.client;
 
 import com.ethan.remoting.exchange.Response;
 import org.springframework.stereotype.Component;

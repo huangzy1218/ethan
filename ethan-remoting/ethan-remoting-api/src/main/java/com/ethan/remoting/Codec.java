@@ -1,4 +1,4 @@
-package com.ethan.rpc.protocol.codec;
+package com.ethan.remoting;
 
 import com.ethan.common.extension.SPI;
 import io.netty.buffer.ByteBuf;

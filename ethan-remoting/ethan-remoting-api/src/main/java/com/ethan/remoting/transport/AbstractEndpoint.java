@@ -1,9 +1,12 @@
 package com.ethan.remoting.transport;
 
 import com.ethan.common.URL;
+import com.ethan.remoting.Codec;
 import com.ethan.rpc.model.ApplicationModel;
-import com.ethan.rpc.protocol.codec.Codec;
 import lombok.Getter;
+
+import static com.ethan.common.constant.CommonConstants.CONNECT_TIMEOUT_KEY;
+import static com.ethan.common.constant.CommonConstants.DEFAULT_CONNECT_TIMEOUT;
 
 /**
  * @author Huang Z.Y.
@@ -23,7 +26,7 @@ public class AbstractEndpoint {
         this.url = url;
         this.codec = getChannelCodec(url);
         this.connectTimeout =
-                url.getPositiveParameter(Constants.CONNECT_TIMEOUT_KEY, Constants.DEFAULT_CONNECT_TIMEOUT);
+                url.getPositiveParameter(CONNECT_TIMEOUT_KEY, DEFAULT_CONNECT_TIMEOUT);
     }
 
     protected static Codec getChannelCodec(URL url) {
