@@ -1,10 +1,15 @@
 package com.ethan.common.config;
 
+import lombok.Data;
+import lombok.ToString;
+
 /**
  * Registry configuration.
  *
  * @author Huang Z.Y.
  */
+@Data
+@ToString
 public class RegistryConfig extends AbstractConfig {
 
     public static final String NO_AVAILABLE = "N/A";

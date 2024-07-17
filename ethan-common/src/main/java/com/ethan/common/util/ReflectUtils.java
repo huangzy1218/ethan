@@ -3,6 +3,8 @@ package com.ethan.common.util;
 import javassist.NotFoundException;
 
 import java.lang.reflect.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 
 /**
@@ -286,5 +288,48 @@ public class ReflectUtils {
         }
         return ret.toString();
     }
+
+    /**
+     * Find method from method signature.
+     *
+     * @param clazz      Target class to find method
+     * @param methodName Method signature, e.g.: method1(int, String). It is allowed to provide method name only, e.g.: method2
+     * @return Target method
+     * @throws NoSuchMethodException
+     * @throws ClassNotFoundException
+     * @throws IllegalStateException  when multiple methods are found (overridden method when parameter info is not provided)
+     * @deprecated Recommend {@link MethodUtils#findMethod(Class, String, Class[])}
+     */
+    @Deprecated
+    public static Method findMethodByMethodSignature(Class<?> clazz, String methodName, String[] parameterTypes)
+            throws NoSuchMethodException, ClassNotFoundException {
+        Method method;
+        if (parameterTypes == null) {
+            List<Method> finded = new ArrayList<>();
+            for (Method m : clazz.getMethods()) {
+                if (m.getName().equals(methodName)) {
+                    finded.add(m);
+                }
+            }
+            if (finded.isEmpty()) {
+                throw new NoSuchMethodException("No such method " + methodName + " in class " + clazz);
+            }
+            if (finded.size() > 1) {
+                String msg = String.format(
+                        "Not unique method for method name(%s) in class(%s), find %d methods.",
+                        methodName, clazz.getName(), finded.size());
+                throw new IllegalStateException(msg);
+            }
+            method = finded.get(0);
+        } else {
+            Class<?>[] types = new Class<?>[parameterTypes.length];
+            for (int i = 0; i < parameterTypes.length; i++) {
+                types[i] = ReflectUtils.name2class(parameterTypes[i]);
+            }
+            method = clazz.getMethod(methodName, types);
+        }
+        return method;
+    }
+
 
 }

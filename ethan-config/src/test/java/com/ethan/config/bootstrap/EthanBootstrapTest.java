@@ -1,13 +1,18 @@
 package com.ethan.config.bootstrap;
 
 
+import com.ethan.common.config.SysProps;
 import org.junit.jupiter.api.Test;
 
 public class EthanBootstrapTest {
 
     @Test
     void testBootstrap() {
+        SysProps.setProperty("ethan.registry.address", "127.0.0.1");
+        SysProps.setProperty("ethan.registry.port", 8080);
         EthanBootstrap ethan = EthanBootstrap.getInstance().application("ethan");
+        ethan.initialize();
+        System.out.println(ethan.getConfigManager().getRegistry());
     }
 
 }

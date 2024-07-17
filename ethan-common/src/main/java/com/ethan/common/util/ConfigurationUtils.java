@@ -1,8 +1,13 @@
 package com.ethan.common.util;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
+ * Configuration utility.
+ *
  * @author Huang Z.Y.
  */
 public class ConfigurationUtils {
@@ -18,21 +23,18 @@ public class ConfigurationUtils {
      * Map props = getSubProperties("ethan.protocol.");
      *
      * # result
-     * props: {"name": "dubbo", "port" : "1234"}
-     *
+     * props: {"name": "ethan", "port" : "1234"}
      * </pre>
      *
-     * @param configMaps
+     * @param configMap Configuration map
      * @param prefix
      * @param <V>
      * @return
      */
     public static <V extends Object> Map<String, V> getSubProperties(
-            Collection<Map<String, V>> configMaps, String prefix) {
+            Map<String, V> configMap, String prefix) {
         Map<String, V> map = new LinkedHashMap<>();
-        for (Map<String, V> configMap : configMaps) {
-            getSubProperties(configMap, prefix, map);
-        }
+        getSubProperties(configMap, prefix, map);
         return map;
     }
 
@@ -68,6 +70,7 @@ public class ConfigurationUtils {
                 }
             }
         }
+        return resultMap;
     }
 
     public static boolean isEmptyValue(Object value) {

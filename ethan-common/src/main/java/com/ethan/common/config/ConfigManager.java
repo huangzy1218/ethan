@@ -4,12 +4,13 @@ import com.ethan.common.context.ApplicationExt;
 import com.ethan.common.util.ConfigurationUtils;
 import com.ethan.common.util.StringUtils;
 import com.ethan.rpc.model.ApplicationModel;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.ethan.common.config.AbstractConfig.getTagName;
+import static com.ethan.common.config.AbstractConfig.invokeSetter;
 import static com.ethan.common.constant.CommonConstants.ETHAN;
 
 /**
@@ -17,6 +18,7 @@ import static com.ethan.common.constant.CommonConstants.ETHAN;
  *
  * @author Huang Z.Y.
  */
+@Slf4j
 public class ConfigManager implements ApplicationExt {
 
     public static final String NAME = "config";
@@ -81,14 +83,26 @@ public class ConfigManager implements ApplicationExt {
         addConfig(application);
     }
 
-    public <T extends AbstractConfig> List<T> loadConfigsOfTypeFromProps(Class<T> cls) {
-        environment.getConfigurations()
-//        addConfig(configsCache);
+    public <T extends AbstractConfig> void loadConfigsOfTypeFromProps(Class<T> cls) {
+        try {
+            T config = createConfig(cls);
+            Map<String, Object> configIds = getConfigIdFromProps(cls);
+            for (Map.Entry<String, Object> entry : configIds.entrySet()) {
+                invokeSetter(cls, config, entry.getKey(), entry.getValue());
+            }
+            addConfig(config);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException(
+                    "Cannot assign nested class when refreshing config: "
+                            + cls.getName(),
+                    e);
+        }
     }
 
-    private String getConfigIdsFromProps(Class<? extends AbstractConfig> clazz) {
+    @SuppressWarnings("unchecked")
+    private <V extends Object> Map<String, V> getConfigIdFromProps(Class<? extends AbstractConfig> clazz) {
         String prefix = ETHAN + "." + AbstractConfig.getTagName(clazz) + ".";
-        return ConfigurationUtils.getSubIds(environment.getConfigurationMaps(), prefix);
+        return (Map<String, V>) ConfigurationUtils.getSubProperties(environment.getPropertiesMap(), prefix);
     }
 
     private <T extends AbstractConfig> T createConfig(Class<T> cls)

@@ -2,6 +2,7 @@ package com.ethan.config.bootstrap;
 
 import com.ethan.common.config.ApplicationConfig;
 import com.ethan.common.config.ConfigManager;
+import com.ethan.common.config.RegistryConfig;
 import com.ethan.common.util.ConcurrentHashMapUtils;
 import com.ethan.config.bootstrap.builder.ApplicationBuilder;
 import com.ethan.rpc.model.ApplicationModel;
@@ -46,6 +47,14 @@ public final class EthanBootstrap {
     public static EthanBootstrap getInstance(ApplicationModel applicationModel) {
         return ConcurrentHashMapUtils.computeIfAbsent(
                 instanceMap, applicationModel, k -> new EthanBootstrap(applicationModel));
+    }
+
+    public ApplicationModel getApplicationModel() {
+        return applicationModel;
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
 
     /**
@@ -97,30 +106,30 @@ public final class EthanBootstrap {
             if (initialized) {
                 return;
             }
-            onInitialize();
-
-            // register shutdown hook
-            registerShutdownHook();
+//            onInitialize();
+//
+//            // register shutdown hook
+//            registerShutdownHook();
 
             startConfigCenter();
 
-            loadApplicationConfigs();
-
-            initModuleDeployers();
-
-            initMetricsReporter();
-
-            initMetricsService();
-
-            // @since 2.7.8
-            startMetadataCenter();
+//            loadApplicationConfigs();
+//
+//            initModuleDeployers();
+//
+//            initMetricsReporter();
+//
+//            initMetricsService();
+//
+//            // @since 2.7.8
+//            startMetadataCenter();
 
             initialized = true;
         }
     }
 
     private void startConfigCenter() {
-        configManager.loadConfigsOfTypeFromProps(ApplicationConfig.class);
+        configManager.loadConfigsOfTypeFromProps(RegistryConfig.class);
     }
 
 }

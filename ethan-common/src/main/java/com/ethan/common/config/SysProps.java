@@ -1,5 +1,7 @@
 package com.ethan.common.config;
 
+import com.ethan.rpc.model.ApplicationModel;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -10,15 +12,17 @@ import java.util.Map;
  */
 public class SysProps {
 
-    private static Map<String, String> map = new LinkedHashMap<String, String>();
+    private static Environment environment = ApplicationModel.defaultModel().modelEnvironment();
+    private static Map<String, Object> map = new LinkedHashMap<>();
 
     public static void reset() {
         map.clear();
     }
 
-    public static void setProperty(String key, String value) {
+    public static void setProperty(String key, Object value) {
         map.put(key, value);
-        System.setProperty(key, value);
+        environment.setProperty(key, value);
+        System.setProperty(key, value.toString());
     }
 
     public static void clear() {
