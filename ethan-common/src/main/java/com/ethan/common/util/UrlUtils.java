@@ -2,6 +2,7 @@ package com.ethan.common.util;
 
 import com.ethan.common.URL;
 
+import static com.ethan.common.constant.CommonConstants.DEFAULT_SERIALIZATION;
 import static com.ethan.common.constant.CommonConstants.INTERFACE_KEY;
 
 /**
@@ -24,12 +25,22 @@ public class UrlUtils {
      * @param value   Value
      * @return {@code true} if match otherwise false
      */
-    static boolean isItemMatch(String pattern, String value) {
+    public static boolean isItemMatch(String pattern, String value) {
         if (StringUtils.isEmpty(pattern)) {
             return value == null;
         } else {
             return "*".equals(pattern) || pattern.equals(value);
         }
+    }
+
+    public static String serializationOrDefault(URL url) {
+        if (url != null) {
+            String serialization = url.getParameter("serialization");
+            if (!StringUtils.isEmpty(serialization)) {
+                return serialization;
+            }
+        }
+        return DEFAULT_SERIALIZATION;
     }
 
 }

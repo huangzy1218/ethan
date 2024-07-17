@@ -43,7 +43,6 @@ public class RemoteInvoker<T> extends AbstractInvoker<T> {
                                         + RpcUtils.getMethodName(invocation) + ", terminate directly."),
                         invocation);
             }
-
             invocation.setAttachment(TIMEOUT_KEY, String.valueOf(timeout));
 
             Request request = new Request();

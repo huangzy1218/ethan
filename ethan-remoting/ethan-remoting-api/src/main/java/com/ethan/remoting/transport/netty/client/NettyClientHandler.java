@@ -3,15 +3,10 @@ package com.ethan.remoting.transport.netty.client;
 import com.ethan.common.URL;
 import com.ethan.common.context.BeanProvider;
 import com.ethan.remoting.exchange.Response;
-import com.ethan.remoting.exchange.support.DefaultFuture;
-import com.ethan.remoting.transport.netty.NettyChannel;
-import com.ethan.rpc.Message;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
-
-import static com.ethan.rpc.Constants.HEARTBEAT_RESPONSE_TYPE;
-import static com.ethan.rpc.Constants.RESPONSE_TYPE;
 
 
 /**
@@ -20,6 +15,7 @@ import static com.ethan.rpc.Constants.RESPONSE_TYPE;
  * @author Huang Z.Y.
  */
 @Slf4j
+@ChannelHandler.Sharable
 public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 
     private final URL url;
@@ -39,24 +35,23 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        try {
-            if (msg instanceof Message) {
-                Message mess = (Message) msg;
-                byte messageType = mess.getMessageType();
-                if (messageType == HEARTBEAT_RESPONSE_TYPE) {
-                    log.info("heart [{}]", mess.getData());
-                } else if (messageType == RESPONSE_TYPE) {
-                    Response response = (Response) mess.getData();
-                    NettyChannel ch = NettyChannel.getOrAddChannel(ctx.channel(), url);
-                    DefaultFuture.received(ch, response);
-                    unprocessedRequests.complete(response);
-                }
-            }
-        } finally {
-            // Release the received message to avoid memory leaks
+        if (msg instanceof Response) {
+            Response response = (Response) msg;
+            // Handle the response
+            handleResponse(response);
+        } else {
+            log.warn("Unexpected message type: {}", msg.getClass().getName());
+            // Pass it along the pipeline if not handled
             ctx.fireChannelRead(msg);
         }
     }
+
+    private void handleResponse(Response response) {
+        // Process the response, e.g., store it in unprocessedRequests
+        unprocessedRequests.completeRequest(response.getId(), response);
+        log.info("Response processed successfully for requestId: {}", response.getId());
+    }
+
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {

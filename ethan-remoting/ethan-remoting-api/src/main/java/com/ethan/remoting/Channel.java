@@ -10,8 +10,7 @@ import java.net.InetSocketAddress;
  * @author Huang Z.Y.
  */
 public interface Channel extends Node {
-
-
+    
     /**
      * Get local address.
      *

@@ -13,9 +13,11 @@ import java.io.IOException;
 @SPI
 public interface Codec {
 
-    void encode(ByteBuf buffer, Object message) throws IOException;
+    Integer MAX_FRAME_LENGTH = 8388608;
 
-    Object decode(ByteBuf buffer) throws Exception;
+    void encode(Channel channel, ByteBuf buffer, Object message) throws IOException;
+
+    Object decode(Channel channel, ByteBuf buffer) throws Exception;
 
     enum DecodeResult {
         NEED_MAGIC_NUMBER,

@@ -3,6 +3,7 @@ package com.ethan.common;
 import com.ethan.common.url.component.URLAddress;
 import com.ethan.common.url.component.URLParam;
 import com.ethan.common.util.StringUtils;
+import com.ethan.rpc.model.ApplicationModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -265,6 +266,10 @@ public class URL implements Serializable {
     public String[] getCategory(String[] defaultValue) {
         String value = getCategory();
         return StringUtils.isEmpty(value) ? defaultValue : COMMA_SPLIT_PATTERN.split(value);
+    }
+
+    public ApplicationModel getOrDefaultFrameworkModel() {
+        return ApplicationModel.defaultModel();
     }
 
 }

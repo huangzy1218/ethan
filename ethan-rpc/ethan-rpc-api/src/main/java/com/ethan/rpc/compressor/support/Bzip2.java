@@ -1,8 +1,8 @@
-package com.ethan.rpc.protocol.compressor.support;
+package com.ethan.rpc.compressor.support;
 
 import com.ethan.common.enumeration.CompressType;
 import com.ethan.rpc.RpcException;
-import com.ethan.rpc.protocol.compressor.Compressor;
+import com.ethan.rpc.compressor.Compressor;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 

@@ -3,6 +3,8 @@ package com.ethan.remoting.exchange;
 import lombok.Data;
 import lombok.ToString;
 
+import static com.ethan.common.constant.CommonConstants.HEARTBEAT_EVENT;
+
 /**
  * Response.
  *
@@ -76,6 +78,8 @@ public class Response {
     private byte status = OK;
     private String errorMsg;
     private Object result;
+    private String version;
+    private boolean event = false;
 
     public Response() {
     }
@@ -83,5 +87,15 @@ public class Response {
     public Response(long id) {
         this.id = id;
     }
+
+    public Response(long id, String version) {
+        this.id = id;
+        this.version = version;
+    }
+
+    public boolean isHeartbeat() {
+        return event && HEARTBEAT_EVENT == result;
+    }
+
 
 }

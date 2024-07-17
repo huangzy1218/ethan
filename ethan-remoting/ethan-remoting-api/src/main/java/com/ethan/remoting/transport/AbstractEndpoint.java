@@ -2,6 +2,7 @@ package com.ethan.remoting.transport;
 
 import com.ethan.common.URL;
 import com.ethan.remoting.Codec;
+import com.ethan.remoting.exchange.codec.ExchangeCodec;
 import com.ethan.rpc.model.ApplicationModel;
 import lombok.Getter;
 
@@ -30,7 +31,7 @@ public class AbstractEndpoint {
     }
 
     protected static Codec getChannelCodec(URL url) {
-        return ApplicationModel.defaultModel().getExtensionLoader(Codec.class).getExtension("ethan-codec");
+        return ApplicationModel.defaultModel().getExtensionLoader(Codec.class).getExtension(ExchangeCodec.NAME);
     }
 
 }

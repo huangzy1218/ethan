@@ -1,7 +1,7 @@
-package com.ethan.rpc.protocol.compressor.support;
+package com.ethan.rpc.compressor.support;
 
 import com.ethan.common.enumeration.CompressType;
-import com.ethan.rpc.protocol.compressor.Compressor;
+import com.ethan.rpc.compressor.Compressor;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

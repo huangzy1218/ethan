@@ -46,6 +46,9 @@ public interface CommonConstants {
     String THREAD_NAME_KEY = "threadname";
     String SERVER_THREAD_POOL_NAME = "EthanServerHandler";
     String LOCAL_PROTOCOL = "native";
+    String REMOTE_PROTOCOL = "remote";
+    String PROTOCOL_VERSION = "1.0.0";
+    String HEARTBEAT_EVENT = null;
 
     /*=======================================================================================
      * Default configuration

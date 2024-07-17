@@ -1,4 +1,4 @@
-package com.ethan.rpc.protocol.compressor;
+package com.ethan.rpc.compressor;
 
 /**
  * Get encode.

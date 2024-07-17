@@ -7,6 +7,8 @@ import lombok.ToString;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.ethan.common.constant.CommonConstants.HEARTBEAT_EVENT;
+
 /**
  * Request.
  *
@@ -26,6 +28,10 @@ public class Request {
     @Getter
     private final long id;
     private Object data;
+    private String version;
+    private boolean broken = false;
+    private boolean event = false;
+
 
     public Request() {
         id = newId();
@@ -39,5 +45,10 @@ public class Request {
         // getAndIncrement() When it grows to MAX_VALUE, it will grow to MIN_VALUE, and the negative can be used as ID
         return INVOKE_ID.getAndIncrement();
     }
+
+    public boolean isHeartbeat() {
+        return event && HEARTBEAT_EVENT == data;
+    }
+
 
 }

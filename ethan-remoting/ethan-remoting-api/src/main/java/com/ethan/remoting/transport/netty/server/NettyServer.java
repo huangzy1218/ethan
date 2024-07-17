@@ -11,6 +11,7 @@ import com.ethan.remoting.transport.AbstractEndpoint;
 import com.ethan.remoting.transport.netty.NettyEventLoopFactory;
 import com.ethan.remoting.transport.netty.codec.NettyCodecAdapter;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -56,7 +57,7 @@ public class NettyServer extends AbstractEndpoint implements RemotingServer {
 
         String bindIp = getUrl().getParameter(BIND_IP_KEY, getUrl().getHost());
         int bindPort = getUrl().getParameter(BIND_PORT_KEY, getUrl().getPort());
-        final NettyServerHandler nettyServerHandler = new NettyServerHandler(getUrl());
+        final NettyServerHandler nettyServerHandler = new NettyServerHandler();
 
         bossGroup = NettyEventLoopFactory.eventLoopGroup(1, EVENT_LOOP_BOSS_POOL_NAME);
         workerGroup = NettyEventLoopFactory.eventLoopGroup(DEFAULT_IO_THREADS, EVENT_LOOP_WORKER_POOL_NAME);

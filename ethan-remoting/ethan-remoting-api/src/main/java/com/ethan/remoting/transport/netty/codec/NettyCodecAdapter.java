@@ -1,14 +1,18 @@
 package com.ethan.remoting.transport.netty.codec;
 
 import com.ethan.common.URL;
+import com.ethan.remoting.Codec;
+import com.ethan.remoting.transport.netty.NettyChannel;
 import com.ethan.rpc.Message;
-import com.ethan.rpc.protocol.codec.Codec;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 /**
  * Netty codec adapter.
@@ -42,37 +46,21 @@ public class NettyCodecAdapter {
 
         @Override
         protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
-            codec.encode(out, msg);
+            Channel ch = ctx.channel();
+            NettyChannel channel = NettyChannel.getOrAddChannel(ch, url);
+            codec.encode(channel, out, msg);
         }
     }
 
-    private class InternalDecoder extends LengthFieldBasedFrameDecoder {
-
-        public InternalDecoder() {
-            this(MAX_FRAME_LENGTH, 5, 4, -9, 0);
-        }
-
-        public InternalDecoder(int maxFrameLength, int lengthFieldOffset, int lengthFieldLength,
-                               int lengthAdjustment, int initialBytesToStrip) {
-            super(maxFrameLength, lengthFieldOffset, lengthFieldLength, lengthAdjustment, initialBytesToStrip);
-        }
+    private class InternalDecoder extends ByteToMessageDecoder {
 
         @Override
-        protected Object decode(ChannelHandlerContext ctx, ByteBuf input) throws Exception {
-            Object decoded = super.decode(ctx, input);
-            if (decoded instanceof ByteBuf frame) {
-                if (frame.readableBytes() >= TOTAL_LENGTH) {
-                    try {
-                        return codec.decode(frame);
-                    } catch (Exception e) {
-                        log.error("Decode frame error!", e);
-                        throw e;
-                    } finally {
-                        frame.release();
-                    }
-                }
-            }
-            return decoded;
+        protected void decode(ChannelHandlerContext ctx, ByteBuf input, List<Object> out) throws Exception {
+            NettyChannel channel = NettyChannel.getOrAddChannel(ctx.channel(), url);
+            // Decode object
+            do {
+                Object msg = codec.decode(channel, input);
+            } while (input.isReadable());
         }
     }
 

@@ -29,6 +29,7 @@ public class DefaultFuture extends CompletableFuture<Object> {
     private static final Map<Long, Channel> CHANNELS = new ConcurrentHashMap<>();
     @Getter
     private final Channel channel;
+    @Getter
     private final Request request;
     @Getter
     private final int timeout;

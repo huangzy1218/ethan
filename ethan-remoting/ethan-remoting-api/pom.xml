@@ -19,5 +19,9 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-rpc-api</artifactId>
+        </dependency>
     </dependencies>
 </project>

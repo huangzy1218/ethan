@@ -6,19 +6,39 @@ import com.ethan.rpc.Invoker;
 import com.ethan.rpc.Protocol;
 import com.ethan.rpc.RpcException;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @author Huang Z.Y.
  */
 public class RemoteProtocol implements Protocol {
 
+
+    public static final String NAME = "dubbo";
+
+    public static final int DEFAULT_PORT = 8801;
+
+    protected final Map<String, Exporter<?>> exporterMap = new ConcurrentHashMap<>();
+
+
     @Override
     public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
-        return null;
+        URL url = invoker.getUrl();
+        String key = url.getServiceKey();
+        RemoteExporter<T> exporter = new RemoteExporter<>(invoker, key, exporterMap);
+        return exporter;
     }
 
     @Override
     public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
-        return null;
+        return protocolBindingRefer(type, url);
     }
-    
+
+    public <T> Invoker<T> protocolBindingRefer(Class<T> serviceType, URL url) throws RpcException {
+        // Create rpc invoker
+        RemoteInvoker<T> invoker = new RemoteInvoker<>(serviceType, url);
+        return invoker;
+    }
+
 }
