@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.ethan.common.constant.CommonConstants.PROTOCOL_VERSION;
+import static com.ethan.common.constant.CommonConstants.*;
 import static com.ethan.remoting.transport.CodecSupport.getSerialization;
 
 /**
@@ -213,6 +213,7 @@ public class ExchangeCodec implements Codec {
         // Write header
         buffer.writeBytes(header);
         buffer.writerIndex(savedWriteIndex + HEADER_LENGTH + len);
+        DefaultFuture.newFuture(channel, req, channel.getUrl().getParameter(TIMEOUT_KEY, DEFAULT_TIMEOUT));
     }
 
     protected void encodeResponseData(Channel channel, ObjectOutput out, Object data) throws IOException {
