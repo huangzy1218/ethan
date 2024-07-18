@@ -10,22 +10,21 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.CompletableFuture;
-
 public class NettyHandlerTest {
 
     private NettyServer nettyServer;
     private NettyClient nettyClient;
 
     @BeforeEach
-    public void setUp() throws RemotingException {
+    public void setUp() throws Throwable {
         // Create a mock URL for the server
         URL serverUrl = URL.valueOf("dubbo://localhost:8080");
         nettyServer = new NettyServer(serverUrl);
-
+        nettyServer.open();
         // Create a mock URL for the client
         URL clientUrl = URL.valueOf("dubbo://localhost:8080");
         nettyClient = new NettyClient(clientUrl);
+        nettyClient.connect();
     }
 
     @Test
@@ -33,12 +32,7 @@ public class NettyHandlerTest {
         String message = "Hello, Netty!";
 
         // Send a message from client to server
-        CompletableFuture<Object> future = nettyClient.request(message);
-        future.thenAccept(response -> {
-            System.out.println("Received response: " + response);
-        }).exceptionally(e -> {
-            return null;
-        });
+        nettyClient.request(message);
     }
 
     @Test

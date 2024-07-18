@@ -76,7 +76,6 @@ public class NettyChannel implements Channel {
             throw new RemotingException(this, "Failed to send message "
                     + (message == null ? "" : message.getClass().getName()));
         }
-
         boolean success = true;
         try {
             ChannelFuture future = channel.write(message);

@@ -35,6 +35,7 @@ public interface CommonConstants {
     String SERIALIZATION_KEY = "message.serialize";
     String BIND_PORT_KEY = "bind.port";
     String NETTY_EPOLL_ENABLE_KEY = "netty.epoll.enable";
+    String KEEP_ALIVE_KEY = "keep.alive";
     String OS_NAME_KEY = "os.name";
     String OS_LINUX_PREFIX = "linux";
     String CONNECT_TIMEOUT_KEY = "connect.timeout";
@@ -55,6 +56,11 @@ public interface CommonConstants {
      *======================================================================================*/
     String DEFAULT_SERIALIZATION = "fastjson2";
     String DEFAULT_COMPRESS = "gzip";
+    int DEFAULT_HEARTBEAT = 60 * 1000;
+    String HEARTBEAT_CONFIG_KEY = "ethan.protocol.default-heartbeat";
+    String HEARTBEAT_TIMEOUT_KEY = "heartbeat.timeout";
+    String CLOSE_TIMEOUT_KEY = "close.timeout";
+    String CLOSE_TIMEOUT_CONFIG_KEY = "ethan.protocol.default-close-timeout";
     int DEFAULT_IO_THREADS = Math.min(Runtime.getRuntime().availableProcessors() + 1, 32);
     int DEFAULT_CONNECT_TIMEOUT = 3000;
     String DEFAULT_CATEGORY = PROVIDERS_CATEGORY;

@@ -8,6 +8,7 @@ import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.support.DefaultFuture;
 import com.ethan.remoting.transport.AbstractEndpoint;
 import com.ethan.remoting.transport.netty.NettyChannel;
+import com.ethan.remoting.transport.netty.NettyEventLoopFactory;
 import com.ethan.remoting.transport.netty.codec.NettyCodecAdapter;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -16,7 +17,6 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.EpollSocketChannel;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +25,9 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
 
 import static com.ethan.common.constant.CommonConstants.DEFAULT_CONNECT_TIMEOUT;
+import static com.ethan.common.constant.CommonConstants.DEFAULT_IO_THREADS;
+import static com.ethan.remoting.RemotingConstants.EVENT_LOOP_CLIENT_POOL_NAME;
+import static com.ethan.remoting.RemotingConstants.IO_THREADS_KEY;
 import static com.ethan.remoting.transport.netty.NettyEventLoopFactory.shouldEpoll;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -53,17 +56,15 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
 
     public NettyClient(final URL url) {
         super(url);
-        eventLoopGroup = new NioEventLoopGroup();
+        eventLoopGroup = createWorkerGroup();
         doOpen();
-        doConnect();
     }
 
     public static Class<? extends SocketChannel> socketChannelClass() {
         return shouldEpoll() ? EpollSocketChannel.class : NioSocketChannel.class;
     }
 
-    @Override
-    public void doOpen() {
+    protected void doOpen() {
         final NettyClientHandler nettyClientHandler = new NettyClientHandler(getUrl());
         bootstrap = new Bootstrap();
         initBootstrap(nettyClientHandler);
@@ -91,14 +92,12 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
         });
     }
 
-    @Override
     public void doConnect() {
         InetSocketAddress connectAddress = new InetSocketAddress(getUrl().getHost(), getUrl().getPort());
         doConnect(connectAddress);
     }
 
-    @Override
-    public void doDisConnect() throws Throwable {
+    protected void doDisConnect() throws Throwable {
         NettyChannel.removeChannelIfDisconnected(channel);
     }
 
@@ -111,7 +110,6 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
         return NettyChannel.getOrAddChannel(c, getUrl());
     }
 
-    @Override
     public CompletableFuture<Object> request(Object request) throws RemotingException {
         Request req;
         if (request instanceof Request) {
@@ -133,6 +131,12 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
         return future;
     }
 
+    protected EventLoopGroup createWorkerGroup() {
+        return NettyEventLoopFactory.eventLoopGroup(
+                getUrl().getPositiveParameter(IO_THREADS_KEY, DEFAULT_IO_THREADS),
+                EVENT_LOOP_CLIENT_POOL_NAME);
+    }
+
     private void doConnect(InetSocketAddress serverAddress) {
         ChannelFuture future = bootstrap.connect(serverAddress);
         boolean ret = future.awaitUninterruptibly(getConnectTimeout(), MILLISECONDS);
@@ -142,8 +146,7 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
             NettyClient.this.channel = newChannel;
             if (oldChannel != null) {
                 try {
-                    log.info("Close old netty channel " + oldChannel + " on create new netty channel "
-                            + newChannel);
+                    log.info("Close old netty channel {} on create new netty channel {}", oldChannel, newChannel);
                     oldChannel.close();
                 } finally {
                     NettyChannel.removeChannelIfDisconnected(oldChannel);
@@ -153,13 +156,24 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
             // Log the cause of the failure
             Throwable cause = future.cause();
             if (cause != null) {
-                log.error("Failed to connect to server: " + serverAddress, cause);
+                log.error("Failed to connect to server: {}", serverAddress, cause);
             } else {
-                log.error("Failed to connect to server: " + serverAddress + " within timeout of " + getConnectTimeout() + " milliseconds.");
+                log.error("Failed to connect to server: {} within timeout of {} milliseconds.", serverAddress, getConnectTimeout());
             }
         }
     }
 
+    @Override
+    public void open() {
+        doOpen();
+    }
+
+    @Override
+    public void connect() throws Throwable {
+        doConnect();
+    }
+
+    @Override
     public void close() {
         try {
             doDisConnect();

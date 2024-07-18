@@ -4,9 +4,9 @@ import com.ethan.remoting.Channel;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.Response;
 import com.ethan.remoting.exchange.support.DefaultFuture;
+import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 @ChannelHandler.Sharable
-public class NettyServerHandler extends ChannelInboundHandlerAdapter {
+public class NettyServerHandler extends ChannelDuplexHandler {
 
     /**
      * The cache for alive worker channel.
@@ -28,6 +28,12 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Getter
     private final Map<String, Channel> channels = new ConcurrentHashMap<>();
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+        log.info("Netty server channel active.");
+    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {

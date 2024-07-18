@@ -3,9 +3,9 @@ package com.ethan.remoting.transport.netty.client;
 import com.ethan.common.URL;
 import com.ethan.common.context.BeanProvider;
 import com.ethan.remoting.exchange.Response;
+import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @ChannelHandler.Sharable
-public class NettyClientHandler extends ChannelInboundHandlerAdapter {
+public class NettyClientHandler extends ChannelDuplexHandler {
 
     private final URL url;
     private final UnprocessedRequests unprocessedRequests;
@@ -30,6 +30,12 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         this.url = url;
     }
 
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+        log.info("Netty client channel active.");
+    }
+
     /**
      * Read the information returned from the server.
      */
@@ -39,6 +45,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
             Response response = (Response) msg;
             // Handle the response
             handleResponse(response);
+            ctx.fireChannelRead(msg);
         } else {
             log.warn("Unexpected message type: {}", msg.getClass().getName());
             // Pass it along the pipeline if not handled

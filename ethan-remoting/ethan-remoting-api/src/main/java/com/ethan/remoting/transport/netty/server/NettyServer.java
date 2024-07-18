@@ -1,9 +1,7 @@
 package com.ethan.remoting.transport.netty.server;
 
 import com.ethan.common.URL;
-import com.ethan.common.util.CollectionUtils;
-import com.ethan.common.util.NamedThreadFactory;
-import com.ethan.common.util.RuntimeUtils;
+import com.ethan.common.util.UrlUtils;
 import com.ethan.remoting.Channel;
 import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.RemotingServer;
@@ -11,22 +9,22 @@ import com.ethan.remoting.transport.AbstractEndpoint;
 import com.ethan.remoting.transport.netty.NettyEventLoopFactory;
 import com.ethan.remoting.transport.netty.codec.NettyCodecAdapter;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
-import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.Future;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.InetSocketAddress;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
+import static com.ethan.common.constant.CommonConstants.DEFAULT_IO_THREADS;
 import static com.ethan.common.constant.CommonConstants.*;
-import static com.ethan.remoting.RemotingConstants.EVENT_LOOP_BOSS_POOL_NAME;
-import static com.ethan.remoting.RemotingConstants.EVENT_LOOP_WORKER_POOL_NAME;
+import static com.ethan.remoting.RemotingConstants.*;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 
 /**
@@ -37,123 +35,137 @@ import static com.ethan.remoting.RemotingConstants.EVENT_LOOP_WORKER_POOL_NAME;
 @Slf4j
 public class NettyServer extends AbstractEndpoint implements RemotingServer {
 
-    EventLoopGroup bossGroup;
-    EventLoopGroup workerGroup;
+    /**
+     * The cache for alive worker channel.
+     * <ip:port, dubbo channel>
+     */
+    private Map<String, Channel> channels;
+    /**
+     * Netty server bootstrap.
+     */
     private ServerBootstrap bootstrap;
+    /**
+     * The boss channel that receive connections and dispatch these to worker channel.
+     */
     private io.netty.channel.Channel channel;
-    private InetSocketAddress bindAddress;
+    private EventLoopGroup bossGroup;
+    private EventLoopGroup workerGroup;
 
     public NettyServer(URL url) throws RemotingException {
         super(url);
-        String bindIp = getUrl().getParameter(BIND_IP_KEY, getUrl().getHost());
-        int bindPort = getUrl().getParameter(BIND_PORT_KEY, getUrl().getPort());
-        bindAddress = new InetSocketAddress(bindIp, bindPort);
-        doOpen();
     }
 
-    @Override
-    public void doOpen() {
+    /**
+     * Init and start netty server
+     *
+     * @throws Throwable
+     */
+    protected void doOpen() {
         bootstrap = new ServerBootstrap();
 
-        String bindIp = getUrl().getParameter(BIND_IP_KEY, getUrl().getHost());
-        int bindPort = getUrl().getParameter(BIND_PORT_KEY, getUrl().getPort());
-        final NettyServerHandler nettyServerHandler = new NettyServerHandler();
+        bossGroup = createBossGroup();
+        workerGroup = createWorkerGroup();
 
-        bossGroup = NettyEventLoopFactory.eventLoopGroup(1, EVENT_LOOP_BOSS_POOL_NAME);
-        workerGroup = NettyEventLoopFactory.eventLoopGroup(DEFAULT_IO_THREADS, EVENT_LOOP_WORKER_POOL_NAME);
-
-        DefaultEventExecutorGroup serviceHandlerGroup = new DefaultEventExecutorGroup(
-                RuntimeUtils.cpus() * 2,
-                new NamedThreadFactory("service-handler-group", false)
-        );
+        final NettyServerHandler nettyServerHandler = createNettyServerHandler();
+        channels = nettyServerHandler.getChannels();
 
         initServerBootstrap(nettyServerHandler);
 
+        // bind
         try {
-            // The bond port is synchronized until the bond succeeds
-            ChannelFuture future = bootstrap.bind(bindIp, bindPort).syncUninterruptibly();
-            channel = future.channel();
-        } catch (Throwable e) {
+            ChannelFuture channelFuture = bootstrap.bind((getUrl().getPort()));
+            channelFuture.syncUninterruptibly();
+            channel = channelFuture.channel();
+        } catch (Throwable t) {
             closeBootstrap();
-            log.error("Occur exception when start server:", e);
+            throw t;
         }
     }
 
-    private void closeBootstrap() {
-        try {
-            if (bootstrap != null) {
-                Future<?> bossGroupShutdownFuture = bossGroup.shutdownGracefully();
-                Future<?> workerGroupShutdownFuture = workerGroup.shutdownGracefully();
-                bossGroupShutdownFuture.syncUninterruptibly();
-                workerGroupShutdownFuture.syncUninterruptibly();
-            }
-        } catch (Throwable e) {
-            closeBootstrap();
-            log.warn("Transport failed to closed", e);
-        }
+    @Override
+    public void open() {
+        doOpen();
+    }
+
+    protected EventLoopGroup createBossGroup() {
+        return NettyEventLoopFactory.eventLoopGroup(1, EVENT_LOOP_BOSS_POOL_NAME);
+    }
+
+    protected EventLoopGroup createWorkerGroup() {
+        return NettyEventLoopFactory.eventLoopGroup(
+                getUrl().getPositiveParameter(IO_THREADS_KEY, DEFAULT_IO_THREADS),
+                EVENT_LOOP_WORKER_POOL_NAME);
+    }
+
+    protected NettyServerHandler createNettyServerHandler() {
+        return new NettyServerHandler();
     }
 
     protected void initServerBootstrap(NettyServerHandler nettyServerHandler) {
-        bootstrap.group(bossGroup, workerGroup)
-                .channel(NioServerSocketChannel.class)
-                // TCP has the Nagle algorithm enabled by default,
-                // which is used to send large data as fast as possible and reduce network transmission.
-                .childOption(ChannelOption.TCP_NODELAY, true)
-                // Enable the underlying TCP heartbeat mechanism
-                .childOption(ChannelOption.SO_KEEPALIVE, true)
-                // Indicates the maximum length of the queue used by the system to temporarily store requests that have completed three-way handshakes.
-                // If the connection establishment is frequent and the server is slow to create new connections, you can increase this parameter appropriately
-                .option(ChannelOption.SO_BACKLOG, 128)
-                // It is initialized when the client makes its first request
+        boolean keepalive = getUrl().getParameter(KEEP_ALIVE_KEY, Boolean.FALSE);
+        bootstrap
+                .group(bossGroup, workerGroup)
+                .channel(NettyEventLoopFactory.serverSocketChannelClass())
+                .option(ChannelOption.SO_REUSEADDR, Boolean.TRUE)
+                .childOption(ChannelOption.TCP_NODELAY, Boolean.TRUE)
+                .childOption(ChannelOption.SO_KEEPALIVE, keepalive)
+                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    protected void initChannel(SocketChannel ch) {
-                        // Close the connection if you do not receive a client request within 30 seconds
-                        ChannelPipeline p = ch.pipeline();
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        int closeTimeout = UrlUtils.getCloseTimeout(getUrl());
                         NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl());
-                        p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS))
+                        ch.pipeline()
                                 .addLast("decoder", adapter.getDecoder())
                                 .addLast("encoder", adapter.getEncoder())
+                                .addLast("server-idle-handler", new IdleStateHandler(0, 0, closeTimeout, MILLISECONDS))
                                 .addLast("handler", nettyServerHandler);
                     }
                 });
     }
 
     @Override
-    public void doClose() {
-        if (channel != null) {
-            channel.close();
-        }
-        closeAllChannels();
-    }
-
     public void close() {
         doClose();
     }
 
-    public Collection<Channel> getChannels() {
-        return Collections.emptyList();
-    }
-
-    private void closeAllChannels() {
-        Collection<Channel> channelCollection = getChannels();
-        if (CollectionUtils.isNotEmpty(channelCollection)) {
-            for (Channel channel : channelCollection) {
-                try {
-                    channel.close();
-                } catch (Throwable e) {
-                    log.warn("Failed to close channel: {}", e.getMessage(), e);
-                }
+    protected void doClose() {
+        try {
+            if (channel != null) {
+                // unbind.
+                channel.close();
             }
+        } catch (Throwable e) {
+            log.warn("Transport failed to closed: {}", e.getMessage(), e);
+        }
+        closeBootstrap();
+        try {
+            if (channels != null) {
+                channels.clear();
+            }
+        } catch (Throwable e) {
+            log.warn("Transport failed to closed: {}", e.getMessage(), e);
         }
     }
 
-    protected io.netty.channel.Channel getBossChannel() {
-        return channel;
+    private void closeBootstrap() {
+        try {
+            if (bootstrap != null) {
+                long timeout = getUrl().getParameter(TIMEOUT_KEY, DEFAULT_TIMEOUT);
+                long quietPeriod = Math.min(2000L, timeout);
+                Future<?> bossGroupShutdownFuture = bossGroup.shutdownGracefully(quietPeriod, timeout, MILLISECONDS);
+                Future<?> workerGroupShutdownFuture =
+                        workerGroup.shutdownGracefully(quietPeriod, timeout, MILLISECONDS);
+                bossGroupShutdownFuture.syncUninterruptibly();
+                workerGroupShutdownFuture.syncUninterruptibly();
+            }
+        } catch (Throwable e) {
+            log.warn("Transport failed to closed: {}", e.getMessage(), e);
+        }
     }
 
-    public InetSocketAddress getBindAddress() {
-        return bindAddress;
+    public int getChannelsSize() {
+        return channels.size();
     }
 
 }
