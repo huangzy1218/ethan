@@ -73,14 +73,14 @@ public class DefaultFuture extends CompletableFuture<Object> {
         task.run();
     }
 
-    public static void sent(Channel channel, Request request) {
+    public static void sent(Request request) {
         DefaultFuture future = FUTURES.get(request.getId());
         if (future != null) {
             future.doSent();
         }
     }
 
-    public static void received(Channel channel, Response response) {
+    public static void received(Response response) {
         try {
             DefaultFuture future = FUTURES.remove(response.getId());
             if (future != null) {
@@ -166,7 +166,7 @@ public class DefaultFuture extends CompletableFuture<Object> {
             timeoutResponse.setStatus(future.isSent() ? Response.SERVER_TIMEOUT : Response.CLIENT_TIMEOUT);
             timeoutResponse.setErrorMsg(future.getTimeoutMessage(true));
             // Handle response
-            DefaultFuture.received(future.getChannel(), timeoutResponse);
+            DefaultFuture.received(timeoutResponse);
         }
     }
 

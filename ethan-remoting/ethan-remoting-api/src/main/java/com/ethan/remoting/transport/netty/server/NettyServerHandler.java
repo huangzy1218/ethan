@@ -3,6 +3,7 @@ package com.ethan.remoting.transport.netty.server;
 import com.ethan.remoting.Channel;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.Response;
+import com.ethan.remoting.exchange.support.DefaultFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -54,6 +55,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     private Response processRequest(Request request) {
         Response response = new Response();
         response.setId(request.getId());
+        DefaultFuture.received(response);
         return response;
     }
 

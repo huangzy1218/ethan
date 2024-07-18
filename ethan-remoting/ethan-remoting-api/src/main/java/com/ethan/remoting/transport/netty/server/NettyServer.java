@@ -115,7 +115,6 @@ public class NettyServer extends AbstractEndpoint implements RemotingServer {
                                 .addLast("decoder", adapter.getDecoder())
                                 .addLast("encoder", adapter.getEncoder())
                                 .addLast("handler", nettyServerHandler);
-                        //p.addLast(serviceHandlerGroup, new NettyRpcServerHandler());
                     }
                 });
     }

@@ -124,6 +124,7 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
         NettyChannel ch = NettyChannel.getOrAddChannel(channel, getUrl());
         DefaultFuture future = DefaultFuture.newFuture(ch, req, getConnectTimeout());
         try {
+            DefaultFuture.sent(req);
             ch.send(req);
         } catch (RemotingException e) {
             future.cancel(true);
