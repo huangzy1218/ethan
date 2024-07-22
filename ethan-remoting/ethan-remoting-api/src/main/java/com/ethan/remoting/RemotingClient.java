@@ -10,7 +10,8 @@ public interface RemotingClient {
     /**
      * Open client.
      */
-    void open();
+    default void open() {
+    }
 
     /**
      * Connect to server.
@@ -20,13 +21,7 @@ public interface RemotingClient {
     /**
      * Disconnect to server,
      */
-    void close() throws Throwable;
-
-    /**
-     * Get the connected channel.
-     *
-     * @return Channel
-     */
-    Channel getChannel();
+    default void close() throws Throwable {
+    }
 
 }

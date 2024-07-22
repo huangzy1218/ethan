@@ -1,184 +1,71 @@
 package com.ethan.remoting.transport.netty.client;
 
 import com.ethan.common.URL;
-import com.ethan.remoting.Channel;
-import com.ethan.remoting.RemotingClient;
-import com.ethan.remoting.RemotingException;
-import com.ethan.remoting.exchange.Request;
-import com.ethan.remoting.exchange.support.DefaultFuture;
 import com.ethan.remoting.transport.AbstractEndpoint;
-import com.ethan.remoting.transport.netty.NettyChannel;
-import com.ethan.remoting.transport.netty.NettyEventLoopFactory;
 import com.ethan.remoting.transport.netty.codec.NettyCodecAdapter;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.epoll.EpollSocketChannel;
-import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import lombok.extern.slf4j.Slf4j;
-
-import java.net.InetSocketAddress;
-import java.util.concurrent.CompletableFuture;
-
-import static com.ethan.common.constant.CommonConstants.DEFAULT_CONNECT_TIMEOUT;
-import static com.ethan.common.constant.CommonConstants.DEFAULT_IO_THREADS;
-import static com.ethan.remoting.RemotingConstants.EVENT_LOOP_CLIENT_POOL_NAME;
-import static com.ethan.remoting.RemotingConstants.IO_THREADS_KEY;
-import static com.ethan.remoting.transport.netty.NettyEventLoopFactory.shouldEpoll;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
- * Netty client.
- *
  * @author Huang Z.Y.
  */
-@Slf4j
-public class NettyClient extends AbstractEndpoint implements RemotingClient {
+public class NettyClient extends AbstractEndpoint {
 
-    private static final String SOCKS_PROXY_HOST = "socksProxyHost";
-
-    private static final String SOCKS_PROXY_PORT = "socksProxyPort";
-
-    private static final String DEFAULT_SOCKS_PROXY_PORT = "1080";
-
-    private static final String DEFAULT_SOCKS_HOST = "127.0.0.1";
-    private final EventLoopGroup eventLoopGroup;
     private Bootstrap bootstrap;
+    private EventLoopGroup group;
     /**
-     * Current channel. Each successful invocation of {@link NettyClient#doConnect()} will
-     * replace this with new channel and close old channel.
+     * Save established pipeline.
      */
-    private volatile io.netty.channel.Channel channel;
+    private Channel channel;
 
-    public NettyClient(final URL url) {
+    public NettyClient(URL url) {
         super(url);
-        eventLoopGroup = createWorkerGroup();
-        doOpen();
-    }
-
-    public static Class<? extends SocketChannel> socketChannelClass() {
-        return shouldEpoll() ? EpollSocketChannel.class : NioSocketChannel.class;
-    }
-
-    protected void doOpen() {
-        final NettyClientHandler nettyClientHandler = new NettyClientHandler(getUrl());
+        // Initialize Netty components
         bootstrap = new Bootstrap();
-        initBootstrap(nettyClientHandler);
-    }
+        group = new NioEventLoopGroup();
 
-    protected void initBootstrap(NettyClientHandler nettyClientHandler) {
-        bootstrap
-                .group(eventLoopGroup)
-                .option(ChannelOption.SO_KEEPALIVE, true)
+        bootstrap.group(group)
+                .channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
-                .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, Math.max(DEFAULT_CONNECT_TIMEOUT, getConnectTimeout()))
-                .channel(socketChannelClass());
-
-        bootstrap.handler(new ChannelInitializer<SocketChannel>() {
-
-            @Override
-            protected void initChannel(SocketChannel ch) throws Exception {
-                NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl());
-                ch.pipeline()
-                        .addLast("decoder", adapter.getDecoder())
-                        .addLast("encoder", adapter.getEncoder())
-                        .addLast("handler", nettyClientHandler);
-            }
-        });
+                .handler(new ChannelInitializer<NioSocketChannel>() {
+                    @Override
+                    protected void initChannel(NioSocketChannel ch) {
+                        NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl());
+                        ch.pipeline()
+                                .addLast("decoder", adapter.getDecoder())
+                                .addLast("encoder", adapter.getEncoder())
+                                .addLast("handler", new NettyClientHandler());
+                    }
+                });
     }
 
-    public void doConnect() {
-        InetSocketAddress connectAddress = new InetSocketAddress(getUrl().getHost(), getUrl().getPort());
-        doConnect(connectAddress);
-    }
-
-    protected void doDisConnect() throws Throwable {
-        NettyChannel.removeChannelIfDisconnected(channel);
-    }
-
-    @Override
-    public Channel getChannel() {
-        io.netty.channel.Channel c = channel;
-        if (c == null) {
-            return null;
-        }
-        return NettyChannel.getOrAddChannel(c, getUrl());
-    }
-
-    public CompletableFuture<Object> request(Object request) throws RemotingException {
-        Request req;
-        if (request instanceof Request) {
-            req = (Request) request;
-        } else {
-            // Create request
-            req = new Request();
-            req.setData(request);
-        }
-        NettyChannel ch = NettyChannel.getOrAddChannel(channel, getUrl());
-        DefaultFuture future = DefaultFuture.newFuture(ch, req, getConnectTimeout());
+    public void connect() {
         try {
-            DefaultFuture.sent(req);
-            ch.send(req);
-        } catch (RemotingException e) {
-            future.cancel(true);
-            throw e;
-        }
-        return future;
-    }
-
-    protected EventLoopGroup createWorkerGroup() {
-        return NettyEventLoopFactory.eventLoopGroup(
-                getUrl().getPositiveParameter(IO_THREADS_KEY, DEFAULT_IO_THREADS),
-                EVENT_LOOP_CLIENT_POOL_NAME);
-    }
-
-    private void doConnect(InetSocketAddress serverAddress) {
-        ChannelFuture future = bootstrap.connect(serverAddress);
-        boolean ret = future.awaitUninterruptibly(getConnectTimeout(), MILLISECONDS);
-        if (ret && future.isSuccess()) {
-            io.netty.channel.Channel newChannel = future.channel();
-            io.netty.channel.Channel oldChannel = NettyClient.this.channel;
-            NettyClient.this.channel = newChannel;
-            if (oldChannel != null) {
-                try {
-                    log.info("Close old netty channel {} on create new netty channel {}", oldChannel, newChannel);
-                    oldChannel.close();
-                } finally {
-                    NettyChannel.removeChannelIfDisconnected(oldChannel);
-                }
-            }
-        } else {
-            // Log the cause of the failure
-            Throwable cause = future.cause();
-            if (cause != null) {
-                log.error("Failed to connect to server: {}", serverAddress, cause);
-            } else {
-                log.error("Failed to connect to server: {} within timeout of {} milliseconds.", serverAddress, getConnectTimeout());
-            }
+            ChannelFuture future = bootstrap.connect(getUrl().getHost(), getUrl().getPort()).sync();
+            this.channel = future.channel();
+            future.channel().closeFuture().addListener(f -> group.shutdownGracefully());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Interrupted during connection", e);
         }
     }
 
-    @Override
-    public void open() {
-        doOpen();
-    }
-
-    @Override
-    public void connect() throws Throwable {
-        doConnect();
-    }
-
-    @Override
-    public void close() {
-        try {
-            doDisConnect();
-        } catch (Throwable ignored) {
+    /**
+     * Send message to server.
+     *
+     * @param message The content of the message to be sent
+     */
+    public void send(Object message) {
+        if (group.isShuttingDown() || group.isShutdown()) {
+            throw new IllegalStateException("The client has closed or is closing.");
         }
+        if (channel == null || !channel.isActive()) {
+            throw new IllegalStateException("Connection not established or closed.");
+        }
+        // Send message to server
+        channel.writeAndFlush(message);
     }
 
 }

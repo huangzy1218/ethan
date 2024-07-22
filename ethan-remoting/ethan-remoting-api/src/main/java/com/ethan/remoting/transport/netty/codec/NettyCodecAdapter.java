@@ -60,7 +60,8 @@ public class NettyCodecAdapter {
         @Override
         protected void decode(ChannelHandlerContext ctx, ByteBuf input, List<Object> out) throws Exception {
             NettyChannel channel = NettyChannel.getOrAddChannel(ctx.channel(), url);
-            // Decode object
+//            codec.decode(channel, input);
+//            // Decode object
             do {
                 int saveReaderIndex = input.readerIndex();
                 Object msg = codec.decode(channel, input);
@@ -78,5 +79,25 @@ public class NettyCodecAdapter {
             } while (input.isReadable());
         }
     }
+
+//    private static class InternalEncoder extends MessageToByteEncoder<String> {
+//        @Override
+//        protected void encode(ChannelHandlerContext ctx, String msg, ByteBuf out) throws Exception {
+//            byte[] bytes = msg.getBytes(StandardCharsets.UTF_8);
+//            out.writeBytes(bytes);
+//        }
+//    }
+//
+//    private static class InternalDecoder extends ByteToMessageDecoder {
+//        @Override
+//        protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+//            if (in.readableBytes() > 0) {
+//                byte[] bytes = new byte[in.readableBytes()];
+//                in.readBytes(bytes);
+//                String decoded = new String(bytes, StandardCharsets.UTF_8);
+//                out.add(decoded);
+//            }
+//        }
+//    }
 
 }

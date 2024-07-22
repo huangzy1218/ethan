@@ -2,28 +2,25 @@ package com.ethan.remoting.transport.netty.codec;
 
 import com.ethan.common.URL;
 import com.ethan.remoting.Codec;
-import com.ethan.remoting.exchange.codec.ExchangeCodec;
-import com.ethan.remoting.transport.netty.NettyChannel;
-import com.ethan.rpc.model.ApplicationModel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+
+import static org.mockito.Mockito.mock;
 
 public class NettyCodecAdapterTest {
 
-    private NettyCodecAdapter adapter;
-    private ChannelHandlerContext ctx;
-    private NettyChannel channel;
+    private NettyCodecAdapter codecAdapter;
+    private Codec codec;
+    private URL url;
 
     @BeforeEach
     public void setUp() {
-        Codec codec = ApplicationModel.defaultModel().getExtensionLoader(Codec.class).getExtension(ExchangeCodec.NAME);
-        URL url = URL.valueOf("ethan://127.0.0.1:8080");
-        adapter = new NettyCodecAdapter(codec, url);
-        ctx = Mockito.mock(ChannelHandlerContext.class);
-        channel = new NettyChannel(new NioSocketChannel(), url);
+        // Mock the dependencies
+        codec = mock(Codec.class);
+        url = mock(URL.class);
+
+        // Initialize the codec adapter with mocks
+        codecAdapter = new NettyCodecAdapter(codec, url);
     }
 
     @Test

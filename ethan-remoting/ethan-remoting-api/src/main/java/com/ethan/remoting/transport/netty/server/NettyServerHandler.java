@@ -1,17 +1,12 @@
 package com.ethan.remoting.transport.netty.server;
 
-import com.ethan.remoting.Channel;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.Response;
 import com.ethan.remoting.exchange.support.DefaultFuture;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Netty server handler.
@@ -22,17 +17,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @ChannelHandler.Sharable
 public class NettyServerHandler extends ChannelDuplexHandler {
 
-    /**
-     * The cache for alive worker channel.
-     * <ip:port, dubbo channel>
-     */
-    @Getter
-    private final Map<String, Channel> channels = new ConcurrentHashMap<>();
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        log.info("Netty server channel active.");
+        log.info("Netty server channel active: {}", ctx.channel().remoteAddress());
     }
 
     @Override
@@ -41,9 +30,12 @@ public class NettyServerHandler extends ChannelDuplexHandler {
             Request request = (Request) msg;
             log.info("Received request: {}", request);
             handleRequest(request, ctx);
+            ctx.fireChannelRead(msg);
         } else {
             log.warn("Received unexpected message type: {}", msg.getClass());
+            ctx.fireChannelRead(msg);
         }
+        ctx.flush();
     }
 
     private void handleRequest(Request request, ChannelHandlerContext ctx) {

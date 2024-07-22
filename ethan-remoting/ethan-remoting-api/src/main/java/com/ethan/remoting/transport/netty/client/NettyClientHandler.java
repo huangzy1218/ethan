@@ -1,7 +1,5 @@
 package com.ethan.remoting.transport.netty.client;
 
-import com.ethan.common.URL;
-import com.ethan.common.context.BeanProvider;
 import com.ethan.remoting.exchange.Response;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
@@ -18,22 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 @ChannelHandler.Sharable
 public class NettyClientHandler extends ChannelDuplexHandler {
 
-    private final URL url;
-    private final UnprocessedRequests unprocessedRequests;
-
-
-    public NettyClientHandler(URL url) {
-        if (url == null) {
-            throw new IllegalArgumentException("url == null");
-        }
-        this.unprocessedRequests = BeanProvider.getBean(UnprocessedRequests.class);
-        this.url = url;
-    }
-
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        log.info("Netty client channel active.");
+        log.info("Netty client channel active: {}", ctx.channel().remoteAddress());
+        ctx.flush();
     }
 
     /**
@@ -51,19 +38,25 @@ public class NettyClientHandler extends ChannelDuplexHandler {
             // Pass it along the pipeline if not handled
             ctx.fireChannelRead(msg);
         }
+        ctx.flush();
     }
 
     private void handleResponse(Response response) {
-        // Process the response, e.g., store it in unprocessedRequests
-        unprocessedRequests.completeRequest(response.getId(), response);
+//        unprocessedRequests.completeRequest(response.getId(), response);
         log.info("Response processed successfully for requestId: {}", response.getId());
     }
 
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error("Exception caught in NettyClientHandler", cause);
-        ctx.close();
+//        log.error("Exception caught in NettyClientHandler", cause);
+        try {
+            throw cause;
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        } finally {
+            ctx.close();
+        }
     }
 
 }

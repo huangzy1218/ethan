@@ -1,171 +1,76 @@
 package com.ethan.remoting.transport.netty.server;
 
 import com.ethan.common.URL;
-import com.ethan.common.util.UrlUtils;
-import com.ethan.remoting.Channel;
-import com.ethan.remoting.RemotingException;
-import com.ethan.remoting.RemotingServer;
 import com.ethan.remoting.transport.AbstractEndpoint;
-import com.ethan.remoting.transport.netty.NettyEventLoopFactory;
 import com.ethan.remoting.transport.netty.codec.NettyCodecAdapter;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.timeout.IdleStateHandler;
-import io.netty.util.concurrent.Future;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Map;
-
-import static com.ethan.common.constant.CommonConstants.DEFAULT_IO_THREADS;
-import static com.ethan.common.constant.CommonConstants.*;
-import static com.ethan.remoting.RemotingConstants.*;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-
-
 /**
- * Netty server.
- *
  * @author Huang Z.Y.
  */
 @Slf4j
-public class NettyServer extends AbstractEndpoint implements RemotingServer {
+public class NettyServer extends AbstractEndpoint {
 
-    /**
-     * The cache for alive worker channel.
-     * <ip:port, dubbo channel>
-     */
-    private Map<String, Channel> channels;
-    /**
-     * Netty server bootstrap.
-     */
     private ServerBootstrap bootstrap;
-    /**
-     * The boss channel that receive connections and dispatch these to worker channel.
-     */
-    private io.netty.channel.Channel channel;
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
 
-    public NettyServer(URL url) throws RemotingException {
+    public NettyServer(final URL url) {
         super(url);
-    }
-
-    /**
-     * Init and start netty server
-     *
-     * @throws Throwable
-     */
-    protected void doOpen() {
+        // 初始化 Netty 组件
         bootstrap = new ServerBootstrap();
+        // 1 个 boss 线程
+        bossGroup = new NioEventLoopGroup(1);
+        // 默认的 worker 线程数
+        workerGroup = new NioEventLoopGroup();
 
-        bossGroup = createBossGroup();
-        workerGroup = createWorkerGroup();
-
-        final NettyServerHandler nettyServerHandler = createNettyServerHandler();
-        channels = nettyServerHandler.getChannels();
-
-        initServerBootstrap(nettyServerHandler);
-
-        // bind
-        try {
-            ChannelFuture channelFuture = bootstrap.bind((getUrl().getPort()));
-            channelFuture.syncUninterruptibly();
-            channel = channelFuture.channel();
-        } catch (Throwable t) {
-            closeBootstrap();
-            throw t;
-        }
-    }
-
-    @Override
-    public void open() {
-        doOpen();
-    }
-
-    protected EventLoopGroup createBossGroup() {
-        return NettyEventLoopFactory.eventLoopGroup(1, EVENT_LOOP_BOSS_POOL_NAME);
-    }
-
-    protected EventLoopGroup createWorkerGroup() {
-        return NettyEventLoopFactory.eventLoopGroup(
-                getUrl().getPositiveParameter(IO_THREADS_KEY, DEFAULT_IO_THREADS),
-                EVENT_LOOP_WORKER_POOL_NAME);
-    }
-
-    protected NettyServerHandler createNettyServerHandler() {
-        return new NettyServerHandler();
-    }
-
-    protected void initServerBootstrap(NettyServerHandler nettyServerHandler) {
-        boolean keepalive = getUrl().getParameter(KEEP_ALIVE_KEY, Boolean.FALSE);
-        bootstrap
-                .group(bossGroup, workerGroup)
-                .channel(NettyEventLoopFactory.serverSocketChannelClass())
-                .option(ChannelOption.SO_REUSEADDR, Boolean.TRUE)
-                .childOption(ChannelOption.TCP_NODELAY, Boolean.TRUE)
-                .childOption(ChannelOption.SO_KEEPALIVE, keepalive)
-                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .childHandler(new ChannelInitializer<SocketChannel>() {
+        bootstrap.group(bossGroup, workerGroup)
+                .channel(NioServerSocketChannel.class)
+                .option(ChannelOption.SO_BACKLOG, 128)
+                .childOption(ChannelOption.TCP_NODELAY, true)
+                .childOption(ChannelOption.SO_KEEPALIVE, true)
+                .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
-                        int closeTimeout = UrlUtils.getCloseTimeout(getUrl());
+                    protected void initChannel(NioSocketChannel ch) {
                         NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl());
                         ch.pipeline()
                                 .addLast("decoder", adapter.getDecoder())
                                 .addLast("encoder", adapter.getEncoder())
-                                .addLast("server-idle-handler", new IdleStateHandler(0, 0, closeTimeout, MILLISECONDS))
-                                .addLast("handler", nettyServerHandler);
+                                .addLast("handler", new NettyServerHandler());
                     }
                 });
     }
 
-    @Override
-    public void close() {
-        doClose();
-    }
-
-    protected void doClose() {
+    /**
+     * 启动 Netty 服务器并绑定指定端口
+     */
+    public void start() {
         try {
-            if (channel != null) {
-                // unbind.
-                channel.close();
-            }
-        } catch (Throwable e) {
-            log.warn("Transport failed to closed: {}", e.getMessage(), e);
-        }
-        closeBootstrap();
-        try {
-            if (channels != null) {
-                channels.clear();
-            }
-        } catch (Throwable e) {
-            log.warn("Transport failed to closed: {}", e.getMessage(), e);
+            bootstrap.bind(getUrl().getPort()).sync();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("等待 Netty 服务器启动过程中被中断", e);
         }
     }
 
-    private void closeBootstrap() {
+    /**
+     * 关闭 Netty 服务器，释放资源
+     */
+    public void shutdown() {
         try {
-            if (bootstrap != null) {
-                long timeout = getUrl().getParameter(TIMEOUT_KEY, DEFAULT_TIMEOUT);
-                long quietPeriod = Math.min(2000L, timeout);
-                Future<?> bossGroupShutdownFuture = bossGroup.shutdownGracefully(quietPeriod, timeout, MILLISECONDS);
-                Future<?> workerGroupShutdownFuture =
-                        workerGroup.shutdownGracefully(quietPeriod, timeout, MILLISECONDS);
-                bossGroupShutdownFuture.syncUninterruptibly();
-                workerGroupShutdownFuture.syncUninterruptibly();
-            }
-        } catch (Throwable e) {
-            log.warn("Transport failed to closed: {}", e.getMessage(), e);
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
+            log.info("Netty 服务器已关闭");
+        } catch (Exception e) {
+            log.error("关闭 Netty 服务器时出现异常", e);
         }
-    }
-
-    public int getChannelsSize() {
-        return channels.size();
     }
 
 }
