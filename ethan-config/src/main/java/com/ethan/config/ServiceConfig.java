@@ -1,7 +1,6 @@
 //package com.ethan.config;
 //
 //import com.ethan.common.URL;
-//import com.ethan.common.config.ProtocolConfig;
 //import com.ethan.rpc.Exporter;
 //import com.ethan.rpc.ProxyFactory;
 //import com.ethan.rpc.descriptor.ServiceDescriptor;
@@ -60,20 +59,6 @@
 //
 //        repository.registerProvider(providerModel);
 //
-//        List<URL> registryURLs = ConfigValidationUtils.loadRegistries(this, true);
-//
-//        for (ProtocolConfig protocolConfig : protocols) {
-//            String pathKey = URL.buildKey(
-//                    getContextPath(protocolConfig).map(p -> p + "/" + path).orElse(path), group, version);
-//            // stub service will use generated service name
-//            if (!serverService) {
-//                // In case user specified path, register service one more time to map it to path.
-//                repository.registerService(pathKey, interfaceClass);
-//            }
-//            doExportUrlsFor1Protocol(protocolConfig, registryURLs, registerType);
-//        }
-//
-//        providerModel.setServiceUrls(urls);
 //
 //    }
 //
@@ -86,7 +71,7 @@
 //        local = local.setServiceModel(providerModel);
 //        local = local.addParameter(EXPORTER_LISTENER_KEY, LOCAL_PROTOCOL);
 //        doExportUrl(local, false, RegisterTypeEnum.AUTO_REGISTER);
-//        log.info("Export dubbo service " + interfaceClass.getName() + " to local registry url : " + local);
+//        log.info("Export dubbo service {} to local registry url : {}", interfaceClass.getName(), local);
 //    }
 //
 //    @Override

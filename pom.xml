@@ -16,6 +16,7 @@
         <module>ethan-springboot</module>
         <module>ethan-rpc</module>
         <module>ethan-config</module>
+        <module>ethan-cluster</module>
     </modules>
 
     <properties>

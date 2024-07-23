@@ -53,7 +53,7 @@ public class NativeInvoker<T> extends AbstractInvoker<T> {
             consumerUrl =
                     new ServiceAddressURL(serverURL.getUrlAddress(), serverURL.getUrlParam(), getUrl());
         }
-        
+
         int timeout = RpcUtils.calculateTimeout(consumerUrl, DEFAULT_TIMEOUT);
         if (timeout <= 0) {
             return AsyncRpcResult.newDefaultAsyncResult(
@@ -66,10 +66,9 @@ public class NativeInvoker<T> extends AbstractInvoker<T> {
             ((RpcInvocation) invocation).setInvokeMode(InvokeMode.ASYNC);
             ExecutorService executor = AdaptiveExecuteService.newDefaultExecutor(ExecutorUtils.setThreadName(getUrl(),
                     SERVER_THREAD_POOL_NAME));
-            Invoker<?> finalInvoker = invoker;
             CompletableFuture<AppResponse> appResponseFuture = CompletableFuture.supplyAsync(
                     () -> {
-                        Result result = finalInvoker.invoke(invocation);
+                        Result result = invoker.invoke(invocation);
                         if (result.hasException()) {
                             return new AppResponse(result.getException());
                         } else {

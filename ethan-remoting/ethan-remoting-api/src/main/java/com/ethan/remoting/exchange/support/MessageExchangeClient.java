@@ -4,7 +4,9 @@ import com.ethan.common.URL;
 import com.ethan.remoting.Channel;
 import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.exchange.ExchangeClient;
+import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.transport.netty.NettyChannel;
+import com.ethan.remoting.transport.netty.client.NettyClient;
 
 import java.net.InetSocketAddress;
 
@@ -16,9 +18,11 @@ import java.net.InetSocketAddress;
 public class MessageExchangeClient implements ExchangeClient {
 
     private final Channel channel;
+    private NettyClient client;
 
     public MessageExchangeClient(io.netty.channel.Channel channel, URL url) {
         this.channel = new NettyChannel(channel, url);
+        client = new NettyClient(url);
     }
 
     @Override
@@ -38,7 +42,15 @@ public class MessageExchangeClient implements ExchangeClient {
 
     @Override
     public void send(Object message) throws RemotingException {
-        channel.send(message);
+        Request request;
+        if (message instanceof Request) {
+            request = (Request) message;
+            client.send((Request) message);
+        } else {
+            request = new Request();
+            request.setData(message);
+        }
+        client.send(request);
     }
 
     @Override

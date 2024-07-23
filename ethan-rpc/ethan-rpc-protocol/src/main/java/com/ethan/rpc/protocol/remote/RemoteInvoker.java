@@ -9,10 +9,7 @@ import com.ethan.remoting.exchange.support.MessageExchangeClient;
 import com.ethan.rpc.*;
 import com.ethan.rpc.protocol.AbstractInvoker;
 import com.ethan.rpc.support.RpcUtils;
-import com.ethan.serialize.SerializationException;
 import io.netty.channel.socket.nio.NioSocketChannel;
-
-import java.io.IOException;
 
 import static com.ethan.common.constant.CommonConstants.DEFAULT_TIMEOUT;
 import static com.ethan.common.constant.CommonConstants.TIMEOUT_KEY;
@@ -38,13 +35,11 @@ public class RemoteInvoker<T> extends AbstractInvoker<T> {
             int timeout = RpcUtils.calculateTimeout(getUrl(), DEFAULT_TIMEOUT);
             if (timeout <= 0) {
                 return AsyncRpcResult.newDefaultAsyncResult(
-                        new RpcException(
-                                "No time left for making the following call: " + invocation.getServiceName() + "."
-                                        + RpcUtils.getMethodName(invocation) + ", terminate directly."),
+                        new RpcException("No time left for making the following call: " + invocation.getServiceName() + "."
+                                + RpcUtils.getMethodName(invocation) + ", terminate directly."),
                         invocation);
             }
             invocation.setAttachment(TIMEOUT_KEY, String.valueOf(timeout));
-
             Request request = new Request();
             request.setData(inv);
 
@@ -58,11 +53,8 @@ public class RemoteInvoker<T> extends AbstractInvoker<T> {
         } catch (RemotingException e) {
             String remoteExpMsg = "Failed to invoke remote method: " + RpcUtils.getMethodName(invocation)
                     + ", provider: " + getUrl() + ", cause: " + e.getMessage();
-            if (e.getCause() instanceof IOException && e.getCause().getCause() instanceof SerializationException) {
-                throw new RpcException(remoteExpMsg, e);
-            } else {
-                throw new RpcException(remoteExpMsg, e);
-            }
+
+            throw new RpcException(remoteExpMsg, e);
         }
     }
 

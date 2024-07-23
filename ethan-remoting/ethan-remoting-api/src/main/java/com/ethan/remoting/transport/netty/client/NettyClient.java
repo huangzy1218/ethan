@@ -1,7 +1,10 @@
 package com.ethan.remoting.transport.netty.client;
 
 import com.ethan.common.URL;
+import com.ethan.remoting.exchange.Request;
+import com.ethan.remoting.exchange.support.DefaultFuture;
 import com.ethan.remoting.transport.AbstractEndpoint;
+import com.ethan.remoting.transport.netty.NettyChannel;
 import com.ethan.remoting.transport.netty.codec.NettyCodecAdapter;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -57,15 +60,17 @@ public class NettyClient extends AbstractEndpoint {
      *
      * @param message The content of the message to be sent
      */
-    public void send(Object message) {
+    public void send(Request request) {
         if (group.isShuttingDown() || group.isShutdown()) {
             throw new IllegalStateException("The client has closed or is closing.");
         }
         if (channel == null || !channel.isActive()) {
             throw new IllegalStateException("Connection not established or closed.");
         }
+        com.ethan.remoting.Channel ch = NettyChannel.getOrAddChannel(channel, getUrl());
+        DefaultFuture.newFuture(ch, request, getConnectTimeout());
         // Send message to server
-        channel.writeAndFlush(message);
+        channel.writeAndFlush(request);
     }
 
 }
