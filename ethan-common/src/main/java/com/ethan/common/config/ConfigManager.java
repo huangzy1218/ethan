@@ -111,4 +111,12 @@ public class ConfigManager implements ApplicationExt {
         return config;
     }
 
+    public void addReference(ReferenceConfigBase<?> referenceConfig) {
+        addConfig(referenceConfig);
+    }
+
+    public void addService(ServiceConfigBase<?> serviceConfig) {
+        addConfig(serviceConfig);
+    }
+
 }

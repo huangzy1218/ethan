@@ -44,5 +44,9 @@ public class RpcUtils {
         return invocation.getMethodName();
     }
 
+    public static Object[] getArguments(Invocation invocation) {
+        return invocation.getArguments();
+    }
+
 }
     

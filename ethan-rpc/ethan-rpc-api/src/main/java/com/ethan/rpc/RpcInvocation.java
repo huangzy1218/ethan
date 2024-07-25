@@ -92,6 +92,11 @@ public class RpcInvocation implements Invocation {
     }
 
     @Override
+    public Object[] getArguments() {
+        return parameters;
+    }
+
+    @Override
     public Object put(Object key, Object value) {
         return attributes.put(key, value);
     }

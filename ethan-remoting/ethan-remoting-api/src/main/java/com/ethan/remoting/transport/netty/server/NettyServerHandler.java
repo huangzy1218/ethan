@@ -1,6 +1,5 @@
 package com.ethan.remoting.transport.netty.server;
 
-import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.Response;
 import io.netty.channel.Channel;
@@ -8,8 +7,6 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.concurrent.CompletionStage;
 
 /**
  * Netty server handler.
@@ -44,8 +41,9 @@ public class NettyServerHandler extends ChannelDuplexHandler {
     private void handleRequest(Request request, ChannelHandlerContext ctx) {
         try {
             // Process the request and generate a response
-            Response response = processRequest(request);
-            ctx.writeAndFlush(response);
+            Channel channel = ctx.channel();
+//            processRequest(ctx.channel(), request);
+//            ctx.writeAndFlush(response);
         } catch (Exception e) {
             log.error("Error processing request: {}", request, e);
             Response errorResponse = createErrorResponse(request, e);
@@ -53,45 +51,45 @@ public class NettyServerHandler extends ChannelDuplexHandler {
         }
     }
 
-    private void processRequest(Channel channel, Request req) throws RemotingException {
-        Response res = new Response(req.getId(), req.getVersion());
-        if (req.isBroken()) {
-            Object data = req.getData();
-            String msg;
-            if (data == null) {
-                msg = null;
-            } else {
-                msg = data.toString();
-            }
-            res.setErrorMsg("Fail to decode request due to: " + msg);
-            res.setStatus(Response.BAD_REQUEST);
-            channel.send(res);
-            return;
-        }
-        // find handler by message class.
-        Object msg = req.getData();
-        try {
-            CompletionStage<Object> future = handler.reply(channel, msg);
-            future.whenComplete((appResult, t) -> {
-                try {
-                    if (t == null) {
-                        res.setStatus(Response.OK);
-                        res.setResult(appResult);
-                    } else {
-                        res.setStatus(Response.SERVICE_ERROR);
-                        res.setErrorMsg(t.toString());
-                    }
-                    channel.send(res);
-                } catch (RemotingException e) {
-                    log.warn("Send result to consumer failed, channel is {}, msg is {}", channel, e);
-                }
-            });
-        } catch (Throwable e) {
-            res.setStatus(Response.SERVICE_ERROR);
-            res.setErrorMsg(e.toString());
-            channel.send(res);
-        }
-    }
+//    private void processRequest(Channel channel, Request req) throws RemotingException {
+//        Response res = new Response(req.getId(), req.getVersion());
+//        if (req.isBroken()) {
+//            Object data = req.getData();
+//            String msg;
+//            if (data == null) {
+//                msg = null;
+//            } else {
+//                msg = data.toString();
+//            }
+//            res.setErrorMsg("Fail to decode request due to: " + msg);
+//            res.setStatus(Response.BAD_REQUEST);
+//            channel.send(res);
+//            return;
+//        }
+//        // find handler by message class.
+//        Object msg = req.getData();
+//        try {
+//            CompletionStage<Object> future = handler.reply(channel, msg);
+//            future.whenComplete((appResult, t) -> {
+//                try {
+//                    if (t == null) {
+//                        res.setStatus(Response.OK);
+//                        res.setResult(appResult);
+//                    } else {
+//                        res.setStatus(Response.SERVICE_ERROR);
+//                        res.setErrorMsg(t.toString());
+//                    }
+//                    channel.send(res);
+//                } catch (RemotingException e) {
+//                    log.warn("Send result to consumer failed, channel is {}, msg is {}", channel, e);
+//                }
+//            });
+//        } catch (Throwable e) {
+//            res.setStatus(Response.SERVICE_ERROR);
+//            res.setErrorMsg(e.toString());
+//            channel.send(res);
+//        }
+//    }
 
     private Response createErrorResponse(Request request, Exception e) {
         Response response = new Response();

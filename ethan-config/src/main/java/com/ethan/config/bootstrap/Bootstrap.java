@@ -1,11 +1,16 @@
 package com.ethan.config.bootstrap;
 
+import com.ethan.common.URL;
 import com.ethan.common.config.ApplicationConfig;
 import com.ethan.common.config.ConfigManager;
 import com.ethan.common.config.RegistryConfig;
 import com.ethan.common.util.ConcurrentHashMapUtils;
+import com.ethan.config.ReferenceConfig;
+import com.ethan.config.ServiceConfig;
 import com.ethan.config.bootstrap.builder.ApplicationBuilder;
+import com.ethan.remoting.transport.netty.server.NettyServer;
 import com.ethan.rpc.model.ApplicationModel;
+import lombok.Getter;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -19,51 +24,46 @@ import java.util.function.Consumer;
  *
  * @author Huang Z.Y.
  */
-public final class EthanBootstrap {
+public final class Bootstrap {
 
-    private static final ConcurrentMap<ApplicationModel, EthanBootstrap> instanceMap = new ConcurrentHashMap<>();
-    private static volatile EthanBootstrap instance;
+    private static final ConcurrentMap<ApplicationModel, Bootstrap> instanceMap = new ConcurrentHashMap<>();
+    private static volatile Bootstrap instance;
+    @Getter
     private final ApplicationModel applicationModel;
+    @Getter
     private final ConfigManager configManager;
     private final Object startLock = new Object();
     protected volatile boolean initialized = false;
+    private NettyServer server;
 
-    public EthanBootstrap(ApplicationModel applicationModel) {
+    public Bootstrap(ApplicationModel applicationModel) {
         this.applicationModel = applicationModel;
         configManager = applicationModel.getApplicationConfigManager();
     }
 
-    public static EthanBootstrap getInstance() {
+    public static Bootstrap getInstance() {
         if (instance == null) {
-            synchronized (EthanBootstrap.class) {
+            synchronized (Bootstrap.class) {
                 if (instance == null) {
-                    instance = EthanBootstrap.getInstance(ApplicationModel.defaultModel());
+                    instance = Bootstrap.getInstance(ApplicationModel.defaultModel());
                 }
             }
         }
         return instance;
     }
 
-    public static EthanBootstrap getInstance(ApplicationModel applicationModel) {
+    public static Bootstrap getInstance(ApplicationModel applicationModel) {
         return ConcurrentHashMapUtils.computeIfAbsent(
-                instanceMap, applicationModel, k -> new EthanBootstrap(applicationModel));
-    }
-
-    public ApplicationModel getApplicationModel() {
-        return applicationModel;
-    }
-
-    public ConfigManager getConfigManager() {
-        return configManager;
+                instanceMap, applicationModel, k -> new Bootstrap(applicationModel));
     }
 
     /**
      * Set the name of application.
      *
      * @param name the name of application
-     * @return current {@link EthanBootstrap} instance
+     * @return current {@link Bootstrap} instance
      */
-    public EthanBootstrap application(String name) {
+    public Bootstrap application(String name) {
         return application(name, builder -> {
             // DO NOTHING
         });
@@ -74,9 +74,9 @@ public final class EthanBootstrap {
      *
      * @param name            The name of application
      * @param consumerBuilder {@link ApplicationBuilder}
-     * @return Current {@link EthanBootstrap} instance
+     * @return Current {@link Bootstrap} instance
      */
-    public EthanBootstrap application(String name, Consumer<ApplicationBuilder> consumerBuilder) {
+    public Bootstrap application(String name, Consumer<ApplicationBuilder> consumerBuilder) {
         ApplicationBuilder builder = createApplicationBuilder(name);
         consumerBuilder.accept(builder);
         return application(builder.build());
@@ -90,10 +90,25 @@ public final class EthanBootstrap {
      * Set the {@link com.ethan.common.config.ApplicationConfig}.
      *
      * @param applicationConfig The {@link com.ethan.common.config.ApplicationConfig}
-     * @return Current {@link EthanBootstrap} instance
+     * @return Current {@link Bootstrap} instance
      */
-    public EthanBootstrap application(ApplicationConfig applicationConfig) {
+    public Bootstrap application(ApplicationConfig applicationConfig) {
         configManager.setApplication(applicationConfig);
+        return this;
+    }
+
+    public Bootstrap reference(ReferenceConfig<?> referenceConfig) {
+        getConfigManager().addReference(referenceConfig);
+        return this;
+    }
+
+    public Bootstrap service(ServiceConfig<?> serviceConfig) {
+        getConfigManager().addService(serviceConfig);
+        return this;
+    }
+
+    public Bootstrap server(URL url) {
+        server = new NettyServer(url);
         return this;
     }
 
@@ -106,30 +121,10 @@ public final class EthanBootstrap {
             if (initialized) {
                 return;
             }
-//            onInitialize();
-//
-//            // register shutdown hook
-//            registerShutdownHook();
-
-            startConfigCenter();
-
-//            loadApplicationConfigs();
-//
-//            initModuleDeployers();
-//
-//            initMetricsReporter();
-//
-//            initMetricsService();
-//
-//            // @since 2.7.8
-//            startMetadataCenter();
+            configManager.loadConfigsOfTypeFromProps(RegistryConfig.class);
 
             initialized = true;
         }
-    }
-
-    private void startConfigCenter() {
-        configManager.loadConfigsOfTypeFromProps(RegistryConfig.class);
     }
 
 }

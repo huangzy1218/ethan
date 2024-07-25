@@ -63,7 +63,7 @@ public class DefaultFuture extends CompletableFuture<Object> {
     }
 
     /**
-     * check time out of the future
+     * Check time out of the future.
      */
     private static void timeoutCheck(DefaultFuture future) {
         if (future == null || future.isDone()) {

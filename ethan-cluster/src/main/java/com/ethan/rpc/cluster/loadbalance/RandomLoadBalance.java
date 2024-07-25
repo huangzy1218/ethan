@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
+ * Random load balance.
+ *
  * @author Huang Z.Y.
  */
 public class RandomLoadBalance extends AbstractLoadBalance {

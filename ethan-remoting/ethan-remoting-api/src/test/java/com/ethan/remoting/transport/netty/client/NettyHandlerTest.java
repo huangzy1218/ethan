@@ -34,7 +34,7 @@ public class NettyHandlerTest {
         // Send a message from client to server
         Request request = new Request();
         request.setData("Hello World");
-        nettyClient.send(message);
+        nettyClient.send(request);
     }
 
     @Test

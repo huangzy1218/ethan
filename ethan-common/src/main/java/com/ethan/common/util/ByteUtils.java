@@ -1,11 +1,17 @@
 package com.ethan.common.util;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 /**
  * Byte utility for codec.
  *
  * @author Huang Z.Y.
  */
 public class ByteUtils {
+
+
+    private static final ThreadLocal<MessageDigest> MD = new ThreadLocal<>();
 
     /**
      * Byte array copy.
@@ -149,5 +155,39 @@ public class ByteUtils {
         b[off + 0] = (byte) (v >>> 24);
     }
 
+
+    /**
+     * Get md5.
+     *
+     * @param str Input string
+     * @return MD5 byte array
+     */
+    public static byte[] getMD5(String str) {
+        return getMD5(str.getBytes());
+    }
+
+    /**
+     * Get md5.
+     *
+     * @param source Byte array source
+     * @return MD5 byte array
+     */
+    public static byte[] getMD5(byte[] source) {
+        MessageDigest md = getMessageDigest();
+        return md.digest(source);
+    }
+
+    private static MessageDigest getMessageDigest() {
+        MessageDigest ret = MD.get();
+        if (ret == null) {
+            try {
+                ret = MessageDigest.getInstance("MD5");
+                MD.set(ret);
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return ret;
+    }
 
 }

@@ -8,7 +8,7 @@ import com.ethan.common.extension.SPI;
  *
  * @author Huang Z.Y.
  */
-@SPI
+@SPI("remote")
 public interface Protocol {
 
     /**
