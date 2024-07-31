@@ -12,11 +12,7 @@ import lombok.Data;
 public class AbstractInterfaceConfig extends AbstractConfig {
 
     private static final long serialVersionUID = -1035807325876392990L;
-
-    /**
-     * The interface name of the exported service.
-     */
-    protected String interfaceName;
+    
     /**
      * The remote service version the customer/provider side will reference.
      */

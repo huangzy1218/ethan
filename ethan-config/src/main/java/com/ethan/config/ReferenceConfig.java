@@ -2,15 +2,9 @@ package com.ethan.config;
 
 import com.ethan.common.config.ConsumerConfig;
 import com.ethan.common.config.ReferenceConfigBase;
-import com.ethan.common.constant.CommonConstants;
-import com.ethan.common.util.StringUtils;
-import com.ethan.rpc.EthanStub;
 import com.ethan.rpc.Invoker;
-import com.ethan.rpc.descriptor.ServiceDescriptor;
 import com.ethan.rpc.model.ConsumerModel;
-import com.ethan.rpc.model.FrameworkServiceRepository;
-
-import java.util.Map;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
  * @author Huang Z.Y.
@@ -18,7 +12,7 @@ import java.util.Map;
 public class ReferenceConfig<T> extends ReferenceConfigBase {
 
     private static final long serialVersionUID = 1505896195123513822L;
-
+    private final AnnotationConfigApplicationContext CONTEXT = new AnnotationConfigApplicationContext(ReferenceConfig.class);
     /**
      * The interface class of the reference service.
      */
@@ -49,68 +43,9 @@ public class ReferenceConfig<T> extends ReferenceConfigBase {
      */
     private transient volatile boolean initialized;
 
-
+    @SuppressWarnings("unchecked")
     public T get() {
-        if (destroyed) {
-            throw new IllegalStateException("The invoker of ReferenceConfig(" + url + ") has already destroyed!");
-        }
-
-        if (ref == null) {
-            init();
-        }
-
-        return ref;
-    }
-
-    protected synchronized void init() {
-        if (initialized && ref != null) {
-            return;
-        }
-        try {
-            // Auto detect proxy type
-            String proxyType = getProxy();
-            if (StringUtils.isBlank(proxyType) && EthanStub.class.isAssignableFrom(interfaceClass)) {
-                setProxy(CommonConstants.NATIVE_STUB);
-            }
-
-            Map<String, String> referenceParameters = appendConfig();
-
-            FrameworkServiceRepository repository = getScopeModel().getServiceRepository();
-            ServiceDescriptor serviceDescriptor;
-            if (CommonConstants.NATIVE_STUB.equals(getProxy())) {
-                serviceDescriptor = StubSuppliers.getServiceDescriptor(interfaceName);
-                repository.registerService(serviceDescriptor);
-                setInterface(serviceDescriptor.getInterfaceName());
-            } else {
-                serviceDescriptor = repository.registerService(interfaceClass);
-            }
-            consumerModel = new ConsumerModel(proxy, serviceKey);
-
-            // Compatible with dependencies on ServiceModel#getReferenceConfig() , and will be removed in a future
-            // version.
-            consumerModel.setConfig(this);
-
-            repository.registerConsumer(consumerModel);
-
-            serviceMetadata.getAttachments().putAll(referenceParameters);
-
-            ref = createProxy(referenceParameters);
-
-            serviceMetadata.setTarget(ref);
-            serviceMetadata.addAttribute(PROXY_CLASS_REF, ref);
-
-            consumerModel.setProxyObject(ref);
-            consumerModel.initMethodModels();
-
-            if (check) {
-                checkInvokerAvailable(0);
-            }
-        } catch (Throwable t) {
-            logAndCleanup(t);
-
-            throw t;
-        }
-        initialized = true;
+        return (T) CONTEXT.getBean(interfaceClass.getName());
     }
 
 }

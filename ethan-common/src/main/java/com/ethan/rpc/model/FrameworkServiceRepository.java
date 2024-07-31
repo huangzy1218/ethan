@@ -1,7 +1,6 @@
 package com.ethan.rpc.model;
 
 import com.ethan.common.util.ConcurrentHashMapUtils;
-import com.ethan.rpc.descriptor.ReflectionServiceDescriptor;
 import com.ethan.rpc.descriptor.ServiceDescriptor;
 
 import java.util.List;
@@ -50,8 +49,7 @@ public class FrameworkServiceRepository {
     }
 
     public ServiceDescriptor registerService(Class<?> interfaceClazz) {
-        ServiceDescriptor serviceDescriptor = new ReflectionServiceDescriptor(interfaceClazz);
-        return registerService(interfaceClazz, serviceDescriptor);
+        
     }
 
     public ServiceDescriptor registerService(Class<?> interfaceClazz, ServiceDescriptor serviceDescriptor) {

@@ -2,12 +2,11 @@ package com.ethan.config;
 
 import com.ethan.common.URL;
 import com.ethan.common.config.ServiceConfigBase;
+import com.ethan.remoting.transport.netty.server.NettyServer;
 import com.ethan.rpc.Exporter;
 import com.ethan.rpc.ProxyFactory;
-import com.ethan.rpc.descriptor.ServiceDescriptor;
 import com.ethan.rpc.model.ApplicationModel;
 import com.ethan.rpc.model.FrameworkServiceRepository;
-import com.ethan.rpc.model.ProviderModel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,11 +34,12 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
      * the JavassistProxyFactory is its default implementation.
      */
     private ProxyFactory proxyFactory;
-    private ProviderModel providerModel;
     /**
      * Whether the provider has been exported.
      */
     private transient volatile boolean exported;
+    private NettyServer server;
+
 
     @Override
     public void export() {
@@ -55,11 +55,8 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
         if (exported) {
             return;
         }
-
         FrameworkServiceRepository repository = ApplicationModel.getServiceRepository();
-        ServiceDescriptor serviceDescriptor = repository.registerService(getInterfaceClass());
-        providerModel = new ProviderModel(serviceKey, ref);
-        repository.registerProvider(providerModel);
+        repository.registerService(interfaceClass);
     }
 
     private void exportLocal(URL url) {

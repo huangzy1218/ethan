@@ -105,7 +105,7 @@ public class DefaultFuture extends CompletableFuture<Object> {
 
     private void doReceived(Response res) {
         if (res == null) {
-            throw new IllegalStateException("response cannot be null");
+            throw new IllegalStateException("Response cannot be null");
         }
         if (res.getStatus() == Response.OK) {
             this.complete(res.getResult());

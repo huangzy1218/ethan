@@ -1,6 +1,5 @@
 package com.ethan.config.bootstrap;
 
-import com.ethan.common.URL;
 import com.ethan.common.config.ApplicationConfig;
 import com.ethan.common.config.ConfigManager;
 import com.ethan.common.config.RegistryConfig;
@@ -8,7 +7,6 @@ import com.ethan.common.util.ConcurrentHashMapUtils;
 import com.ethan.config.ReferenceConfig;
 import com.ethan.config.ServiceConfig;
 import com.ethan.config.bootstrap.builder.ApplicationBuilder;
-import com.ethan.remoting.transport.netty.server.NettyServer;
 import com.ethan.rpc.model.ApplicationModel;
 import lombok.Getter;
 
@@ -34,7 +32,6 @@ public final class Bootstrap {
     private final ConfigManager configManager;
     private final Object startLock = new Object();
     protected volatile boolean initialized = false;
-    private NettyServer server;
 
     public Bootstrap(ApplicationModel applicationModel) {
         this.applicationModel = applicationModel;
@@ -104,11 +101,6 @@ public final class Bootstrap {
 
     public Bootstrap service(ServiceConfig<?> serviceConfig) {
         getConfigManager().addService(serviceConfig);
-        return this;
-    }
-
-    public Bootstrap server(URL url) {
-        server = new NettyServer(url);
         return this;
     }
 
