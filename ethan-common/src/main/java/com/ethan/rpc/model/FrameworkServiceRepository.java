@@ -49,7 +49,7 @@ public class FrameworkServiceRepository {
     }
 
     public ServiceDescriptor registerService(Class<?> interfaceClazz) {
-        
+        return null;
     }
 
     public ServiceDescriptor registerService(Class<?> interfaceClazz, ServiceDescriptor serviceDescriptor) {

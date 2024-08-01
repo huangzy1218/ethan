@@ -1,6 +1,5 @@
 package com.ethan.rpc.proxy;
 
-import com.ethan.common.URL;
 import com.ethan.common.constant.CommonConstants;
 import com.ethan.rpc.*;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +17,10 @@ public abstract class AbstractProxyInvoker<T> implements Invoker<T> {
 
     private final T proxy;
     private final Class<T> type;
-    private final URL url;
 
-    public AbstractProxyInvoker(T proxy, Class<T> type, URL url) {
+    public AbstractProxyInvoker(T proxy, Class<T> type) {
         this.proxy = proxy;
         this.type = type;
-        this.url = url;
     }
 
     @Override
@@ -48,8 +45,7 @@ public abstract class AbstractProxyInvoker<T> implements Invoker<T> {
             return new AsyncRpcResult(appResponseFuture, invocation);
         } catch (Throwable e) {
             throw new RpcException(
-                    "Failed to invoke remote proxy method " + invocation.getMethodName() + " to " + getUrl()
-                            + ", cause: " + e.getMessage(),
+                    "Failed to invoke remote proxy method " + invocation.getMethodName() + ", cause: " + e.getMessage(),
                     e);
         }
     }
@@ -70,11 +66,6 @@ public abstract class AbstractProxyInvoker<T> implements Invoker<T> {
     @Override
     public Class<T> getInterface() {
         return type;
-    }
-
-    @Override
-    public URL getUrl() {
-        return url;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.ethan.remoting.transport.netty.client;
 
 import com.ethan.common.URL;
+import com.ethan.remoting.RemotingClient;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.support.DefaultFuture;
 import com.ethan.remoting.transport.AbstractEndpoint;
@@ -14,7 +15,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 /**
  * @author Huang Z.Y.
  */
-public class NettyClient extends AbstractEndpoint {
+public class NettyClient extends AbstractEndpoint implements RemotingClient {
 
     private Bootstrap bootstrap;
     private EventLoopGroup group;
@@ -44,6 +45,7 @@ public class NettyClient extends AbstractEndpoint {
                 });
     }
 
+    @Override
     public void connect() {
         try {
             ChannelFuture future = bootstrap.connect(getUrl().getHost(), getUrl().getPort()).sync();
@@ -58,7 +60,7 @@ public class NettyClient extends AbstractEndpoint {
     /**
      * Send message to server.
      *
-     * @param message The content of the message to be sent
+     * @param request The content of the message to be sent
      */
     public void send(Request request) {
         if (group.isShuttingDown() || group.isShutdown()) {

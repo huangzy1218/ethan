@@ -1,6 +1,5 @@
 package com.ethan.rpc.proxy.jdk;
 
-import com.ethan.common.URL;
 import com.ethan.rpc.Invoker;
 import com.ethan.rpc.RpcException;
 import com.ethan.rpc.proxy.AbstractProxyFactory;
@@ -18,8 +17,8 @@ import java.lang.reflect.Proxy;
 public class JdkProxyFactory extends AbstractProxyFactory {
 
     @Override
-    public <T> Invoker<T> getInvoker(T proxy, Class<T> type, URL url) throws RpcException {
-        return new AbstractProxyInvoker<T>(proxy, type, url) {
+    public <T> Invoker<T> getInvoker(T proxy, Class<T> type) throws RpcException {
+        return new AbstractProxyInvoker<T>(proxy, type) {
             @Override
             protected Object doInvoke(T proxy, String methodName, Class<?>[] parameterTypes, Object[] arguments)
                     throws Throwable {

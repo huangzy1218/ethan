@@ -1,6 +1,7 @@
 package com.ethan.remoting.transport.netty.server;
 
 import com.ethan.common.URL;
+import com.ethan.remoting.RemotingServer;
 import com.ethan.remoting.transport.AbstractEndpoint;
 import com.ethan.remoting.transport.netty.codec.NettyCodecAdapter;
 import io.netty.bootstrap.ServerBootstrap;
@@ -16,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Huang Z.Y.
  */
 @Slf4j
-public class NettyServer extends AbstractEndpoint {
+public class NettyServer extends AbstractEndpoint implements RemotingServer {
 
     private ServerBootstrap bootstrap;
     private EventLoopGroup bossGroup;
@@ -51,7 +52,8 @@ public class NettyServer extends AbstractEndpoint {
     /**
      * 启动 Netty 服务器并绑定指定端口
      */
-    public void start() {
+    @Override
+    public void open() {
         try {
             bootstrap.bind(getUrl().getPort()).sync();
         } catch (InterruptedException e) {
@@ -63,7 +65,8 @@ public class NettyServer extends AbstractEndpoint {
     /**
      * 关闭 Netty 服务器，释放资源
      */
-    public void shutdown() {
+    @Override
+    public void close() {
         try {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

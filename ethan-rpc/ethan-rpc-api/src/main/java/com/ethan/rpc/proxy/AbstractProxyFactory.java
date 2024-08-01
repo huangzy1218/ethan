@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedHashSet;
 
-import static com.ethan.common.constant.CommonConstants.*;
+import static com.ethan.common.constant.CommonConstants.COMMA_SPLIT_PATTERN;
 
 
 /**
@@ -32,7 +32,7 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
         LinkedHashSet<Class<?>> interfaces = new LinkedHashSet<>();
         ClassLoader classLoader = getClassLoader(invoker);
 
-        String config = invoker.getUrl().getParameter(INTERFACES);
+        String config = invoker.getInterface().getName();
         if (StringUtils.isNotEmpty(config)) {
             String[] types = COMMA_SPLIT_PATTERN.split(config);
             for (String type : types) {
@@ -47,7 +47,7 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
         if (generic) {
             try {
                 // Find the real interface from url
-                String realInterface = invoker.getUrl().getParameter(INTERFACE);
+                String realInterface = invoker.getInterface().getName();
                 realInterfaceClass = ReflectUtils.forName(classLoader, realInterface);
                 interfaces.add(realInterfaceClass);
             } catch (Throwable ignored) {

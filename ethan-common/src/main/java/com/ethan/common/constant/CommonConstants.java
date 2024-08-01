@@ -71,6 +71,7 @@ public interface CommonConstants {
     int DEFAULT_CORE_POOL_SIZE = Runtime.getRuntime().availableProcessors();
     int DEFAULT_KEEP_ALIVE_TIME = 60;
     String DEFAULT_PROXY = "javassist";
-
-
+    String DEFAULT_REGISTRY = "zookeeper";
+    String DEFAULT_TRANSPORT = "netty";
+    
 }

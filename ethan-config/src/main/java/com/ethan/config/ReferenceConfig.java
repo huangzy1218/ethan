@@ -1,7 +1,7 @@
 package com.ethan.config;
 
+import com.ethan.common.config.AbstractInterfaceConfig;
 import com.ethan.common.config.ConsumerConfig;
-import com.ethan.common.config.ReferenceConfigBase;
 import com.ethan.rpc.Invoker;
 import com.ethan.rpc.model.ConsumerModel;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 /**
  * @author Huang Z.Y.
  */
-public class ReferenceConfig<T> extends ReferenceConfigBase {
+public class ReferenceConfig<T> extends AbstractInterfaceConfig {
 
     private static final long serialVersionUID = 1505896195123513822L;
     private final AnnotationConfigApplicationContext CONTEXT = new AnnotationConfigApplicationContext(ReferenceConfig.class);
@@ -42,6 +42,9 @@ public class ReferenceConfig<T> extends ReferenceConfigBase {
      * The flag whether the ReferenceConfig has been initialized.
      */
     private transient volatile boolean initialized;
+    public ReferenceConfig() {
+        super();
+    }
 
     @SuppressWarnings("unchecked")
     public T get() {

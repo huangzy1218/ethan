@@ -32,7 +32,7 @@ public class NativeInvoker<T> extends AbstractInvoker<T> {
     private volatile URL consumerUrl = null;
 
     public NativeInvoker(Class<T> type, URL url, String key, Map<String, Exporter<?>> exporterMap) {
-        super(type, url);
+        super(type);
         this.key = key;
         this.exporterMap = exporterMap;
     }

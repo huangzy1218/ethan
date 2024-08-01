@@ -28,15 +28,13 @@ public class NativeProtocolTest {
     void testLocalProtocol() throws Exception {
         DemoService service = new DemoServiceImpl();
         Invoker<?> invoker = proxy.getInvoker(
-                service, DemoService.class,
-                URL.valueOf("native://127.0.0.1:8080/DemoService")
-                        .addParameter(INTERFACE_KEY, DemoService.class.getName()));
+                service, DemoService.class);
         Exporter<?> exporter = protocol.export(invoker);
         Invoker<DemoService> refer = protocol.refer(
                 DemoService.class,
                 URL.valueOf("native://127.0.0.1:8080/DemoService")
                         .addParameter(INTERFACE_KEY, DemoService.class.getName()));
-        
+
         service = proxy.getProxy(refer);
         Object res1 = service.invoke("native://127.0.0.1:8080/DemoService", "invoke");
         Assertions.assertEquals("native://127.0.0.1:8080/DemoService:invoke", res1);

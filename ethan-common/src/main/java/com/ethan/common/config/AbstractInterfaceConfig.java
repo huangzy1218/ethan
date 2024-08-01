@@ -28,6 +28,7 @@ public class AbstractInterfaceConfig extends AbstractConfig {
      */
     protected String proxy;
     protected String serviceKey;
+    protected String interfaceName;
 
     private static String buildServiceKey(String path, String group, String version) {
         int length = path == null ? 0 : path.length();

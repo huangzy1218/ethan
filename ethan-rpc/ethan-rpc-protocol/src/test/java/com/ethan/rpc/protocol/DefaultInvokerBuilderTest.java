@@ -23,7 +23,7 @@ class DefaultInvokerBuilderTest {
     // Mocked Invocation
     private RpcInvocation invocation;
     // Test class extending AbstractInvoker for testing purposes
-    private AbstractInvoker<DemoService> invoker = new AbstractInvoker<>(DemoService.class, url) {
+    private AbstractInvoker<DemoService> invoker = new AbstractInvoker<>(DemoService.class) {
         @Override
         protected Result doInvoke(Invocation invocation) throws Throwable {
             // Simulate some invocation logic

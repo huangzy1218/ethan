@@ -20,6 +20,10 @@
             <groupId>com.ethan</groupId>
             <artifactId>ethan-remoting-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-registry</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
