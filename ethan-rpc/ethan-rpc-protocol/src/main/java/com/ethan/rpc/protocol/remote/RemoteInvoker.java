@@ -1,6 +1,5 @@
 package com.ethan.rpc.protocol.remote;
 
-import com.ethan.common.URL;
 import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.TimeoutException;
 import com.ethan.remoting.exchange.ExchangeClient;
@@ -21,9 +20,9 @@ public class RemoteInvoker<T> extends AbstractInvoker<T> {
 
     private ExchangeClient client;
 
-    public RemoteInvoker(Class<T> type, URL url) {
-        super(type, url);
-        client = new MessageExchangeClient(new NioSocketChannel(), url);
+    public RemoteInvoker(Class<T> type) {
+        super(type);
+        client = new MessageExchangeClient(new NioSocketChannel());
     }
 
     @Override
@@ -32,14 +31,7 @@ public class RemoteInvoker<T> extends AbstractInvoker<T> {
         final String methodName = RpcUtils.getMethodName(invocation);
 
         try {
-            int timeout = RpcUtils.calculateTimeout(getUrl(), DEFAULT_TIMEOUT);
-            if (timeout <= 0) {
-                return AsyncRpcResult.newDefaultAsyncResult(
-                        new RpcException("No time left for making the following call: " + invocation.getServiceName() + "."
-                                + RpcUtils.getMethodName(invocation) + ", terminate directly."),
-                        invocation);
-            }
-            invocation.setAttachment(TIMEOUT_KEY, String.valueOf(timeout));
+            invocation.setAttachment(TIMEOUT_KEY, String.valueOf(DEFAULT_TIMEOUT));
             Request request = new Request();
             request.setData(inv);
 
@@ -47,12 +39,11 @@ public class RemoteInvoker<T> extends AbstractInvoker<T> {
             return AsyncRpcResult.newDefaultAsyncResult(invocation);
         } catch (TimeoutException e) {
             throw new RpcException(
-                    "Invoke remote method timeout. method: " + RpcUtils.getMethodName(invocation) + ", provider: "
-                            + getUrl() + ", cause: " + e.getMessage(),
+                    "Invoke remote method timeout. method: " + RpcUtils.getMethodName(invocation) + ", cause: " + e.getMessage(),
                     e);
         } catch (RemotingException e) {
             String remoteExpMsg = "Failed to invoke remote method: " + RpcUtils.getMethodName(invocation)
-                    + ", provider: " + getUrl() + ", cause: " + e.getMessage();
+                    + ", cause: " + e.getMessage();
 
             throw new RpcException(remoteExpMsg, e);
         }

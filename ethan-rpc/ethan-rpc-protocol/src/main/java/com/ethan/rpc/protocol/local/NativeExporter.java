@@ -15,9 +15,9 @@ public class NativeExporter<T> extends AbstractExporter<T> {
 
     private final Map<String, Exporter<?>> exporterMap;
 
-    NativeExporter(Invoker<T> invoker, String key, Map<String, Exporter<?>> exporterMap) {
+    NativeExporter(Invoker<T> invoker, Map<String, Exporter<?>> exporterMap) {
         super(invoker);
-        this.key = key;
+        this.key = invoker.getInterface().getName();
         this.exporterMap = exporterMap;
         exporterMap.put(key, this);
     }

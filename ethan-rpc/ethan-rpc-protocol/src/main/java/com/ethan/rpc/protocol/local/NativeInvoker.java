@@ -2,8 +2,8 @@ package com.ethan.rpc.protocol.local;
 
 import com.ethan.common.URL;
 import com.ethan.common.threadpool.AdaptiveExecuteService;
-import com.ethan.common.url.component.ServiceAddressURL;
 import com.ethan.common.util.ExecutorUtils;
+import com.ethan.common.util.PropertyUtils;
 import com.ethan.rpc.*;
 import com.ethan.rpc.protocol.AbstractInvoker;
 import com.ethan.rpc.support.RpcUtils;
@@ -31,30 +31,23 @@ public class NativeInvoker<T> extends AbstractInvoker<T> {
     private volatile Exporter<?> exporter = null;
     private volatile URL consumerUrl = null;
 
-    public NativeInvoker(Class<T> type, URL url, String key, Map<String, Exporter<?>> exporterMap) {
+    public NativeInvoker(Class<T> type, Map<String, Exporter<?>> exporterMap) {
         super(type);
-        this.key = key;
+        key = type.getName();
         this.exporterMap = exporterMap;
     }
 
     @Override
     protected Result doInvoke(Invocation invocation) throws Throwable {
         if (exporter == null) {
-            exporter = NativeProtocol.getExporter(exporterMap, getUrl());
+            exporter = NativeProtocol.getExporter(exporterMap);
             if (exporter == null) {
                 throw new RpcException("Service [" + key + "] not found.");
             }
         }
         // Solve local exposure, the server opens the token, and the client call fails.
         Invoker<?> invoker = exporter.getInvoker();
-        URL serverURL = invoker.getUrl();
-        if (consumerUrl == null) {
-            // No need to sync, multi-objects is acceptable and will be gc-ed.
-            consumerUrl =
-                    new ServiceAddressURL(serverURL.getUrlAddress(), serverURL.getUrlParam(), getUrl());
-        }
-
-        int timeout = RpcUtils.calculateTimeout(consumerUrl, DEFAULT_TIMEOUT);
+        int timeout = PropertyUtils.getProperty("ethan.timeout", DEFAULT_TIMEOUT);
         if (timeout <= 0) {
             return AsyncRpcResult.newDefaultAsyncResult(
                     new RpcException("No time left for making the following call: " + invocation.getServiceName() + "."

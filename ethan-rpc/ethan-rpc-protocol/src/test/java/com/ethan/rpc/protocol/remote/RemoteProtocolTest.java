@@ -12,7 +12,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.ethan.common.constant.CommonConstants.*;
+import static com.ethan.common.constant.CommonConstants.DEFAULT_PROXY;
+import static com.ethan.common.constant.CommonConstants.REMOTE_PROTOCOL;
 
 public class RemoteProtocolTest {
 
@@ -30,14 +31,10 @@ public class RemoteProtocolTest {
     void tesRemoteProtocol() throws Exception {
         DemoService service = new DemoServiceImpl();
         Invoker<?> invoker = proxy.getInvoker(
-                service, DemoService.class,
-                URL.valueOf("remote://127.0.0.1:8080/DemoService")
-                        .addParameter(INTERFACE_KEY, DemoService.class.getName()));
+                service, DemoService.class);
         Exporter<?> exporter = protocol.export(invoker);
         Invoker<DemoService> refer = protocol.refer(
-                DemoService.class,
-                URL.valueOf("native://127.0.0.1:8080/DemoService")
-                        .addParameter(INTERFACE_KEY, DemoService.class.getName()));
+                DemoService.class);
 
         service = proxy.getProxy(refer);
         Object res1 = service.invoke("native://127.0.0.1:8080/DemoService", "invoke");

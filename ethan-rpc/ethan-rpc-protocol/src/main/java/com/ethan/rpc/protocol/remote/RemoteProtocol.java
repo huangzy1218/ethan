@@ -31,13 +31,13 @@ public class RemoteProtocol implements Protocol {
     }
 
     @Override
-    public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
-        return protocolBindingRefer(type, url);
+    public <T> Invoker<T> refer(Class<T> type) throws RpcException {
+        return protocolBindingRefer(type);
     }
 
-    public <T> Invoker<T> protocolBindingRefer(Class<T> serviceType, URL url) throws RpcException {
+    public <T> Invoker<T> protocolBindingRefer(Class<T> serviceType) throws RpcException {
         // Create rpc invoker
-        RemoteInvoker<T> invoker = new RemoteInvoker<>(serviceType, url);
+        RemoteInvoker<T> invoker = new RemoteInvoker<>(serviceType);
         return invoker;
     }
 
