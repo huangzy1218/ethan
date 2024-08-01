@@ -1,6 +1,7 @@
 package com.ethan.common.config;
 
 import com.ethan.common.util.StringUtils;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -9,10 +10,11 @@ import lombok.Data;
  * @author Huang Z.Y.
  */
 @Data
+@Builder
 public class AbstractInterfaceConfig extends AbstractConfig {
 
     private static final long serialVersionUID = -1035807325876392990L;
-    
+
     /**
      * The remote service version the customer/provider side will reference.
      */
