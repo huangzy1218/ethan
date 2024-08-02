@@ -7,8 +7,7 @@ import com.ethan.rpc.Exporter;
 import com.ethan.rpc.ProxyFactory;
 import com.ethan.rpc.model.ApplicationModel;
 import com.ethan.rpc.model.FrameworkServiceRepository;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -23,10 +22,10 @@ import static com.ethan.common.constant.CommonConstants.LOCAL_PROTOCOL;
  * @author Huang Z.Y.
  */
 @Slf4j
-@Getter
-@Builder
+@Data
 public class ServiceConfig<T> extends AbstractInterfaceConfig {
 
+    private static final long serialVersionUID = -788514912403041933L;
     /**
      * The exported services.
      */

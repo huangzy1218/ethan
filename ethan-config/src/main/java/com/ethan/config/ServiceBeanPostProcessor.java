@@ -42,10 +42,11 @@ public class ServiceBeanPostProcessor implements BeanPostProcessor {
             // Get Reference annotation
             Reference service = bean.getClass().getAnnotation(Reference.class);
             // Build rpc service properties
-            ServiceConfig serviceConfig = ServiceConfig.builder()
-                    .group(service.group())
-                    .version(service.version())
-                    .service(bean).build();
+            ServiceConfig serviceConfig = new ServiceConfig();
+            serviceConfig.setGroup(service.group());
+            serviceConfig.setVersion(service.version());
+            serviceConfig.setAsync(service.async());
+            serviceConfig.setRef(service);
             ApplicationModel.defaultModel().getApplicationConfigManager().addService(serviceConfig);
         }
         return bean;

@@ -1,7 +1,6 @@
 package com.ethan.common.config;
 
 import com.ethan.common.util.StringUtils;
-import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -10,8 +9,7 @@ import lombok.Data;
  * @author Huang Z.Y.
  */
 @Data
-@Builder
-public class AbstractInterfaceConfig extends AbstractConfig {
+public abstract class AbstractInterfaceConfig extends AbstractConfig {
 
     private static final long serialVersionUID = -1035807325876392990L;
 
@@ -29,6 +27,7 @@ public class AbstractInterfaceConfig extends AbstractConfig {
     protected String proxy;
     protected String serviceKey;
     protected String interfaceName;
+    protected boolean async;
 
     private static String buildServiceKey(String path, String group, String version) {
         int length = path == null ? 0 : path.length();
