@@ -1,5 +1,6 @@
 package com.ethan.rpc.protocol;
 
+import com.ethan.common.URL;
 import com.ethan.remoting.RemotingException;
 import com.ethan.rpc.*;
 import com.ethan.rpc.support.RpcUtils;
@@ -29,14 +30,20 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
     private final Class<T> type;
 
     /**
+     * {@link com.ethan.common.Node} Url.
+     */
+    private final URL url;
+
+    /**
      * Available.
      */
     @Getter
     @Setter
     private volatile boolean available = true;
 
-    public AbstractInvoker(Class<T> type) {
+    public AbstractInvoker(Class<T> type, URL url) {
         this.type = type;
+        this.url = url;
     }
 
     @Override

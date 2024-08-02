@@ -94,8 +94,7 @@ public class ConfigManager {
         } catch (ReflectiveOperationException e) {
             throw new IllegalStateException(
                     "Cannot assign nested class when refreshing config: "
-                            + cls.getName(),
-                    e);
+                            + cls.getName(), e);
         }
     }
 

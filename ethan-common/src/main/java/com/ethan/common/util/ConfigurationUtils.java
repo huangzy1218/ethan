@@ -1,8 +1,5 @@
 package com.ethan.common.util;
 
-import com.ethan.common.config.Environment;
-import com.ethan.model.ApplicationModel;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -14,8 +11,6 @@ import java.util.Set;
  * @author Huang Z.Y.
  */
 public class ConfigurationUtils {
-
-    public static final Environment environment = ApplicationModel.defaultModel().modelEnvironment();
 
     /**
      * Search props and extract sub properties.
@@ -42,7 +37,8 @@ public class ConfigurationUtils {
                 // Type conversion is required here because the getProperty method of Properties returns String
                 @SuppressWarnings("unchecked")
                 V value = (V) properties.getProperty(name);
-                required.put(name, value);
+                String subName = name.substring(prefix.length());
+                required.put(subName, value);
             }
         }
         return required;

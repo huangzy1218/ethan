@@ -1,11 +1,13 @@
 package com.ethan.rpc;
 
+import com.ethan.common.Node;
+
 /**
  * Invoker, a executable service calls (API/SPI, Prototype, ThreadSafe).
  *
  * @author Huang Z.Y.
  */
-public interface Invoker<T> {
+public interface Invoker<T> extends Node {
 
     /**
      * Get service interface.

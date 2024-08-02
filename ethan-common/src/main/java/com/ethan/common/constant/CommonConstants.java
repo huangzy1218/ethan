@@ -74,5 +74,6 @@ public interface CommonConstants {
     String DEFAULT_REGISTRY = "zookeeper";
     String DEFAULT_TRANSPORT = "netty";
     int DEFAULT_SERVER_PORT = 9851;
+    String CONFIG_PATH = "ethan.yaml";
 
 }

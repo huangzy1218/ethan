@@ -2,6 +2,7 @@ package com.ethan.common.config;
 
 import com.ethan.common.context.ApplicationExt;
 import lombok.Getter;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Map;
 import java.util.Properties;
@@ -21,6 +22,14 @@ public class Environment implements ApplicationExt {
 
     public Object getProperty(String key) {
         return properties.get(key);
+    }
+
+    public Object getProperty(String key, Object defaultValue) {
+        Object value = properties.get(key);
+        if (ObjectUtils.isEmpty(value)) {
+            return defaultValue;
+        }
+        return value;
     }
 
     public void setProperty(String key, Object value) {

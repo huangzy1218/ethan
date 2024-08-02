@@ -3,13 +3,12 @@ package com.ethan.rpc.protocol.local;
 import com.ethan.common.URL;
 import com.ethan.common.threadpool.AdaptiveExecuteService;
 import com.ethan.common.util.ExecutorUtils;
-import com.ethan.common.util.PropertyUtils;
+import com.ethan.model.ApplicationModel;
 import com.ethan.rpc.*;
 import com.ethan.rpc.protocol.AbstractInvoker;
 import com.ethan.rpc.support.RpcUtils;
 import lombok.Setter;
 
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
@@ -26,28 +25,26 @@ public class NativeInvoker<T> extends AbstractInvoker<T> {
      * Service key.
      */
     private final String key;
-    private final Map<String, Exporter<?>> exporterMap;
     @Setter
     private volatile Exporter<?> exporter = null;
-    private volatile URL consumerUrl = null;
 
-    public NativeInvoker(Class<T> type, Map<String, Exporter<?>> exporterMap) {
-        super(type);
+    public NativeInvoker(Class<T> type, URL url, Exporter<?> exporter) {
+        super(type, url);
         key = type.getName();
-        this.exporterMap = exporterMap;
+        this.exporter = exporter;
     }
 
     @Override
     protected Result doInvoke(Invocation invocation) throws Throwable {
         if (exporter == null) {
-            exporter = NativeProtocol.getExporter(exporterMap);
+            exporter = NativeProtocol.getExporter(exporterMap, invocation.getServiceName());
             if (exporter == null) {
                 throw new RpcException("Service [" + key + "] not found.");
             }
         }
         // Solve local exposure, the server opens the token, and the client call fails.
         Invoker<?> invoker = exporter.getInvoker();
-        int timeout = PropertyUtils.getProperty("ethan.timeout", DEFAULT_TIMEOUT);
+        int timeout = (Integer) ApplicationModel.defaultModel().modelEnvironment().getProperty("ethan.timeout", DEFAULT_TIMEOUT);
         if (timeout <= 0) {
             return AsyncRpcResult.newDefaultAsyncResult(
                     new RpcException("No time left for making the following call: " + invocation.getServiceName() + "."

@@ -21,6 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
 
+import static com.ethan.common.constant.CommonConstants.CONFIG_PATH;
+
 /**
  * The bootstrap class of Ethan.<br/>
  * Get singleton instance by calling static method {@link #getInstance()}.
@@ -121,7 +123,10 @@ public final class Bootstrap {
             if (initialized) {
                 return;
             }
-            loadYamlProperties("")
+            try {
+                loadYamlProperties(CONFIG_PATH);
+            } catch (IOException ignored) {
+            }
             configManager.loadConfigsOfTypeFromProps(RegistryConfig.class);
             initialized = true;
         }

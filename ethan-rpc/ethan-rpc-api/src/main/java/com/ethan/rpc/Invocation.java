@@ -47,8 +47,7 @@ public interface Invocation extends Serializable {
     /**
      * Get attachment by key.
      *
-     * @return Attachment value.
-     * @serial
+     * @return Attachment value
      */
     String getAttachment(String key);
 
