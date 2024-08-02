@@ -73,5 +73,6 @@ public interface CommonConstants {
     String DEFAULT_PROXY = "javassist";
     String DEFAULT_REGISTRY = "zookeeper";
     String DEFAULT_TRANSPORT = "netty";
-    
+    int DEFAULT_SERVER_PORT = 9851;
+
 }

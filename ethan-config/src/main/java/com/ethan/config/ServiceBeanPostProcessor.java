@@ -6,7 +6,6 @@ import com.ethan.remoting.Transporter;
 import com.ethan.rpc.Invoker;
 import com.ethan.rpc.Protocol;
 import com.ethan.rpc.ProxyFactory;
-import com.ethan.rpc.model.ApplicationModel;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -22,11 +21,12 @@ import static com.ethan.common.constant.CommonConstants.LOCAL_PROTOCOL;
  */
 @Component
 @Slf4j
-public class ServiceBeanPostProcessor implements BeanPostProcessor {
+public class ServiceBeanPostProcessor<T> implements BeanPostProcessor {
 
     private final Protocol protocol;
     private Registry registry;
     private Transporter transporter;
+    private ServiceRepository repository;
 
     public ServiceBeanPostProcessor() {
         protocol = ApplicationModel.defaultModel()
@@ -39,15 +39,8 @@ public class ServiceBeanPostProcessor implements BeanPostProcessor {
     @SneakyThrows
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if (bean.getClass().isAnnotationPresent(Reference.class)) {
-            // Get Reference annotation
-            Reference service = bean.getClass().getAnnotation(Reference.class);
-            // Build rpc service properties
-            ServiceConfig serviceConfig = new ServiceConfig();
-            serviceConfig.setGroup(service.group());
-            serviceConfig.setVersion(service.version());
-            serviceConfig.setAsync(service.async());
-            serviceConfig.setRef(service);
-            ApplicationModel.defaultModel().getApplicationConfigManager().addService(serviceConfig);
+            ServiceConfig<?> serviceConfig = buildServiceConfig(bean);
+            repository.registerService(serviceConfig);
         }
         return bean;
     }
@@ -62,7 +55,7 @@ public class ServiceBeanPostProcessor implements BeanPostProcessor {
             if (rpcReference != null) {
                 ProxyFactory factory = TransportSupport.getProxyFactory();
                 // Get service interface
-                Class<?> superclass = service.getClass().getSuperclass();
+                Class<?> superclass = service.getType().getSuperclass();
                 Invoker<?> invoker = protocol.refer(superclass);
                 // Get proxy
                 try {
@@ -75,6 +68,23 @@ public class ServiceBeanPostProcessor implements BeanPostProcessor {
             }
         }
         return bean;
+    }
+
+    @SuppressWarnings("unchecked")
+    private ServiceConfig buildServiceConfig(Object bean) {
+        // Get Reference annotation
+        Reference service = bean.getClass().getAnnotation(Reference.class);
+        // Build rpc service properties
+        ServiceConfig serviceConfig = new ServiceConfig();
+        serviceConfig.setGroup(service.group());
+        serviceConfig.setVersion(service.version());
+        serviceConfig.setAsync(service.async());
+        serviceConfig.setProxy(service.proxy());
+        serviceConfig.setInterfaceName(service.getClass().getName());
+        serviceConfig.setRegistry(service.registry());
+        T ref = (T) service;
+        serviceConfig.setRef(ref);
+        return serviceConfig;
     }
 
 }

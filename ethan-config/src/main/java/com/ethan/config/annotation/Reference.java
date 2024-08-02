@@ -2,6 +2,8 @@ package com.ethan.config.annotation;
 
 import java.lang.annotation.*;
 
+import static com.ethan.common.constant.CommonConstants.*;
+
 /**
  * An annotation used for referencing a Dubbo service.
  *
@@ -35,16 +37,16 @@ public @interface Reference {
     /**
      * How the proxy is generated, legal values include: jdk, javassist
      */
-    String proxy() default "";
+    String proxy() default DEFAULT_PROXY;
 
     /**
      * Timeout value for service invocation, default value is 0.
      */
-    int timeout() default -1;
+    int timeout() default DEFAULT_TIMEOUT;
 
     /**
      * Registry associated name.
      */
-    String registry() default "";
+    String registry() default DEFAULT_REGISTRY;
 
 }

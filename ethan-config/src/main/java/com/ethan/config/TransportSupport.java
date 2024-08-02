@@ -4,7 +4,6 @@ import com.ethan.common.util.StringUtils;
 import com.ethan.registry.Registry;
 import com.ethan.remoting.Transporter;
 import com.ethan.rpc.ProxyFactory;
-import com.ethan.rpc.model.ApplicationModel;
 
 import static com.ethan.common.constant.CommonConstants.DEFAULT_PROXY;
 import static com.ethan.common.constant.CommonConstants.DEFAULT_REGISTRY;

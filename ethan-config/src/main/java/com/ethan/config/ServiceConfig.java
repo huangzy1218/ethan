@@ -2,11 +2,8 @@ package com.ethan.config;
 
 import com.ethan.common.URL;
 import com.ethan.common.config.AbstractInterfaceConfig;
-import com.ethan.remoting.transport.netty.server.NettyServer;
 import com.ethan.rpc.Exporter;
 import com.ethan.rpc.ProxyFactory;
-import com.ethan.rpc.model.ApplicationModel;
-import com.ethan.rpc.model.FrameworkServiceRepository;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,7 +44,6 @@ public class ServiceConfig<T> extends AbstractInterfaceConfig {
      * Whether the provider has been exported.
      */
     private transient volatile boolean exported;
-    private NettyServer server;
 
     public void export() {
         synchronized (this) {
@@ -62,8 +58,8 @@ public class ServiceConfig<T> extends AbstractInterfaceConfig {
         if (exported) {
             return;
         }
-        FrameworkServiceRepository repository = ApplicationModel.getServiceRepository();
-        repository.registerService();
+        ServiceRepository repository = ApplicationModel.getServiceRepository();
+        repository.registerService(interfaceName, ref);
     }
 
     private void exportLocal(URL url) {

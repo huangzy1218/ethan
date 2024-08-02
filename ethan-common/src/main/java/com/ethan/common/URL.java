@@ -54,6 +54,11 @@ public class URL implements Serializable {
         serviceKey = urlAddress.getServiceKey();
     }
 
+    public URL() {
+        urlAddress = new URLAddress();
+        urlParam = new URLParam();
+    }
+
     /**
      * Parse decoded url string, formatted dubbo://host:port/path?param=value, into strutted URL.
      *
@@ -187,6 +192,10 @@ public class URL implements Serializable {
 
     public int getPort() {
         return urlAddress.getPort();
+    }
+
+    public void setPort(int port) {
+        urlAddress.setPort(port);
     }
 
     public Map<String, Object> getAttributes() {
