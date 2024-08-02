@@ -3,7 +3,7 @@ package com.ethan.common.context;
 import com.ethan.common.extension.SPI;
 
 /**
- * Identification interface.
+ * Identification interface for Application extension.
  *
  * @author Huang Z.Y.
  */

@@ -1,4 +1,4 @@
-package com.ethan.rpc.model;
+package com.ethan.model;
 
 /**
  * This model is bound to your reference's configuration, for example, group, version or method level configuration.

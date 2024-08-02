@@ -1,6 +1,7 @@
 package com.ethan.config;
 
 import com.ethan.common.URL;
+import com.ethan.model.ApplicationModel;
 import com.ethan.registry.Registry;
 import com.ethan.remoting.RemotingException;
 import lombok.extern.slf4j.Slf4j;

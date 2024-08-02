@@ -289,4 +289,19 @@ public class StringUtils {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
+    public static String getFilenameExtension(String path) {
+        if (path == null) {
+            return null;
+        }
+        int extIndex = path.lastIndexOf('.');
+        if (extIndex == -1) {
+            return null;
+        }
+        int folderIndex = path.lastIndexOf('/');
+        if (folderIndex > extIndex) {
+            return null;
+        }
+        return path.substring(extIndex + 1);
+    }
+
 }

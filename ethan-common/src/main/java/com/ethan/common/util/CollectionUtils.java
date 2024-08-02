@@ -54,4 +54,7 @@ public class CollectionUtils {
         return !isEmptyMap(map);
     }
 
+    public static <K, V> Map<K, V> newHashMap() {
+        return org.springframework.util.CollectionUtils.newHashMap(16);
+    }
 }

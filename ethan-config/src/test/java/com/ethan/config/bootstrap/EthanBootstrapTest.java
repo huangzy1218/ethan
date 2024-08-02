@@ -1,7 +1,7 @@
 package com.ethan.config.bootstrap;
 
 
-import com.ethan.common.config.SysProps;
+import com.ethan.config.SysProps;
 import org.junit.jupiter.api.Test;
 
 public class EthanBootstrapTest {

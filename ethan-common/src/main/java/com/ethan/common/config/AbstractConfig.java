@@ -93,7 +93,7 @@ public abstract class AbstractConfig implements Serializable {
                 && method.getReturnType() == void.class);
     }
 
-    protected static void invokeSetter(Class<?> clazz, Object target, String propertyName, Object propertyValue) {
+    public static void invokeSetter(Class<?> clazz, Object target, String propertyName, Object propertyValue) {
         try {
             // Construct the setter method name
             String setterMethodName = "set" + StringUtils.capitalize(propertyName);

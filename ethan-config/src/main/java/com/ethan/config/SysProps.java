@@ -1,6 +1,8 @@
-package com.ethan.common.config;
+package com.ethan.config;
 
-import com.ethan.rpc.model.ApplicationModel;
+
+import com.ethan.common.config.Environment;
+import com.ethan.model.ApplicationModel;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.ethan.config;
+package com.ethan.model;
 
 import com.ethan.common.bean.ScopeBeanFactory;
 import com.ethan.common.config.ConfigManager;
@@ -22,12 +22,11 @@ public class ApplicationModel implements ExtensionAccessor {
     private static final Object globalLock = new Object();
     private static volatile ApplicationModel defaultInstance;
     @Getter
-    private static ServiceRepository serviceRepository = new ServiceRepository();
+    private static ConfigManager configManager = new ConfigManager();
     private static volatile ScopeBeanFactory scopeBeanFactory = new ScopeBeanFactory();
     protected final Object instLock = new Object();
     private final Set<ClassLoader> classLoaders = new ConcurrentHashSet<>();
     private volatile Environment environment;
-    private volatile ConfigManager configManager;
     private volatile ExtensionDirector extensionDirector;
 
     public ApplicationModel() {
@@ -101,8 +100,7 @@ public class ApplicationModel implements ExtensionAccessor {
 
     public Environment modelEnvironment() {
         if (environment == null) {
-            environment =
-                    (Environment) this.getExtensionLoader(ApplicationExt.class).getExtension(Environment.NAME);
+            environment = (Environment) this.getExtensionLoader(ApplicationExt.class).getExtension(Environment.NAME);
         }
         return environment;
     }

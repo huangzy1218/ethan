@@ -2,8 +2,8 @@ package com.ethan.config;
 
 import com.ethan.common.config.AbstractInterfaceConfig;
 import com.ethan.common.config.ConsumerConfig;
+import com.ethan.model.ConsumerModel;
 import com.ethan.rpc.Invoker;
-import com.ethan.rpc.model.ConsumerModel;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
@@ -42,6 +42,7 @@ public class ReferenceConfig<T> extends AbstractInterfaceConfig {
      * The flag whether the ReferenceConfig has been initialized.
      */
     private transient volatile boolean initialized;
+
     public ReferenceConfig() {
         super();
     }

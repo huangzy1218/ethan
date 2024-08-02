@@ -1,4 +1,4 @@
-package com.ethan.registry.integration;
+package com.ethan.registry;
 
 /**
  * @author Huang Z.Y.

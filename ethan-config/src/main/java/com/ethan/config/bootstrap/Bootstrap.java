@@ -4,12 +4,19 @@ import com.ethan.common.config.ApplicationConfig;
 import com.ethan.common.config.ConfigManager;
 import com.ethan.common.config.RegistryConfig;
 import com.ethan.common.util.ConcurrentHashMapUtils;
-import com.ethan.config.ApplicationModel;
+import com.ethan.common.util.StringUtils;
 import com.ethan.config.ReferenceConfig;
 import com.ethan.config.ServiceConfig;
 import com.ethan.config.bootstrap.builder.ApplicationBuilder;
+import com.ethan.model.ApplicationModel;
 import lombok.Getter;
+import org.springframework.boot.env.YamlPropertySourceLoader;
+import org.springframework.core.env.PropertySource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
@@ -108,15 +115,23 @@ public final class Bootstrap {
         if (initialized) {
             return;
         }
+
         // Ensure that the initialization is completed when concurrent calls
         synchronized (startLock) {
             if (initialized) {
                 return;
             }
+            loadYamlProperties("")
             configManager.loadConfigsOfTypeFromProps(RegistryConfig.class);
-
             initialized = true;
         }
+    }
+
+    private PropertySource<?> loadYamlProperties(String resourcePath) throws IOException {
+        Resource resource = new ClassPathResource(resourcePath);
+        YamlPropertySourceLoader sourceLoader = new YamlPropertySourceLoader();
+        List<PropertySource<?>> yamlProperties = sourceLoader.load(StringUtils.getFilenameExtension(resourcePath), resource);
+        return yamlProperties.isEmpty() ? null : yamlProperties.get(0);
     }
 
 }

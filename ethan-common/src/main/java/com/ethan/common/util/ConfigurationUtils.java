@@ -1,9 +1,12 @@
 package com.ethan.common.util;
 
+import com.ethan.common.config.Environment;
+import com.ethan.model.ApplicationModel;
+
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * Configuration utility.
@@ -11,6 +14,8 @@ import java.util.Objects;
  * @author Huang Z.Y.
  */
 public class ConfigurationUtils {
+
+    public static final Environment environment = ApplicationModel.defaultModel().modelEnvironment();
 
     /**
      * Search props and extract sub properties.
@@ -26,55 +31,21 @@ public class ConfigurationUtils {
      * props: {"name": "ethan", "port" : "1234"}
      * </pre>
      *
-     * @param configMap Configuration map
      * @param prefix
-     * @param <V>
-     * @return
+     * @return Properties key-value map
      */
-    public static <V extends Object> Map<String, V> getSubProperties(
-            Map<String, V> configMap, String prefix) {
-        Map<String, V> map = new LinkedHashMap<>();
-        getSubProperties(configMap, prefix, map);
-        return map;
-    }
-
-    private static <V extends Object> Map<String, V> getSubProperties(
-            Map<String, V> configMap, String prefix, Map<String, V> resultMap) {
-        if (!prefix.endsWith(".")) {
-            prefix += ".";
-        }
-
-        if (null == resultMap) {
-            resultMap = new LinkedHashMap<>();
-        }
-
-        if (CollectionUtils.isNotEmptyMap(configMap)) {
-            Map<String, V> copy;
-            synchronized (configMap) {
-                copy = new HashMap<>(configMap);
-            }
-            for (Map.Entry<String, V> entry : copy.entrySet()) {
-                String key = entry.getKey();
-                V val = entry.getValue();
-                if (StringUtils.startsWithIgnoreCase(key, prefix)
-                        && key.length() > prefix.length()
-                        && !ConfigurationUtils.isEmptyValue(val)) {
-
-                    String k = key.substring(prefix.length());
-                    // convert camelCase/snake_case to kebab-case
-                    String newK = StringUtils.convertToSplitName(k, "-");
-                    resultMap.putIfAbsent(newK, val);
-                    if (!Objects.equals(k, newK)) {
-                        resultMap.putIfAbsent(k, val);
-                    }
-                }
+    public static <V> Map<String, V> getSubProperties(Properties properties, String prefix) {
+        Map<String, V> required = new HashMap<>();
+        Set<String> propertyNames = properties.stringPropertyNames();
+        for (String name : propertyNames) {
+            if (name.startsWith(prefix)) {
+                // Type conversion is required here because the getProperty method of Properties returns String
+                @SuppressWarnings("unchecked")
+                V value = (V) properties.getProperty(name);
+                required.put(name, value);
             }
         }
-        return resultMap;
-    }
-
-    public static boolean isEmptyValue(Object value) {
-        return value == null || value instanceof String && StringUtils.isBlank((String) value);
+        return required;
     }
 
 }

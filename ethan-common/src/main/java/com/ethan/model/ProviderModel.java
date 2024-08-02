@@ -1,4 +1,4 @@
-package com.ethan.rpc.model;
+package com.ethan.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

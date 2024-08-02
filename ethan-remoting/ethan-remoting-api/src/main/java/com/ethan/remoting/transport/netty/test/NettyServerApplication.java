@@ -11,7 +11,7 @@ public class NettyServerApplication {
     public static void main(String[] args) {
         URL serverUrl = URL.valueOf("dubbo://127.0.0.1:8088");
         NettyServer nettyServer = new NettyServer(serverUrl);
-        nettyServer.start();
+        nettyServer.open();
     }
 
 }

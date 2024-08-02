@@ -1,8 +1,8 @@
 package com.ethan.rpc.protocol.local;
 
 import com.ethan.common.URL;
+import com.ethan.model.ApplicationModel;
 import com.ethan.rpc.*;
-import com.ethan.rpc.model.ApplicationModel;
 import com.example.DemoService;
 import com.example.DemoServiceImpl;
 import org.junit.jupiter.api.Assertions;

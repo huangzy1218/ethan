@@ -20,5 +20,9 @@
             <groupId>com.ethan</groupId>
             <artifactId>ethan-remoting</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-remoting-connector</artifactId>
+        </dependency>
     </dependencies>
 </project>

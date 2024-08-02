@@ -3,8 +3,8 @@ package com.ethan.remoting.transport;
 import com.ethan.common.URL;
 import com.ethan.common.extension.ExtensionLoader;
 import com.ethan.common.util.UrlUtils;
+import com.ethan.model.ApplicationModel;
 import com.ethan.rpc.compressor.Compressor;
-import com.ethan.rpc.model.ApplicationModel;
 import com.ethan.serialize.ObjectInput;
 import com.ethan.serialize.ObjectOutput;
 import com.ethan.serialize.Serialization;
@@ -58,7 +58,7 @@ public class CodecSupport {
     }
 
     public static Serialization getSerialization(URL url) {
-        return url.getOrDefaultFrameworkModel()
+        return ApplicationModel.defaultModel()
                 .getExtensionLoader(Serialization.class)
                 .getExtension(UrlUtils.serializationOrDefault(url));
     }

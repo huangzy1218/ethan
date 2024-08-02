@@ -1,9 +1,9 @@
 package com.ethan.remoting.transport;
 
 import com.ethan.common.URL;
+import com.ethan.model.ApplicationModel;
 import com.ethan.remoting.Codec;
 import com.ethan.remoting.exchange.codec.ExchangeCodec;
-import com.ethan.rpc.model.ApplicationModel;
 import lombok.Getter;
 
 import static com.ethan.common.constant.CommonConstants.CONNECT_TIMEOUT_KEY;

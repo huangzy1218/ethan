@@ -1,32 +1,22 @@
 package com.ethan.common.util;
 
-import com.ethan.rpc.model.ApplicationModel;
+import lombok.Setter;
+import org.springframework.core.env.Environment;
 
 /**
- * Property utility.
- *
  * @author Huang Z.Y.
  */
 public class PropertyUtils {
 
-    public static String getProperty(String key, String defaultValue) {
-        String value = (String) ApplicationModel.defaultModel().modelEnvironment().getProperty(key);
-        if (value == null) {
-            return defaultValue;
-        }
-        return value;
-    }
-
-    public static int getProperty(String key, int defaultValue) {
-        Object value = ApplicationModel.defaultModel().modelEnvironment().getProperty(key);
-        if (value == null) {
-            return defaultValue;
-        }
-        return Integer.parseInt(value.toString());
-    }
+    @Setter
+    private static Environment environment;
 
     public static String getProperty(String key) {
-        return (String) ApplicationModel.defaultModel().modelEnvironment().getProperty(key);
+        return environment.getProperty(key);
+    }
+
+    public static String getProperty(String key, String defaultValue) {
+        return environment.getProperty(key, defaultValue);
     }
 
 }

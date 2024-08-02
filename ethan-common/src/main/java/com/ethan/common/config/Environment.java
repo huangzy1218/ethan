@@ -1,9 +1,10 @@
 package com.ethan.common.config;
 
 import com.ethan.common.context.ApplicationExt;
+import lombok.Getter;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Properties;
 
 /**
  * @author Huang Z.Y.
@@ -11,7 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Environment implements ApplicationExt {
 
     public static final String NAME = "environment";
-    private final Map<String, Object> properties = new ConcurrentHashMap<>();
+    @Getter
+    private Properties properties = new Properties();
 
     public void loadProperties(Map<String, String> sourceProperties) {
         properties.putAll(sourceProperties);
@@ -23,10 +25,6 @@ public class Environment implements ApplicationExt {
 
     public void setProperty(String key, Object value) {
         properties.put(key, value);
-    }
-
-    public Map<String, Object> getPropertiesMap() {
-        return new ConcurrentHashMap<>(properties);
     }
 
 }

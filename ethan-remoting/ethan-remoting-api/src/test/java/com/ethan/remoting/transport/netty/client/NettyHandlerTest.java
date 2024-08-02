@@ -20,7 +20,7 @@ public class NettyHandlerTest {
         // Create a mock URL for the server
         URL serverUrl = URL.valueOf("dubbo://127.0.0.1:8088");
         nettyServer = new NettyServer(serverUrl);
-        nettyServer.start();
+        nettyServer.open();
         // Create a mock URL for the client
         URL clientUrl = URL.valueOf("dubbo://127.0.0.1:8088");
         nettyClient = new NettyClient(clientUrl);

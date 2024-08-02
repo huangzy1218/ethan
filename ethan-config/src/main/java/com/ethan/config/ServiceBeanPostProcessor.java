@@ -1,6 +1,7 @@
 package com.ethan.config;
 
 import com.ethan.config.annotation.Reference;
+import com.ethan.model.ApplicationModel;
 import com.ethan.registry.Registry;
 import com.ethan.remoting.Transporter;
 import com.ethan.rpc.Invoker;

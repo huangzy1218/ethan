@@ -1,4 +1,4 @@
-package com.ethan.rpc.model;
+package com.ethan.model;
 
 import com.ethan.common.util.ClassUtils;
 import lombok.Data;

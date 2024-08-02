@@ -1,6 +1,7 @@
 package com.ethan.config;
 
 import com.ethan.common.util.StringUtils;
+import com.ethan.model.ApplicationModel;
 import com.ethan.registry.Registry;
 import com.ethan.remoting.Transporter;
 import com.ethan.rpc.ProxyFactory;

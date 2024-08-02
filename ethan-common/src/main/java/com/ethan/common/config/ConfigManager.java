@@ -1,12 +1,12 @@
 package com.ethan.common.config;
 
-import com.ethan.common.context.ApplicationExt;
 import com.ethan.common.util.ConfigurationUtils;
 import com.ethan.common.util.StringUtils;
-import com.ethan.rpc.model.ApplicationModel;
+import com.ethan.model.ApplicationModel;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.ethan.common.config.AbstractConfig.getTagName;
@@ -19,7 +19,7 @@ import static com.ethan.common.constant.CommonConstants.ETHAN;
  * @author Huang Z.Y.
  */
 @Slf4j
-public class ConfigManager implements ApplicationExt {
+public class ConfigManager {
 
     public static final String NAME = "config";
     private static final Class<? extends AbstractConfig>[] supportedConfigTypes = new Class[]{
@@ -102,7 +102,8 @@ public class ConfigManager implements ApplicationExt {
     @SuppressWarnings("unchecked")
     private <V extends Object> Map<String, V> getConfigIdFromProps(Class<? extends AbstractConfig> clazz) {
         String prefix = ETHAN + "." + AbstractConfig.getTagName(clazz) + ".";
-        return (Map<String, V>) ConfigurationUtils.getSubProperties(environment.getPropertiesMap(), prefix);
+        Properties properties = environment.getProperties();
+        return (Map<String, V>) ConfigurationUtils.getSubProperties(properties, prefix);
     }
 
     private <T extends AbstractConfig> T createConfig(Class<T> cls)
@@ -111,7 +112,7 @@ public class ConfigManager implements ApplicationExt {
         return config;
     }
 
-    public void addReference(ReferenceConfigBase<?> referenceConfig) {
+    public void addReference(AbstractConfig referenceConfig) {
         addConfig(referenceConfig);
     }
 
