@@ -41,7 +41,7 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
     @Setter
     private volatile boolean available = true;
 
-    public AbstractInvoker(Class<T> type, URL url) {
+    protected AbstractInvoker(Class<T> type, URL url) {
         this.type = type;
         this.url = url;
     }
@@ -127,9 +127,9 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
 
     protected abstract Result doInvoke(Invocation invocation) throws Throwable;
 
-    public boolean isAvailable() {
-        return available;
+    @Override
+    public URL getUrl() {
+        return url;
     }
-
 }
     

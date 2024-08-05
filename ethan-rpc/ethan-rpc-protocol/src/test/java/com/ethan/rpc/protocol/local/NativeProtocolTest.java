@@ -3,6 +3,7 @@ package com.ethan.rpc.protocol.local;
 import com.ethan.common.URL;
 import com.ethan.model.ApplicationModel;
 import com.ethan.rpc.*;
+import com.ethan.rpc.protocol.injvm.InjvmInvoker;
 import com.example.DemoService;
 import com.example.DemoServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -40,9 +41,8 @@ public class NativeProtocolTest {
 
         URL serviceUrl = URL.valueOf("native://127.0.0.1/TestService");
         exporters.put(serviceUrl.getServiceKey(), exporter);
-        NativeInvoker<?> nativeInvoker = new NativeInvoker<>(
-                DemoService.class, exporters);
-        Result res2 = nativeInvoker.invoke(invocation);
+        InjvmInvoker<?> injvmInvoker = new InjvmInvoker<>(DemoService.class);
+        Result res2 = injvmInvoker.invoke(invocation);
         Assertions.assertEquals("Huang Z.Y.", res2.getValue());
     }
 }

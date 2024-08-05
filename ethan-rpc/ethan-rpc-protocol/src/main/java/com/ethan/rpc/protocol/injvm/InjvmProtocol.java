@@ -1,4 +1,4 @@
-package com.ethan.rpc.protocol.local;
+package com.ethan.rpc.protocol.injvm;
 
 import com.ethan.model.ApplicationModel;
 import com.ethan.rpc.Exporter;
@@ -14,14 +14,14 @@ import static com.ethan.common.constant.CommonConstants.LOCAL_PROTOCOL;
 /**
  * @author Huang Z.Y.
  */
-public class NativeProtocol implements Protocol {
+public class InjvmProtocol implements Protocol {
 
     public static final String NAME = LOCAL_PROTOCOL;
 
     protected final Map<String, Exporter<?>> exporterMap = new ConcurrentHashMap<>();
 
-    public static NativeProtocol getNativeProtocol() {
-        return (NativeProtocol) ApplicationModel.defaultModel()
+    public static InjvmProtocol getInjvmProtocol() {
+        return (InjvmProtocol) ApplicationModel.defaultModel()
                 .getExtensionLoader(Protocol.class).getExtension(NativeProtocol.NAME);
     }
 
@@ -31,12 +31,12 @@ public class NativeProtocol implements Protocol {
 
     @Override
     public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
-        return new NativeExporter<>(invoker, exporterMap);
+        return new InjvmExporter<>(invoker, exporterMap);
     }
 
     @Override
     public <T> Invoker<T> refer(Class<T> type) throws RpcException {
-        return new NativeInvoker<>(type, exporterMap);
+        return new InjvmInvoker<>(type, exporterMap);
     }
 
 }

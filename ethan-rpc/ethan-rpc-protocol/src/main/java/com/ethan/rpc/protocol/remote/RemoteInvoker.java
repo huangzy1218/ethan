@@ -1,5 +1,6 @@
 package com.ethan.rpc.protocol.remote;
 
+import com.ethan.common.URL;
 import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.TimeoutException;
 import com.ethan.remoting.exchange.ExchangeClient;
@@ -20,8 +21,8 @@ public class RemoteInvoker<T> extends AbstractInvoker<T> {
 
     private ExchangeClient client;
 
-    public RemoteInvoker(Class<T> type) {
-        super(type);
+    public RemoteInvoker(Class<T> type, URL url) {
+        super(type, url);
         client = new MessageExchangeClient(new NioSocketChannel());
     }
 

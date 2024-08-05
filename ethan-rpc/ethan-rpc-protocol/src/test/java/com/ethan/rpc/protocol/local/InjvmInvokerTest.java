@@ -2,6 +2,7 @@ package com.ethan.rpc.protocol.local;
 
 import com.ethan.common.URL;
 import com.ethan.rpc.*;
+import com.ethan.rpc.protocol.injvm.InjvmInvoker;
 import com.example.DemoService;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,14 +14,14 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
-public class NativeInvokerTest {
+public class InjvmInvokerTest {
 
     Class<?>[] types = new Class[]{String.class};
     Object[] args = new Object[]{(String) "Huang Z.Y."};
     Invocation invocation = new RpcInvocation("sayHello", DemoService.class.getName(),
             "default/DemoService:1.0", types, args);
 
-    private NativeInvoker<DemoService> invoker;
+    private InjvmInvoker<DemoService> invoker;
     private Exporter<DemoService> exporter;
     private URL url;
 
@@ -29,8 +30,8 @@ public class NativeInvokerTest {
 //        url = URL.valueOf("ethan://localhost:10010/DemoService");
 //        // Create the exporter and set the invoker
 //        // Create the invoker first
-//        invoker = new NativeInvoker<>(DemoService.class, url, url.getServiceKey(), exporter);
-//        exporter = new NativeExporter<>(invoker, null, new HashMap<>());
+//        invoker = new InjvmInvoker<>(DemoService.class, url, url.getServiceKey(), exporter);
+//        exporter = new InjvmExporter<>(invoker, null, new HashMap<>());
 //        invoker.setExporter(exporter);
 ////        when(exporter.getInvoker()).thenReturn(invoker);
     }

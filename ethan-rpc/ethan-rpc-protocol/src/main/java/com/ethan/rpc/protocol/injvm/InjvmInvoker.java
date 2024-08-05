@@ -1,4 +1,4 @@
-package com.ethan.rpc.protocol.local;
+package com.ethan.rpc.protocol.injvm;
 
 import com.ethan.common.URL;
 import com.ethan.common.threadpool.AdaptiveExecuteService;
@@ -19,16 +19,16 @@ import static com.ethan.common.constant.CommonConstants.*;
  *
  * @author Huang Z.Y.
  */
-public class NativeInvoker<T> extends AbstractInvoker<T> {
+public class InjvmInvoker<T> extends AbstractInvoker<T> {
 
     /**
      * Service key.
      */
     private final String key;
     @Setter
-    private volatile Exporter<?> exporter = null;
+    private Exporter<?> exporter;
 
-    public NativeInvoker(Class<T> type, URL url, Exporter<?> exporter) {
+    public InjvmInvoker(Class<T> type, URL url, Exporter<?> exporter) {
         super(type, url);
         key = type.getName();
         this.exporter = exporter;
@@ -36,12 +36,6 @@ public class NativeInvoker<T> extends AbstractInvoker<T> {
 
     @Override
     protected Result doInvoke(Invocation invocation) throws Throwable {
-        if (exporter == null) {
-            exporter = NativeProtocol.getExporter(exporterMap, invocation.getServiceName());
-            if (exporter == null) {
-                throw new RpcException("Service [" + key + "] not found.");
-            }
-        }
         // Solve local exposure, the server opens the token, and the client call fails.
         Invoker<?> invoker = exporter.getInvoker();
         int timeout = (Integer) ApplicationModel.defaultModel().modelEnvironment().getProperty("ethan.timeout", DEFAULT_TIMEOUT);
@@ -95,7 +89,6 @@ public class NativeInvoker<T> extends AbstractInvoker<T> {
 
     @Override
     public boolean isAvailable() {
-        NativeExporter<?> exporter = (NativeExporter<?>) exporterMap.get(key);
         if (exporter == null) {
             return false;
         } else {
