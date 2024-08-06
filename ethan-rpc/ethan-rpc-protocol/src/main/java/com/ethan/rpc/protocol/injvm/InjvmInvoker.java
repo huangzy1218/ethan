@@ -21,16 +21,11 @@ import static com.ethan.common.constant.CommonConstants.*;
  */
 public class InjvmInvoker<T> extends AbstractInvoker<T> {
 
-    /**
-     * Service key.
-     */
-    private final String key;
     @Setter
     private Exporter<?> exporter;
 
-    public InjvmInvoker(Class<T> type, URL url, Exporter<?> exporter) {
+    public InjvmInvoker(Class<T> type, URL url, Exporter<T> exporter) {
         super(type, url);
-        key = type.getName();
         this.exporter = exporter;
     }
 

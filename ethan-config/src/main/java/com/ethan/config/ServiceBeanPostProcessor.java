@@ -4,7 +4,6 @@ import com.ethan.config.annotation.Reference;
 import com.ethan.model.ApplicationModel;
 import com.ethan.registry.Registry;
 import com.ethan.remoting.Transporter;
-import com.ethan.rpc.Invoker;
 import com.ethan.rpc.Protocol;
 import com.ethan.rpc.ProxyFactory;
 import lombok.SneakyThrows;
@@ -57,7 +56,7 @@ public class ServiceBeanPostProcessor<T> implements BeanPostProcessor {
                 ProxyFactory factory = TransportSupport.getProxyFactory();
                 // Get service interface
                 Class<?> superclass = service.getType().getSuperclass();
-                Invoker<?> invoker = protocol.refer(superclass);
+//                Invoker<?> invoker = protocol.refer(superclass, URL.builder().build());
                 // Get proxy
                 try {
                     Object proxy = factory.getProxy(invoker);

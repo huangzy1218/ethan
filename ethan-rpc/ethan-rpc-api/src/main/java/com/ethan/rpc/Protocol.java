@@ -1,5 +1,6 @@
 package com.ethan.rpc;
 
+import com.ethan.common.URL;
 import com.ethan.common.extension.SPI;
 
 /**
@@ -29,6 +30,6 @@ public interface Protocol {
      * @return Invoker service's local proxy
      * @throws RpcException When there's any error while connecting to the service provider
      */
-    <T> Invoker<T> refer(Class<T> type) throws RpcException;
+    <T> Invoker<T> refer(Class<T> type, URL url, Exporter<T> exporter) throws RpcException;
 
 }

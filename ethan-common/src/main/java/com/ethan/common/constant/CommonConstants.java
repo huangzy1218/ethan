@@ -46,8 +46,8 @@ public interface CommonConstants {
     String ASYNC_KEY = "async";
     String THREAD_NAME_KEY = "threadname";
     String SERVER_THREAD_POOL_NAME = "EthanServerHandler";
-    String LOCAL_PROTOCOL = "native";
-    String REMOTE_PROTOCOL = "remote";
+    String LOCAL_PROTOCOL = "injvm";
+    String REMOTE_PROTOCOL = "ethan";
     String PROTOCOL_VERSION = "1.0.0";
     String HEARTBEAT_EVENT = null;
 

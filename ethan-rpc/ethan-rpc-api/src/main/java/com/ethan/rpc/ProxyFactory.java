@@ -1,5 +1,6 @@
 package com.ethan.rpc;
 
+import com.ethan.common.URL;
 import com.ethan.common.extension.SPI;
 
 /**
@@ -33,6 +34,10 @@ public interface ProxyFactory {
      * @param type  Invoker type
      * @return invoker
      */
-    <T> Invoker<T> getInvoker(T proxy, Class<T> type) throws RpcException;
+    <T> Invoker<T> getInvoker(T proxy, Class<T> type, URL url) throws RpcException;
+
+    default <T> Invoker<T> getInvoker(T proxy, Class<T> type) throws RpcException {
+        return getInvoker(proxy, type, URL.buildFixedURL());
+    }
 
 }

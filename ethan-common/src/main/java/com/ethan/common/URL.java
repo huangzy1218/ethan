@@ -124,6 +124,10 @@ public class URL implements Serializable {
         return new URL(urlAddress, urlParam);
     }
 
+    public static URL buildFixedURL() {
+        return URL.valueOf("ethan://0.0.0.0:80");
+    }
+
     public URL addParameter(String key, String value) {
         urlParam.addParameter(key, value);
         // Invalidate cached service key

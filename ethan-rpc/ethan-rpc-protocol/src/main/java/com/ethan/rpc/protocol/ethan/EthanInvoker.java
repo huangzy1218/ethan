@@ -1,4 +1,4 @@
-package com.ethan.rpc.protocol.remote;
+package com.ethan.rpc.protocol.ethan;
 
 import com.ethan.common.URL;
 import com.ethan.remoting.RemotingException;
@@ -17,13 +17,13 @@ import static com.ethan.common.constant.CommonConstants.TIMEOUT_KEY;
 /**
  * @author Huang Z.Y.
  */
-public class RemoteInvoker<T> extends AbstractInvoker<T> {
+public class EthanInvoker<T> extends AbstractInvoker<T> {
 
     private ExchangeClient client;
 
-    public RemoteInvoker(Class<T> type, URL url) {
+    public EthanInvoker(Class<T> type, URL url) {
         super(type, url);
-        client = new MessageExchangeClient(new NioSocketChannel());
+        client = new MessageExchangeClient(new NioSocketChannel(), url);
     }
 
     @Override

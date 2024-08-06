@@ -1,5 +1,6 @@
 package com.ethan.rpc.proxy;
 
+import com.ethan.common.URL;
 import com.ethan.common.constant.CommonConstants;
 import com.ethan.rpc.*;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +18,16 @@ public abstract class AbstractProxyInvoker<T> implements Invoker<T> {
 
     private final T proxy;
     private final Class<T> type;
+    private URL url;
 
-    public AbstractProxyInvoker(T proxy, Class<T> type) {
+    protected AbstractProxyInvoker(T proxy, Class<T> type, URL url) {
         this.proxy = proxy;
         this.type = type;
+        this.url = url;
+    }
+
+    protected AbstractProxyInvoker(T proxy, Class<T> type) {
+        this(proxy, type, URL.buildFixedURL());
     }
 
     @Override
@@ -66,6 +73,11 @@ public abstract class AbstractProxyInvoker<T> implements Invoker<T> {
     @Override
     public Class<T> getInterface() {
         return type;
+    }
+
+    @Override
+    public URL getUrl() {
+        return url;
     }
 
 }

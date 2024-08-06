@@ -1,5 +1,6 @@
 package com.ethan.rpc.proxy.javassist;
 
+import com.ethan.common.URL;
 import com.ethan.common.javassist.JavassistProxy;
 import com.ethan.common.javassist.JavassistWrapper;
 import com.ethan.rpc.Invoker;
@@ -21,7 +22,7 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
     private final JdkProxyFactory jdkProxyFactory = new JdkProxyFactory();
 
     @Override
-    public <T> Invoker<T> getInvoker(T proxy, Class<T> type) throws RpcException {
+    public <T> Invoker<T> getInvoker(T proxy, Class<T> type, URL url) throws RpcException {
         return new AbstractProxyInvoker<T>(proxy, type) {
             @Override
             protected Object doInvoke(T proxy, String methodName, Class<?>[] parameterTypes, Object[] arguments)

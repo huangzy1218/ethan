@@ -1,4 +1,4 @@
-package com.ethan.rpc.protocol.local;
+package com.ethan.rpc.protocol.ethan;
 
 import com.ethan.common.URL;
 import com.ethan.model.ApplicationModel;
@@ -13,11 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.ethan.common.constant.CommonConstants.DEFAULT_PROXY;
-import static com.ethan.common.constant.CommonConstants.LOCAL_PROTOCOL;
+import static com.ethan.common.constant.CommonConstants.REMOTE_PROTOCOL;
 
-public class NativeProtocolTest {
+public class EthanProtocolTest {
+
     private final Protocol protocol = ApplicationModel.defaultModel()
-            .getExtensionLoader(Protocol.class).getExtension(LOCAL_PROTOCOL);
+            .getExtensionLoader(Protocol.class).getExtension(REMOTE_PROTOCOL);
     private final ProxyFactory proxy = ApplicationModel.defaultModel()
             .getExtensionLoader(ProxyFactory.class).getExtension(DEFAULT_PROXY);
     Class<?>[] types = new Class[]{String.class};
@@ -27,13 +28,12 @@ public class NativeProtocolTest {
     private Map<String, Exporter<?>> exporters = new HashMap<>();
 
     @Test
-    void testLocalProtocol() throws Exception {
+    void tesRemoteProtocol() throws Exception {
         DemoService service = new DemoServiceImpl();
         Invoker<?> invoker = proxy.getInvoker(
                 service, DemoService.class);
         Exporter<?> exporter = protocol.export(invoker);
-        Invoker<DemoService> refer = protocol.refer(
-                DemoService.class);
+        Invoker<DemoService> refer = protocol.refer(DemoService.class, );
 
         service = proxy.getProxy(refer);
         Object res1 = service.invoke("native://127.0.0.1:8080/DemoService", "invoke");
@@ -41,8 +41,10 @@ public class NativeProtocolTest {
 
         URL serviceUrl = URL.valueOf("native://127.0.0.1/TestService");
         exporters.put(serviceUrl.getServiceKey(), exporter);
-        InjvmInvoker<?> injvmInvoker = new InjvmInvoker<>(DemoService.class);
+        InjvmInvoker<?> injvmInvoker = new InjvmInvoker<>(
+                DemoService.class, serviceUrl, exporter);
         Result res2 = injvmInvoker.invoke(invocation);
         Assertions.assertEquals("Huang Z.Y.", res2.getValue());
     }
+
 }

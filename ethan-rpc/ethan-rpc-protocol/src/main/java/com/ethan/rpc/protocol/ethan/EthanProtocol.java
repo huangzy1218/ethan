@@ -1,4 +1,4 @@
-package com.ethan.rpc.protocol.remote;
+package com.ethan.rpc.protocol.ethan;
 
 import com.ethan.common.URL;
 import com.ethan.rpc.Exporter;
@@ -12,33 +12,35 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author Huang Z.Y.
  */
-public class RemoteProtocol implements Protocol {
+public class EthanProtocol implements Protocol {
 
 
-    public static final String NAME = "dubbo";
+    public static final String NAME = "ethan";
 
     public static final int DEFAULT_PORT = 8801;
 
     protected final Map<String, Exporter<?>> exporterMap = new ConcurrentHashMap<>();
 
-
     @Override
     public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
         URL url = invoker.getUrl();
         String key = url.getServiceKey();
-        RemoteExporter<T> exporter = new RemoteExporter<>(invoker, key, exporterMap);
-        return exporter;
+        return new EthanExporter<>(invoker);
     }
 
     @Override
-    public <T> Invoker<T> refer(Class<T> type) throws RpcException {
+    public <T> Invoker<T> refer(Class<T> type, URL url, Exporter<T> exporter) throws RpcException {
+        return null;
+    }
+
+    @Override
+    public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
         return protocolBindingRefer(type);
     }
 
     public <T> Invoker<T> protocolBindingRefer(Class<T> serviceType) throws RpcException {
         // Create rpc invoker
-        RemoteInvoker<T> invoker = new RemoteInvoker<>(serviceType);
-        return invoker;
+        return new EthanInvoker<>(serviceType, URL.builder().build());
     }
 
 }

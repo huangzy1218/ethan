@@ -1,5 +1,6 @@
 package com.ethan.rpc.proxy.cglib;
 
+import com.ethan.common.URL;
 import com.ethan.common.cglib.CglibProxy;
 import com.ethan.common.cglib.CglibWrapper;
 import com.ethan.rpc.Invoker;
@@ -40,8 +41,8 @@ public class CglibProxyFactory extends AbstractProxyFactory {
     }
 
     @Override
-    public <T> Invoker<T> getInvoker(T proxy, Class<T> type) throws RpcException {
-        return new AbstractProxyInvoker<T>(proxy, type) {
+    public <T> Invoker<T> getInvoker(T proxy, Class<T> type, URL url) throws RpcException {
+        return new AbstractProxyInvoker<T>(proxy, type, url) {
             @Override
             protected Object doInvoke(T proxy, String methodName, Class<?>[] parameterTypes, Object[] arguments)
                     throws Throwable {

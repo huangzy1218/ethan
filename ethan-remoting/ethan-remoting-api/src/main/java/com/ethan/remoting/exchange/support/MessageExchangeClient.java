@@ -19,6 +19,7 @@ public class MessageExchangeClient implements ExchangeClient {
 
     private final Channel channel;
     private NettyClient client;
+    private URL url;
 
     public MessageExchangeClient(io.netty.channel.Channel channel, URL url) {
         this.channel = new NettyChannel(channel, url);

@@ -39,7 +39,7 @@ public class InjvmInvokerTest {
     @Test
     public void testDoInvokeSyncSuccess() throws Throwable {
         Result mockResult = new AppResponse("Success");
-        Result result = invoker.doInvoke(invocation);
+        Result result = invoker.invoke(invocation);
 //        assertNotNull(result);
 //        assertEquals("Success", result.getValue());
     }
@@ -48,7 +48,7 @@ public class InjvmInvokerTest {
     public void testDoInvokeSyncWithException() throws Throwable {
         Result mockResult = new AppResponse(new RuntimeException("Error"));
         when(invoker.invoke(invocation)).thenReturn(mockResult);
-        Result result = invoker.doInvoke(invocation);
+        Result result = invoker.invoke(invocation);
 
         assertNotNull(result);
         assertTrue(result.hasException());
@@ -66,7 +66,7 @@ public class InjvmInvokerTest {
         CompletableFuture<Result> future = CompletableFuture.completedFuture(mockResult);
         when(invoker.invoke(invocation)).thenReturn(mockResult);
 
-        Result result = invoker.doInvoke(invocation);
+        Result result = invoker.invoke(invocation);
 
         assertNotNull(result);
         assertEquals("Async Success", result.getValue());
