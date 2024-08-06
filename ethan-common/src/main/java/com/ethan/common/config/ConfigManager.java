@@ -1,5 +1,6 @@
 package com.ethan.common.config;
 
+import com.ethan.common.context.ApplicationExt;
 import com.ethan.common.util.ConfigurationUtils;
 import com.ethan.common.util.StringUtils;
 import com.ethan.model.ApplicationModel;
@@ -19,7 +20,7 @@ import static com.ethan.common.constant.CommonConstants.ETHAN;
  * @author Huang Z.Y.
  */
 @Slf4j
-public class ConfigManager {
+public class ConfigManager implements ApplicationExt {
 
     public static final String NAME = "config";
     private static final Class<? extends AbstractConfig>[] supportedConfigTypes = new Class[]{

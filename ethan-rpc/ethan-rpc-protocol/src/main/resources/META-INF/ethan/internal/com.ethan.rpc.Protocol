@@ -1,2 +1,2 @@
-native=com.ethan.rpc.protocol.local.NativeProtocol
-remote=com.ethan.rpc.protocol.ethan.RemoteProtocol
+injvm=com.ethan.rpc.protocol.injvm.InjvmProtocol
+ethan=com.ethan.rpc.protocol.ethan.EthanProtocol

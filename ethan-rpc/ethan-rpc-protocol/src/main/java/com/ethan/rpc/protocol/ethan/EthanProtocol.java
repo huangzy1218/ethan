@@ -33,11 +33,6 @@ public class EthanProtocol implements Protocol {
         return null;
     }
 
-    @Override
-    public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
-        return protocolBindingRefer(type);
-    }
-
     public <T> Invoker<T> protocolBindingRefer(Class<T> serviceType) throws RpcException {
         // Create rpc invoker
         return new EthanInvoker<>(serviceType, URL.builder().build());

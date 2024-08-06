@@ -31,5 +31,5 @@ public interface Protocol {
      * @throws RpcException When there's any error while connecting to the service provider
      */
     <T> Invoker<T> refer(Class<T> type, URL url, Exporter<T> exporter) throws RpcException;
-
+    
 }

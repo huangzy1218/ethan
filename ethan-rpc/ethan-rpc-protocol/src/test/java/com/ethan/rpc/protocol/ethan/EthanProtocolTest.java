@@ -30,10 +30,10 @@ public class EthanProtocolTest {
     @Test
     void tesRemoteProtocol() throws Exception {
         DemoService service = new DemoServiceImpl();
-        Invoker<?> invoker = proxy.getInvoker(
+        Invoker<DemoService> invoker = proxy.getInvoker(
                 service, DemoService.class);
-        Exporter<?> exporter = protocol.export(invoker);
-        Invoker<DemoService> refer = protocol.refer(DemoService.class, );
+        Exporter<DemoService> exporter = protocol.export(invoker);
+        Invoker<DemoService> refer = protocol.refer(DemoService.class, URL.buildFixedURL(), exporter);
 
         service = proxy.getProxy(refer);
         Object res1 = service.invoke("native://127.0.0.1:8080/DemoService", "invoke");
@@ -41,7 +41,7 @@ public class EthanProtocolTest {
 
         URL serviceUrl = URL.valueOf("native://127.0.0.1/TestService");
         exporters.put(serviceUrl.getServiceKey(), exporter);
-        InjvmInvoker<?> injvmInvoker = new InjvmInvoker<>(
+        InjvmInvoker<DemoService> injvmInvoker = new InjvmInvoker<>(
                 DemoService.class, serviceUrl, exporter);
         Result res2 = injvmInvoker.invoke(invocation);
         Assertions.assertEquals("Huang Z.Y.", res2.getValue());
