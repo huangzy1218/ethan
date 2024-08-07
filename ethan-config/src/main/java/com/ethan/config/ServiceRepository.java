@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import static com.ethan.common.constant.CommonConstants.DEFAULT_SERVER_PORT;
+import static com.ethan.common.constant.CommonConstants.*;
 
 /**
  * Service repository for framework.
@@ -42,8 +42,8 @@ public class ServiceRepository {
         URL url = new URL();
         url.setPort(DEFAULT_SERVER_PORT);
         url.setServiceKey(serviceConfig.getInterfaceName());
-        url.addParameter("version", serviceConfig.getVersion());
-        url.addParameter("group", serviceConfig.getGroup());
+        url.addParameter(GROUP_KEY, serviceConfig.getGroup())
+                .addParameter(VERSION_KEY, serviceConfig.getVersion());
         return url;
     }
 

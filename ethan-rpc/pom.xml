@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
-            <version>${spring-boot-configuration-processor.version}</version>
+            <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>

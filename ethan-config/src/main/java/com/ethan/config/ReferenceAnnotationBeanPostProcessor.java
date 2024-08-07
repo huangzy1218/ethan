@@ -3,11 +3,7 @@ package com.ethan.config;
 import com.ethan.common.URL;
 import com.ethan.config.annotation.Reference;
 import com.ethan.config.annotation.Service;
-import com.ethan.model.ApplicationModel;
-import com.ethan.registry.Registry;
-import com.ethan.remoting.Transporter;
 import com.ethan.rpc.Invoker;
-import com.ethan.rpc.Protocol;
 import com.ethan.rpc.ProxyFactory;
 import com.ethan.rpc.RpcException;
 import lombok.SneakyThrows;
@@ -27,16 +23,10 @@ import static com.ethan.common.constant.CommonConstants.*;
 @Slf4j
 public class ReferenceAnnotationBeanPostProcessor<T> implements BeanPostProcessor {
 
-    private final Protocol protocol;
-    private Registry registry;
-    private Transporter transporter;
     private ServiceRepository repository;
 
     public ReferenceAnnotationBeanPostProcessor() {
-        protocol = ApplicationModel.defaultModel()
-                .getExtensionLoader(Protocol.class).getExtension(ETHAN_PROTOCOL);
-        registry = TransportSupport.getRegistry();
-        transporter = TransportSupport.getTransporter();
+        repository = new ServiceRepository();
     }
 
     @Override
