@@ -103,7 +103,7 @@ public class ConfigManager implements ApplicationExt {
     private <V extends Object> Map<String, V> getConfigIdFromProps(Class<? extends AbstractConfig> clazz) {
         String prefix = ETHAN + "." + AbstractConfig.getTagName(clazz) + ".";
         Properties properties = environment.getProperties();
-        return (Map<String, V>) ConfigurationUtils.getSubProperties(properties, prefix);
+        return ConfigurationUtils.getSubProperties(properties, prefix);
     }
 
     private <T extends AbstractConfig> T createConfig(Class<T> cls)

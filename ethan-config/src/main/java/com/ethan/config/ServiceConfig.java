@@ -2,7 +2,6 @@ package com.ethan.config;
 
 import com.ethan.common.URL;
 import com.ethan.common.config.AbstractInterfaceConfig;
-import com.ethan.model.ApplicationModel;
 import com.ethan.rpc.Exporter;
 import com.ethan.rpc.ProxyFactory;
 import lombok.Data;
@@ -56,8 +55,9 @@ public class ServiceConfig<T> extends AbstractInterfaceConfig {
         if (exported) {
             return;
         }
-        ServiceRepository repository = ApplicationModel.getServiceRepository();
-        repository.registerService(interfaceName, ref);
+        // todo
+//        ServiceRepository repository = ApplicationModel.getServiceRepository();
+//        repository.registerService(interfaceName, ref);
     }
 
     private void exportLocal(URL url) {

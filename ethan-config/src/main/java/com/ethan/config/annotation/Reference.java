@@ -2,7 +2,8 @@ package com.ethan.config.annotation;
 
 import java.lang.annotation.*;
 
-import static com.ethan.common.constant.CommonConstants.*;
+import static com.ethan.common.constant.CommonConstants.DEFAULT_PROXY;
+import static com.ethan.common.constant.CommonConstants.DEFAULT_TIMEOUT;
 
 /**
  * An annotation used for referencing a Dubbo service.
@@ -43,10 +44,5 @@ public @interface Reference {
      * Timeout value for service invocation, default value is 0.
      */
     int timeout() default DEFAULT_TIMEOUT;
-
-    /**
-     * Registry associated name.
-     */
-    String registry() default DEFAULT_REGISTRY;
 
 }

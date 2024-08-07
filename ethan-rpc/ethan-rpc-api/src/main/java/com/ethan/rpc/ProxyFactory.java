@@ -40,4 +40,9 @@ public interface ProxyFactory {
         return getInvoker(proxy, type, URL.buildFixedURL());
     }
 
+    @SuppressWarnings("unchecked")
+    default <T> Invoker<?> getInvoker(Object proxy, Class<?> type, URL url, int tag) throws RpcException {
+        return getInvoker((T) proxy, (Class<? super T>) type, url);
+    }
+
 }

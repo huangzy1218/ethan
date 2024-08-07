@@ -2,6 +2,8 @@ package com.ethan.common.config;
 
 import com.ethan.common.context.ApplicationExt;
 import lombok.Getter;
+import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.PropertySource;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Map;
@@ -16,8 +18,23 @@ public class Environment implements ApplicationExt {
     @Getter
     private Properties properties = new Properties();
 
-    public void loadProperties(Map<String, String> sourceProperties) {
-        properties.putAll(sourceProperties);
+    public void loadProperties(PropertySource<?> sourceProperties) {
+        MapPropertySource mapSource = (MapPropertySource) sourceProperties;
+        Map<String, Object> propertiesMap = mapSource.getSource();
+        for (Map.Entry<String, Object> entry : propertiesMap.entrySet()) {
+            String key = entry.getKey();
+            String valueStr = entry.getValue().toString();
+            Object value = tryParseInteger(valueStr) != null ? Integer.parseInt(valueStr) : valueStr;
+            this.properties.put(key, value);
+        }
+    }
+
+    private Integer tryParseInteger(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     public Object getProperty(String key) {

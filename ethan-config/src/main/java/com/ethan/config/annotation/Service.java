@@ -2,7 +2,8 @@ package com.ethan.config.annotation;
 
 import java.lang.annotation.*;
 
-import static com.ethan.common.constant.CommonConstants.*;
+import static com.ethan.common.constant.CommonConstants.DEFAULT_PROXY;
+import static com.ethan.common.constant.CommonConstants.DEFAULT_TIMEOUT;
 
 /**
  * @author Huang Z.Y.
@@ -43,9 +44,4 @@ public @interface Service {
      */
     int timeout() default DEFAULT_TIMEOUT;
 
-    /**
-     * Registry associated name.
-     */
-    String registry() default DEFAULT_REGISTRY;
-    
 }

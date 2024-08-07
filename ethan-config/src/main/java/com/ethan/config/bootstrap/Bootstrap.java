@@ -2,6 +2,7 @@ package com.ethan.config.bootstrap;
 
 import com.ethan.common.config.ApplicationConfig;
 import com.ethan.common.config.ConfigManager;
+import com.ethan.common.config.Environment;
 import com.ethan.common.config.RegistryConfig;
 import com.ethan.common.util.ConcurrentHashMapUtils;
 import com.ethan.common.util.StringUtils;
@@ -41,10 +42,13 @@ public final class Bootstrap {
     private final ConfigManager configManager;
     private final Object startLock = new Object();
     protected volatile boolean initialized = false;
+    @Getter
+    private Environment environment;
 
     public Bootstrap(ApplicationModel applicationModel) {
         this.applicationModel = applicationModel;
         configManager = applicationModel.getApplicationConfigManager();
+        environment = applicationModel.modelEnvironment();
     }
 
     public static Bootstrap getInstance() {
@@ -124,7 +128,8 @@ public final class Bootstrap {
                 return;
             }
             try {
-                loadYamlProperties(CONFIG_PATH);
+                PropertySource<?> propertySource = loadYamlProperties(CONFIG_PATH);
+                environment.loadProperties(propertySource);
             } catch (IOException ignored) {
             }
             configManager.loadConfigsOfTypeFromProps(RegistryConfig.class);

@@ -135,6 +135,11 @@ public class URL implements Serializable {
         return this;
     }
 
+    public URL addParameter(String key, boolean value) {
+        urlParam.addParameter(key, String.valueOf(value));
+        return this;
+    }
+
     public boolean hasParameter(String key) {
         String value = getParameter(key);
         return StringUtils.isNotEmpty(value);
@@ -224,8 +229,9 @@ public class URL implements Serializable {
         return value <= 0 ? defaultValue : value;
     }
 
-    public void addParameter(String key, int value) {
+    public URL addParameter(String key, int value) {
         urlParam.addParameter(key, value);
+        return this;
     }
 
     public String getGroup() {

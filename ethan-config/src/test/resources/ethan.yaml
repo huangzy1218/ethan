@@ -1,0 +1,3 @@
+ethan:
+  timeout: 1000
+  proxy: cglib
