@@ -4,8 +4,7 @@ import com.ethan.config.annotation.Reference;
 import com.ethan.model.ApplicationModel;
 import com.ethan.registry.Registry;
 import com.ethan.remoting.Transporter;
-import com.ethan.rpc.Protocol;
-import com.ethan.rpc.ProxyFactory;
+import com.ethan.rpc.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 
+import static com.ethan.common.constant.CommonConstants.ETHAN_PROTOCOL;
 import static com.ethan.common.constant.CommonConstants.LOCAL_PROTOCOL;
 
 /**
@@ -21,7 +21,7 @@ import static com.ethan.common.constant.CommonConstants.LOCAL_PROTOCOL;
  */
 @Component
 @Slf4j
-public class ServiceBeanPostProcessor<T> implements BeanPostProcessor {
+public class ServiceBeanPostProcessor<T extends Object> implements BeanPostProcessor {
 
     private final Protocol protocol;
     private Registry registry;
@@ -47,26 +47,41 @@ public class ServiceBeanPostProcessor<T> implements BeanPostProcessor {
 
     @Override
     @SneakyThrows
+    @SuppressWarnings("unchecked")
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        Class<?> targetClass = bean.getClass();
-        Field[] services = targetClass.getDeclaredFields();
-        for (Field service : services) {
-            Reference rpcReference = service.getAnnotation(Reference.class);
+        // Get all fields of the bean class
+        Class<T> targetClass = (Class<T>) bean.getClass();
+        Field[] fields = targetClass.getDeclaredFields();
+
+        for (Field field : fields) {
+            // Check if the field has the @Reference annotation
+            Reference rpcReference = field.getAnnotation(Reference.class);
             if (rpcReference != null) {
-                ProxyFactory factory = TransportSupport.getProxyFactory();
-                // Get service interface
-                Class<?> superclass = service.getType().getSuperclass();
-//                Invoker<?> invoker = protocol.refer(superclass, URL.builder().build());
-                // Get proxy
-                try {
-                    Object proxy = factory.getProxy(invoker);
-                    service.setAccessible(true);
-                    service.set(bean, proxy);
-                } catch (Exception e) {
-                    log.error("Can't inject service bean: {}, cause: {}", service.getName(), e.getMessage(), e);
+                Class<T> serviceType = (Class<T>) field.getType().getSuperclass();
+
+                if (serviceType == null) {
+                    throw new RpcException("Unable to determine service type for field: " + field.getName());
                 }
+
+                // Obtain the proxy factory and protocol
+                ProxyFactory proxyFactory = TransportSupport.getProxyFactory();
+                Protocol protocol = ApplicationModel.defaultModel().getExtensionLoader(Protocol.class).getExtension(ETHAN_PROTOCOL);
+
+                // Create an Invoker for the service
+                Invoker<T> invoker = proxyFactory.getInvoker((T) bean, serviceType);
+
+                // Export the service
+                Exporter<T> exporter = protocol.export(invoker);
+
+                // Create the proxy object
+                Object proxy = proxyFactory.getProxy(invoker);
+
+                // Set the proxy object into the field
+                field.setAccessible(true);
+                field.set(bean, proxy);
             }
         }
+
         return bean;
     }
 
