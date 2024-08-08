@@ -16,9 +16,19 @@ public class RegistryConfig extends AbstractConfig {
     private static final long serialVersionUID = -7817082142294164305L;
 
     /**
-     * Register center address.
+     * Protocol for register center.
      */
-    private String address;
+    private String protocol;
+
+    /**
+     * Register center host.
+     */
+    private String host;
+
+    /**
+     * Default port for register center.
+     */
+    private Integer port;
 
     /**
      * Username to login register center.
@@ -29,15 +39,5 @@ public class RegistryConfig extends AbstractConfig {
      * Password to login register center.
      */
     private String password;
-
-    /**
-     * Default port for register center.
-     */
-    private Integer port;
-
-    /**
-     * Protocol for register center.
-     */
-    private String protocol;
 
 }

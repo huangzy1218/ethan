@@ -3,6 +3,7 @@ package com.ethan.config;
 import com.ethan.common.URL;
 import com.ethan.model.ApplicationModel;
 import com.ethan.registry.Registry;
+import com.ethan.registry.RegistryFactory;
 import com.ethan.remoting.RemotingException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +29,10 @@ public class ServiceRepository {
 
     public Object registerService(ServiceConfig<?> serviceConfig) throws RemotingException {
         try {
-            registry = ApplicationModel.defaultModel().getExtensionLoader(Registry.class).getExtension(serviceConfig.getRegistry());
+            RegistryFactory registryFactory =
+                    ApplicationModel.defaultModel().getExtensionLoader(RegistryFactory.class).getExtension(DEFAULT_REGISTRY);
+            // todo Complete registry address
+            registryFactory.createRegistry(new URL());
             URL serviceURL = createServiceURL(serviceConfig);
             registry.register(serviceURL);
         } catch (Exception e) {

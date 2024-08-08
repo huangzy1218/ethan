@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
  * @author Huang Z.Y.
  */
 @Component
+@Service(group = "test", version = "1.0")
 public class HelloServiceImpl implements HelloService {
 
     @Override

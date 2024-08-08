@@ -14,7 +14,7 @@ public interface RegistryFactory {
     /**
      * Create registry by url.
      *
-     * @param url Url
+     * @param url URL
      * @return Registry instance
      */
     Registry createRegistry(URL url);
