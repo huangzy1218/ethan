@@ -1,8 +1,9 @@
-package com.ethan.config;
+package com.ethan.config.annotation;
 
 import com.ethan.common.URL;
-import com.ethan.config.annotation.Reference;
-import com.ethan.config.annotation.Service;
+import com.ethan.config.ServiceConfig;
+import com.ethan.config.ServiceRepository;
+import com.ethan.config.TransportSupport;
 import com.ethan.rpc.Invoker;
 import com.ethan.rpc.ProxyFactory;
 import lombok.SneakyThrows;
@@ -39,6 +40,7 @@ public class ReferenceAnnotationBeanPostProcessor implements BeanPostProcessor {
     }
 
     @Override
+    @SneakyThrows
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         // Get all fields of the bean class
         Class<?> targetClass = bean.getClass();
@@ -55,17 +57,10 @@ public class ReferenceAnnotationBeanPostProcessor implements BeanPostProcessor {
                 URL url = buildServiceURL(field);
                 Invoker<?> invoker = proxyFactory.getInvoker(bean, serviceType, url, 1);
                 // Create the proxy object
-                try {
-                    Object proxy = proxyFactory.getProxy(invoker);
-                    // Set the proxy object into the field
-                    field.setAccessible(true);
-                    field.set(bean, proxy);
-                } catch (Exception e) {
-                    log.error("Failed to create or inject proxy for field '{}' in bean '{}'.", field.getName(),
-                            bean.getClass().getName(), e);
-                    throw new RuntimeException(e);
-                }
-
+                Object proxy = proxyFactory.getProxy(invoker);
+                // Set the proxy object into the field
+                field.setAccessible(true);
+                field.set(bean, proxy);
             }
         }
 

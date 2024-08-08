@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class HelloServiceDemo {
 
-    @Reference()
+    @Reference(group = "test", version = "1.0")
     private HelloService helloService;
 
     public void helloFromHelloService() {
