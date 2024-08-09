@@ -13,7 +13,6 @@
         <module>ethan-serialization</module>
         <module>ethan-remoting</module>
         <module>ethan-registry</module>
-        <module>ethan-springboot</module>
         <module>ethan-rpc</module>
         <module>ethan-config</module>
         <module>ethan-cluster</module>
@@ -30,7 +29,7 @@
         <kryo.version>4.0.2</kryo.version>
         <lombok.version>1.18.26</lombok.version>
         <slf4j.version>1.7.5</slf4j.version>
-        <fastjson2.version>2.0.47</fastjson2.version>
+        <fastjson2.vesion>2.0.50</fastjson2.vesion>
         <curator.version>5.1.0</curator.version>
         <spring-boot.version>3.2.4</spring-boot.version>
         <netty.version>4.1.77.Final</netty.version>
@@ -120,9 +119,19 @@
                 <version>${revision}</version>
             </dependency>
             <dependency>
+                <groupId>com.ethan</groupId>
+                <artifactId>ethan-config-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ethan</groupId>
+                <artifactId>ethan-config-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
-                <version>${fastjson2.version}</version>
+                <version>${fastjson2.vesion}</version>
             </dependency>
             <dependency>
                 <groupId>com.ethan</groupId>

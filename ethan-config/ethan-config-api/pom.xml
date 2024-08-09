@@ -5,23 +5,25 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.ethan</groupId>
-        <artifactId>ethan-remoting</artifactId>
+        <artifactId>ethan-config</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>ethan-remoting-api</artifactId>
+    <artifactId>ethan-config-api</artifactId>
+
     <dependencies>
         <dependency>
             <groupId>com.ethan</groupId>
-            <artifactId>ethan-serialization-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
+            <artifactId>ethan-common</artifactId>
         </dependency>
         <dependency>
             <groupId>com.ethan</groupId>
             <artifactId>ethan-rpc-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-registry</artifactId>
+        </dependency>
     </dependencies>
+
 </project>

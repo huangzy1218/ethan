@@ -5,6 +5,10 @@
     <file url="file://$PROJECT_DIR$/ethan-cluster/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ethan-common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ethan-common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ethan-config/ethan-config-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ethan-config/ethan-config-api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ethan-config/ethan-config-starter/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ethan-config/ethan-config-starter/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ethan-config/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ethan-config/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ethan-registry/src/main/java" charset="UTF-8" />

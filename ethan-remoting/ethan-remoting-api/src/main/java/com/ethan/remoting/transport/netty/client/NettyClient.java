@@ -81,15 +81,12 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
         // Send message to server
         channel.writeAndFlush(request);
         DefaultFuture future = DefaultFuture.newFuture(ch, request, getConnectTimeout());
-        if (future.isDone()) {
-            try {
-                Response response = (Response) future.get(url.getParameter(TIMEOUT_KEY, DEFAULT_TIMEOUT), TimeUnit.SECONDS);
-                return CompletableFuture.completedFuture(response);
-            } catch (Exception e) {
-                throw new RpcException("Cannot connect to server: " + getUrl(), e);
-            }
+        try {
+            Response response = (Response) future.get(url.getParameter(TIMEOUT_KEY, DEFAULT_TIMEOUT), TimeUnit.SECONDS);
+            return CompletableFuture.completedFuture(response);
+        } catch (Exception e) {
+            throw new RpcException("Cannot connect to server: " + getUrl(), e);
         }
-
     }
 
 }

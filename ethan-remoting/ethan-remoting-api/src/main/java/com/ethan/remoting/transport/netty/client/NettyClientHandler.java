@@ -49,7 +49,7 @@ public class NettyClientHandler extends ChannelDuplexHandler {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-//        log.error("Exception caught in NettyClientHandler", cause);
+        log.error("Exception caught in NettyClientHandler", cause);
         try {
             throw cause;
         } catch (Throwable e) {

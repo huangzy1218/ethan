@@ -30,6 +30,10 @@ public class RemotingException extends Exception {
         this.remoteAddress = remoteAddress;
     }
 
+    public RemotingException(Exception e) {
+        super(e);
+    }
+
     public RemotingException(Channel channel, Throwable cause) {
         this(
                 channel == null ? null : channel.getLocalAddress(),

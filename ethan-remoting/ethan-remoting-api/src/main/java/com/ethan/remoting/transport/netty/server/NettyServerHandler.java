@@ -7,6 +7,7 @@ import com.ethan.remoting.exchange.Response;
 import com.ethan.rpc.RpcException;
 import com.ethan.rpc.RpcInvocation;
 import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +39,8 @@ public class NettyServerHandler extends ChannelDuplexHandler {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        if (msg instanceof Request) {
-            Request request = (Request) msg;
+        if (msg instanceof Request request) {
+            request = (Request) msg;
             log.info("Received request: {}", request);
             handleRequest(request, ctx);
             ctx.fireChannelRead(msg);
@@ -72,13 +73,13 @@ public class NettyServerHandler extends ChannelDuplexHandler {
                 response.setResult(res);
             } else {
                 response.setStatus(Response.SERVICE_ERROR);
-                response.setErrorMsg(res.toString());
+                response.setErrorMsg("Failed to invoke the method");
             }
             ctx.writeAndFlush(response);
         } catch (Exception e) {
             log.error("Error processing request: {}", request, e);
             Response errorResponse = createErrorResponse(request, e);
-            ctx.writeAndFlush(errorResponse);
+            ctx.writeAndFlush(errorResponse).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
         }
     }
 

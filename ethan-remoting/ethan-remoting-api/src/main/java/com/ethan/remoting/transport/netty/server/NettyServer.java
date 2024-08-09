@@ -25,11 +25,11 @@ public class NettyServer extends AbstractEndpoint implements RemotingServer {
 
     public NettyServer(final URL url) {
         super(url);
-        // 初始化 Netty 组件
+        // Initialize Netty components
         bootstrap = new ServerBootstrap();
-        // 1 个 boss 线程
+        // 1 boss thread
         bossGroup = new NioEventLoopGroup(1);
-        // 默认的 worker 线程数
+        // Default number of worker threads
         workerGroup = new NioEventLoopGroup();
 
         bootstrap.group(bossGroup, workerGroup)
@@ -50,7 +50,7 @@ public class NettyServer extends AbstractEndpoint implements RemotingServer {
     }
 
     /**
-     * 启动 Netty 服务器并绑定指定端口
+     * Start the Netty server and bind the specified port.
      */
     @Override
     public void open() {
@@ -58,21 +58,21 @@ public class NettyServer extends AbstractEndpoint implements RemotingServer {
             bootstrap.bind(getUrl().getPort()).sync();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("等待 Netty 服务器启动过程中被中断", e);
+            throw new RuntimeException("Waiting for Netty server startup to be interrupted", e);
         }
     }
 
     /**
-     * 关闭 Netty 服务器，释放资源
+     * Shut down the Netty server and release resources.
      */
     @Override
     public void close() {
         try {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
-            log.info("Netty 服务器已关闭");
+            log.info("Netty server is down.");
         } catch (Exception e) {
-            log.error("关闭 Netty 服务器时出现异常", e);
+            log.error("Exception when shutting down Netty server", e);
         }
     }
 

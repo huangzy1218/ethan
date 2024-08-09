@@ -11,7 +11,14 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/ethan-remoting/ethan-remoting-api/pom.xml" />
+        <option value="$PROJECT_DIR$/ethan-config/ethan-config-api/pom.xml" />
+        <option value="$PROJECT_DIR$/ethan-config/ethan-config-starter/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/ethan-springboot/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="17" project-jdk-type="JavaSDK" />
