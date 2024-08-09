@@ -52,6 +52,15 @@ public interface CommonConstants {
     String HEARTBEAT_EVENT = null;
 
     /*=======================================================================================
+     * Configuration properties
+     *======================================================================================*/
+    String REGISTRY_HOST = "ethan.registry.host";
+    String REGISTRY_PORT = "ethan.registry.port";
+    String REGISTRY_USERNAME = "ethan.registry.username";
+    String REGISTRY_PASSWORD = "ethan.registry.password";
+    String CONFIG_PATH = "ethan.yaml";
+
+    /*=======================================================================================
      * Default configuration
      *======================================================================================*/
     String DEFAULT_SERIALIZATION = "fastjson2";
@@ -74,6 +83,5 @@ public interface CommonConstants {
     String DEFAULT_REGISTRY = "zookeeper";
     String DEFAULT_TRANSPORT = "netty";
     int DEFAULT_SERVER_PORT = 9851;
-    String CONFIG_PATH = "ethan.yaml";
 
 }
