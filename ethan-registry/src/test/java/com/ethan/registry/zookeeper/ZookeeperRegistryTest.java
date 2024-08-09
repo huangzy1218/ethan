@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 class ZookeeperRegistryTest {
 
     private URL registerUrl = URL.valueOf("zookeeper://39.107.235.5/ethan/default");
-    private URL url = URL.valueOf("ethan://127.0.0.1:20880/com.example.DemoService?version=1.0.0&group=test-group");
+    private URL url = URL.valueOf("void://127.0.0.1:20880/org.example.DemoService?version=1.0.0&group=test-group");
     private ZookeeperRegistry registry;
 
     @BeforeEach

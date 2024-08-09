@@ -128,6 +128,10 @@ public class URL implements Serializable {
         return URL.valueOf("ethan://0.0.0.0:80");
     }
 
+    public void setInterfaceName(String interfaceName) {
+        this.urlAddress.setInterfaceName(interfaceName);
+    }
+
     public URL addParameter(String key, String value) {
         urlParam.addParameter(key, value);
         // Invalidate cached service key
@@ -256,7 +260,7 @@ public class URL implements Serializable {
     }
 
     public String getServiceInterface() {
-        return serviceKey;
+        return urlAddress.getInterfaceName();
     }
 
     public String getCategory(String defaultValue) {

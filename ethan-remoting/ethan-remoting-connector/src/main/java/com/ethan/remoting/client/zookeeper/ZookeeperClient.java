@@ -125,8 +125,7 @@ public class ZookeeperClient {
         try {
             client.create().creatingParentsIfNeeded().forPath(path);
         } catch (Exception e) {
-            log.warn("ZNode {} already exists.", path, e);
-            throw new IllegalStateException(e.getMessage(), e);
+            log.warn("ZNode {} already exists.", path);
         }
     }
 
@@ -134,7 +133,7 @@ public class ZookeeperClient {
         try {
             client.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path);
         } catch (Exception e) {
-            log.warn("ZNode {} already exists.", path, e);
+            log.info("ZNode {} already exists.", path);
         }
     }
 

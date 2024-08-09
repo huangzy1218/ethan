@@ -1,11 +1,9 @@
-package com.ethan.config;
+package com.ethan.config.annotation;
 
 import com.ethan.common.URL;
-import com.ethan.config.annotation.Reference;
-import com.ethan.config.annotation.Service;
+import com.ethan.config.TransportSupport;
 import com.ethan.rpc.Invoker;
 import com.ethan.rpc.ProxyFactory;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -21,23 +19,7 @@ import static com.ethan.common.constant.CommonConstants.*;
 @Component
 @Slf4j
 public class ReferenceAnnotationBeanPostProcessor implements BeanPostProcessor {
-
-    private final ServiceRepository repository;
-
-    public ReferenceAnnotationBeanPostProcessor() {
-        repository = new ServiceRepository();
-    }
-
-    @Override
-    @SneakyThrows
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        if (bean.getClass().isAnnotationPresent(Service.class)) {
-            ServiceConfig<?> serviceConfig = buildServiceConfig(bean);
-            repository.registerService(serviceConfig);
-        }
-        return bean;
-    }
-
+    
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         // Get all fields of the bean class
@@ -70,22 +52,6 @@ public class ReferenceAnnotationBeanPostProcessor implements BeanPostProcessor {
         }
 
         return bean;
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> ServiceConfig<T> buildServiceConfig(Object bean) {
-        // Get Reference annotation
-        Service service = bean.getClass().getAnnotation(Service.class);
-        // Build rpc service properties
-        ServiceConfig<T> serviceConfig = new ServiceConfig<>();
-        serviceConfig.setGroup(service.group());
-        serviceConfig.setVersion(service.version());
-        serviceConfig.setAsync(service.async());
-        serviceConfig.setProxy(service.proxy());
-        serviceConfig.setInterfaceName(service.getClass().getName());
-        T ref = (T) service;
-        serviceConfig.setRef(ref);
-        return serviceConfig;
     }
 
     private URL buildServiceURL(Field bean) {

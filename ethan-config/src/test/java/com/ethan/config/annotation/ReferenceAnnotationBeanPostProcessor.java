@@ -77,8 +77,9 @@ public class ReferenceAnnotationBeanPostProcessor implements BeanPostProcessor {
         serviceConfig.setVersion(service.version());
         serviceConfig.setAsync(service.async());
         serviceConfig.setProxy(service.proxy());
-        serviceConfig.setInterfaceName(service.getClass().getName());
-        T ref = (T) service;
+        serviceConfig.setInterfaceClass(bean.getClass().getInterfaces()[0]);
+        serviceConfig.setInterfaceName(bean.getClass().getInterfaces()[0].getName());
+        T ref = (T) bean;
         serviceConfig.setRef(ref);
         return serviceConfig;
     }
@@ -88,6 +89,7 @@ public class ReferenceAnnotationBeanPostProcessor implements BeanPostProcessor {
         Reference reference = bean.getAnnotation(Reference.class);
         // Build url
         URL url = URL.buildFixedURL();
+        url.setServiceKey(bean.getClass().getName());
         url.addParameter(GROUP_KEY, reference.group())
                 .addParameter(VERSION_KEY, reference.version())
                 .addParameter(TIMEOUT_KEY, reference.timeout())

@@ -47,7 +47,7 @@ public class ServiceRepository {
     private URL createServiceURL(ServiceConfig<?> serviceConfig) {
         URL url = new URL();
         url.setPort(DEFAULT_SERVER_PORT);
-        url.setServiceKey(serviceConfig.getInterfaceName());
+        url.setInterfaceName(serviceConfig.getInterfaceName());
         url.addParameter(GROUP_KEY, serviceConfig.getGroup())
                 .addParameter(VERSION_KEY, serviceConfig.getVersion());
         return url;

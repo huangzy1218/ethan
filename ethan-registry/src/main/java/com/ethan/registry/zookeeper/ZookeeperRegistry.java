@@ -96,7 +96,7 @@ public class ZookeeperRegistry extends AbstractRegistry {
     }
 
     public String toUrlPath(URL url) {
-        return toCategoryPath(url) + url.toFullString();
+        return toCategoryPath(url) + PATH_SEPARATOR + url.toFullString();
     }
 
     private String toCategoryPath(URL url) {
@@ -108,7 +108,7 @@ public class ZookeeperRegistry extends AbstractRegistry {
         if (ANY_VALUE.equals(name)) {
             return toRootPath();
         }
-        return toRootDir() + name;
+        return toRootDir() + PATH_SEPARATOR + name;
     }
 
     private String toRootPath() {
