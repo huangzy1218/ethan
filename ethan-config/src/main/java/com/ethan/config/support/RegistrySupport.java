@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.ethan.common.constant.CommonConstants.DEFAULT_REGISTRY;
+
 /**
  * @author Huang Z.Y.
  */
@@ -31,10 +33,10 @@ public class RegistrySupport {
     }
 
     public static Registry getRegistry(ServiceConfig<?> serviceConfig) {
-        String registryName = serviceConfig.getRegistry();
+        // fixme: No flexible
         return ApplicationModel.defaultModel()
                 .getExtensionLoader(Registry.class)
-                .getExtension(registryName);
+                .getExtension(DEFAULT_REGISTRY);
     }
 
 }

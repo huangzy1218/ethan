@@ -3,6 +3,7 @@ package com.ethan.config;
 import com.ethan.common.URL;
 import com.ethan.common.config.Environment;
 import com.ethan.common.url.component.URLAddress;
+import com.ethan.common.url.component.URLParam;
 import com.ethan.model.ApplicationModel;
 import com.ethan.registry.Registry;
 import com.ethan.registry.RegistryFactory;
@@ -33,7 +34,7 @@ public class ServiceRepository {
         try {
             RegistryFactory registryFactory =
                     ApplicationModel.defaultModel().getExtensionLoader(RegistryFactory.class).getExtension(DEFAULT_REGISTRY);
-            registryFactory.createRegistry(buildRegistryURL());
+            registry = registryFactory.createRegistry(buildRegistryURL());
             URL serviceURL = createServiceURL(serviceConfig);
             registry.register(serviceURL);
         } catch (Exception e) {
@@ -65,7 +66,9 @@ public class ServiceRepository {
     private URL buildRegistryURL() {
         String host = (String) environment.getProperty(REGISTRY_HOST);
         int port = (Integer) environment.getProperty(REGISTRY_PORT);
-        return URL.builder().urlAddress(new URLAddress(DEFAULT_REGISTRY, host, port)).build();
+        return URL.builder()
+                .urlAddress(new URLAddress(DEFAULT_REGISTRY, host, port))
+                .urlParam(new URLParam()).build();
     }
 
 }

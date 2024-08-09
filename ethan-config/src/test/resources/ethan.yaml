@@ -2,5 +2,5 @@ ethan:
   timeout: 1000
   proxy: cglib
   registry:
-    host: 127.0.0.1
+    host: 39.107.235.5
     port: 2181
