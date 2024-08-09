@@ -23,5 +23,9 @@
             <groupId>com.ethan</groupId>
             <artifactId>ethan-rpc-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-config</artifactId>
+        </dependency>
     </dependencies>
 </project>

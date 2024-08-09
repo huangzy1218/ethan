@@ -1,12 +1,19 @@
 package com.ethan.remoting.transport.netty.server;
 
+import com.ethan.common.context.ApplicationContextHolder;
+import com.ethan.config.ServiceRepository;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.Response;
-import io.netty.channel.Channel;
+import com.ethan.rpc.RpcException;
+import com.ethan.rpc.RpcInvocation;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * Netty server handler.
@@ -17,6 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 @ChannelHandler.Sharable
 public class NettyServerHandler extends ChannelDuplexHandler {
 
+    private final ServiceRepository serviceRepository;
+
+    public NettyServerHandler() {
+        serviceRepository = ApplicationContextHolder.getBean(ServiceRepository.class);
+    }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -40,56 +52,35 @@ public class NettyServerHandler extends ChannelDuplexHandler {
 
     private void handleRequest(Request request, ChannelHandlerContext ctx) {
         try {
-            // Process the request and generate a response
-            Channel channel = ctx.channel();
-//            processRequest(ctx.channel(), request);
-//            ctx.writeAndFlush(response);
+            Response response = new Response(request.getId(), request.getVersion());
+            if (request.isBroken()) {
+                Object data = request.getData();
+                String msg;
+                if (data == null) {
+                    msg = null;
+                } else {
+                    msg = data.toString();
+                }
+                response.setErrorMsg("Fail to decode request due to: " + msg);
+                response.setStatus(Response.BAD_REQUEST);
+            }
+            RpcInvocation invocation = (RpcInvocation) request.getData();
+            Object service = serviceRepository.getService(invocation.getServiceName());
+            Object res = invokeTargetMethod(invocation, service);
+            if (Objects.nonNull(res)) {
+                response.setStatus(Response.OK);
+                response.setResult(res);
+            } else {
+                response.setStatus(Response.SERVICE_ERROR);
+                response.setErrorMsg(res.toString());
+            }
+            ctx.writeAndFlush(response);
         } catch (Exception e) {
             log.error("Error processing request: {}", request, e);
             Response errorResponse = createErrorResponse(request, e);
             ctx.writeAndFlush(errorResponse);
         }
     }
-
-//    private void processRequest(Channel channel, Request req) throws RemotingException {
-//        Response res = new Response(req.getId(), req.getVersion());
-//        if (req.isBroken()) {
-//            Object data = req.getData();
-//            String msg;
-//            if (data == null) {
-//                msg = null;
-//            } else {
-//                msg = data.toString();
-//            }
-//            res.setErrorMsg("Fail to decode request due to: " + msg);
-//            res.setStatus(Response.BAD_REQUEST);
-//            channel.send(res);
-//            return;
-//        }
-//        // find handler by message class.
-//        Object msg = req.getData();
-//        try {
-//            CompletionStage<Object> future = handler.reply(channel, msg);
-//            future.whenComplete((appResult, t) -> {
-//                try {
-//                    if (t == null) {
-//                        res.setStatus(Response.OK);
-//                        res.setResult(appResult);
-//                    } else {
-//                        res.setStatus(Response.SERVICE_ERROR);
-//                        res.setErrorMsg(t.toString());
-//                    }
-//                    channel.send(res);
-//                } catch (RemotingException e) {
-//                    log.warn("Send result to consumer failed, channel is {}, msg is {}", channel, e);
-//                }
-//            });
-//        } catch (Throwable e) {
-//            res.setStatus(Response.SERVICE_ERROR);
-//            res.setErrorMsg(e.toString());
-//            channel.send(res);
-//        }
-//    }
 
     private Response createErrorResponse(Request request, Exception e) {
         Response response = new Response();
@@ -102,6 +93,19 @@ public class NettyServerHandler extends ChannelDuplexHandler {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         log.error("Exception caught in NettyServerHandler", cause);
         ctx.close();
+    }
+
+    private Object invokeTargetMethod(RpcInvocation request, Object service) {
+        Object result;
+        try {
+            Method method = service.getClass().getMethod(request.getMethodName(), request.getParameterTypes());
+            result = method.invoke(service, request.getParameters());
+            log.info("Service: [{}] successful invoke method [{}]", request.getServiceName(), request.getMethodName());
+        } catch (NoSuchMethodException | IllegalArgumentException | InvocationTargetException |
+                 IllegalAccessException e) {
+            throw new RpcException(e.getMessage(), e);
+        }
+        return result;
     }
 
 }

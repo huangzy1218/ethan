@@ -35,7 +35,6 @@ public class EthanInvoker<T> extends AbstractInvoker<T> {
             invocation.setAttachment(TIMEOUT_KEY, String.valueOf(DEFAULT_TIMEOUT));
             Request request = new Request();
             request.setData(inv);
-
             client.send(request);
             return AsyncRpcResult.newDefaultAsyncResult(invocation);
         } catch (TimeoutException e) {

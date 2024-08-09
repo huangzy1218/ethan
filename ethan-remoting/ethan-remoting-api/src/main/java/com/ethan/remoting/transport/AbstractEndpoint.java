@@ -15,13 +15,11 @@ import static com.ethan.common.constant.CommonConstants.DEFAULT_CONNECT_TIMEOUT;
 public class AbstractEndpoint {
 
     @Getter
+    protected URL url;
+    @Getter
     private Codec codec;
-
     @Getter
     private int connectTimeout;
-
-    @Getter
-    private URL url;
 
     public AbstractEndpoint(URL url) {
         this.url = url;

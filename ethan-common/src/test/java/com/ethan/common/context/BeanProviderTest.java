@@ -13,7 +13,7 @@ class BeanProviderTest {
 
     @Test
     void testGetBeanFromContext() {
-        URLParam bean = BeanProvider.getBean(URLParam.class);
+        URLParam bean = ApplicationContextHolder.getBean(URLParam.class);
         HashMap<String, String> map = new HashMap<>();
         map.put("key", "value");
         bean.setParameters(map);

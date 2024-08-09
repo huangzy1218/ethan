@@ -9,14 +9,14 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  * @author Huang Z.Y.
  */
 
-public class BeanProvider {
+public class ApplicationContextHolder {
 
     /**
      * Get bean with annotation of component.
      */
     private static AnnotationConfigApplicationContext context;
 
-    private BeanProvider() {
+    private ApplicationContextHolder() {
         // There has some flaw in order to simplify the code.
         // Configuration class must provide visible constructor but universally utility can not
         // be instantiated.

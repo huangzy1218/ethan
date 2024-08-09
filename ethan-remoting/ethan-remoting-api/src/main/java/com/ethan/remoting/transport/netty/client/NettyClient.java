@@ -3,14 +3,22 @@ package com.ethan.remoting.transport.netty.client;
 import com.ethan.common.URL;
 import com.ethan.remoting.RemotingClient;
 import com.ethan.remoting.exchange.Request;
+import com.ethan.remoting.exchange.Response;
 import com.ethan.remoting.exchange.support.DefaultFuture;
 import com.ethan.remoting.transport.AbstractEndpoint;
 import com.ethan.remoting.transport.netty.NettyChannel;
 import com.ethan.remoting.transport.netty.codec.NettyCodecAdapter;
+import com.ethan.rpc.RpcException;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
+import static com.ethan.common.constant.CommonConstants.DEFAULT_TIMEOUT;
+import static com.ethan.common.constant.CommonConstants.TIMEOUT_KEY;
 
 /**
  * @author Huang Z.Y.
@@ -62,7 +70,7 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
      *
      * @param request The content of the message to be sent
      */
-    public void send(Request request) {
+    public CompletableFuture<Response> send(Request request) {
         if (group.isShuttingDown() || group.isShutdown()) {
             throw new IllegalStateException("The client has closed or is closing.");
         }
@@ -70,9 +78,18 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
             throw new IllegalStateException("Connection not established or closed.");
         }
         com.ethan.remoting.Channel ch = NettyChannel.getOrAddChannel(channel, getUrl());
-        DefaultFuture.newFuture(ch, request, getConnectTimeout());
         // Send message to server
         channel.writeAndFlush(request);
+        DefaultFuture future = DefaultFuture.newFuture(ch, request, getConnectTimeout());
+        if (future.isDone()) {
+            try {
+                Response response = (Response) future.get(url.getParameter(TIMEOUT_KEY, DEFAULT_TIMEOUT), TimeUnit.SECONDS);
+                return CompletableFuture.completedFuture(response);
+            } catch (Exception e) {
+                throw new RpcException("Cannot connect to server: " + getUrl(), e);
+            }
+        }
+
     }
 
 }
