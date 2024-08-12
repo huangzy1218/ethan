@@ -1,7 +1,7 @@
 package com.ethan.remoting.exchange.support;
 
+import com.ethan.common.RemotingException;
 import com.ethan.remoting.Channel;
-import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.Response;
 import com.ethan.serialize.SerializationException;
@@ -115,7 +115,7 @@ public class DefaultFuture extends CompletableFuture<Object> {
         } else if (res.getStatus() == Response.SERIALIZATION_ERROR) {
             this.completeExceptionally(new SerializationException(res.getErrorMsg()));
         } else {
-            this.completeExceptionally(new RemotingException(channel, res.getErrorMsg()));
+            this.completeExceptionally(new RemotingException(res.getErrorMsg()));
         }
     }
 

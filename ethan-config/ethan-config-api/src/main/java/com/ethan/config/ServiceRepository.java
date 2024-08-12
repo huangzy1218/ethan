@@ -1,5 +1,6 @@
-package com.ethan.remoting;
+package com.ethan.config;
 
+import com.ethan.common.RemotingException;
 import com.ethan.common.URL;
 import com.ethan.common.config.Environment;
 import com.ethan.common.url.component.URLAddress;

@@ -1,8 +1,8 @@
 package com.ethan.remoting.exchange.support;
 
+import com.ethan.common.RemotingException;
 import com.ethan.common.URL;
 import com.ethan.remoting.Channel;
-import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.exchange.ExchangeClient;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.transport.netty.NettyChannel;

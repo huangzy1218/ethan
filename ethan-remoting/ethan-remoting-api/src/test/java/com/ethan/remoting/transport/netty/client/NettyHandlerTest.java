@@ -1,7 +1,7 @@
 package com.ethan.remoting.transport.netty.client;
 
+import com.ethan.common.RemotingException;
 import com.ethan.common.URL;
-import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.transport.netty.server.NettyServer;
 import org.junit.jupiter.api.AfterEach;

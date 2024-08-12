@@ -1,8 +1,8 @@
-package com.ethan.rpc.compressor.support;
+package com.ethan.remoting.compressor.support;
 
+import com.ethan.common.RpcException;
 import com.ethan.common.enumeration.CompressType;
-import com.ethan.rpc.RpcException;
-import com.ethan.rpc.compressor.Compressor;
+import com.ethan.remoting.compressor.Compressor;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 
@@ -13,7 +13,7 @@ import java.io.ByteArrayOutputStream;
  * Bzip2 compressor, faster compression efficiency.
  *
  * @author Huang Z.Y.
- * @link https://commons.apache.org/proper/commons-compress/
+ * @link <a href="https://commons.apache.org/proper/commons-compress/">Common compress</a>
  */
 public class Bzip2 implements Compressor {
 

@@ -1,5 +1,6 @@
 package com.ethan.remoting;
 
+import com.ethan.common.RemotingException;
 import com.ethan.common.URL;
 
 /**
@@ -12,16 +13,16 @@ public interface Transporter {
      *
      * @param url Server url
      * @return Server
-     * @throws RemotingException
+     * @throws com.ethan.common.RemotingException
      */
-    RemotingServer bind(URL url) throws RemotingException;
+    RemotingServer bind(URL url) throws com.ethan.common.RemotingException;
 
     /**
      * Connect to a server.
      *
      * @param url Server url
      * @return client
-     * @throws RemotingException
+     * @throws com.ethan.common.RemotingException
      */
     RemotingClient connect(URL url) throws RemotingException;
 

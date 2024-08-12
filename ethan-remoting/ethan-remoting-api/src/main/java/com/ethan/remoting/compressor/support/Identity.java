@@ -1,7 +1,7 @@
-package com.ethan.rpc.compressor.support;
+package com.ethan.remoting.compressor.support;
 
 import com.ethan.common.enumeration.CompressType;
-import com.ethan.rpc.compressor.Compressor;
+import com.ethan.remoting.compressor.Compressor;
 
 /**
  * Default compressor.

@@ -1,4 +1,4 @@
-package com.ethan.remoting;
+package com.ethan.common;
 
 import lombok.Getter;
 
@@ -16,13 +16,6 @@ public class RemotingException extends Exception {
 
     private InetSocketAddress remoteAddress;
 
-    public RemotingException(Channel channel, String msg) {
-        this(
-                channel == null ? null : channel.getLocalAddress(),
-                channel == null ? null : channel.getRemoteAddress(),
-                msg);
-    }
-
     public RemotingException(InetSocketAddress localAddress, InetSocketAddress remoteAddress, String message) {
         super(message);
 
@@ -30,15 +23,16 @@ public class RemotingException extends Exception {
         this.remoteAddress = remoteAddress;
     }
 
-    public RemotingException(Exception e) {
-        super(e);
+    public RemotingException(String message) {
+        super(message);
     }
 
-    public RemotingException(Channel channel, Throwable cause) {
-        this(
-                channel == null ? null : channel.getLocalAddress(),
-                channel == null ? null : channel.getRemoteAddress(),
-                cause);
+    public RemotingException(String message, Throwable throwable) {
+        super(message, throwable);
+    }
+
+    public RemotingException(Exception e) {
+        super(e);
     }
 
     public RemotingException(InetSocketAddress localAddress, InetSocketAddress remoteAddress, Throwable cause) {
@@ -46,14 +40,6 @@ public class RemotingException extends Exception {
 
         this.localAddress = localAddress;
         this.remoteAddress = remoteAddress;
-    }
-
-    public RemotingException(Channel channel, String message, Throwable cause) {
-        this(
-                channel == null ? null : channel.getLocalAddress(),
-                channel == null ? null : channel.getRemoteAddress(),
-                message,
-                cause);
     }
 
     public RemotingException(

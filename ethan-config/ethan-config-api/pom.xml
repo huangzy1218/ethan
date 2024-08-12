@@ -18,10 +18,6 @@
         </dependency>
         <dependency>
             <groupId>com.ethan</groupId>
-            <artifactId>ethan-rpc-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ethan</groupId>
             <artifactId>ethan-registry</artifactId>
         </dependency>
     </dependencies>

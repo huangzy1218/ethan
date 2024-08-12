@@ -1,8 +1,8 @@
-package com.ethan.rpc.compressor;
+package com.ethan.remoting.compressor;
 
 import com.ethan.common.extension.SPI;
 import com.ethan.model.ApplicationModel;
-import com.ethan.rpc.compressor.support.Identity;
+import com.ethan.remoting.compressor.support.Identity;
 
 /**
  * Compressor interface.

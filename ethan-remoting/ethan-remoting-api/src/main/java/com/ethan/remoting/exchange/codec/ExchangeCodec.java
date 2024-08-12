@@ -1,9 +1,9 @@
 package com.ethan.remoting.exchange.codec;
 
+import com.ethan.common.RemotingException;
 import com.ethan.common.util.ByteUtils;
 import com.ethan.remoting.Channel;
 import com.ethan.remoting.Codec;
-import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.Response;
 import com.ethan.remoting.exchange.support.DefaultFuture;

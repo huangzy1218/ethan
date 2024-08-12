@@ -1,4 +1,4 @@
-package com.ethan.rpc.compressor;
+package com.ethan.remoting.compressor;
 
 /**
  * Get encode.

@@ -1,10 +1,10 @@
 package com.ethan.registry.redis;
 
+import com.ethan.common.RpcException;
 import com.ethan.common.URL;
+import com.ethan.registry.client.redis.RedisClient;
+import com.ethan.registry.client.redis.RedisTransporter;
 import com.ethan.registry.support.AbstractRegistry;
-import com.ethan.remoting.client.redis.RedisClient;
-import com.ethan.remoting.client.redis.RedisTransporter;
-import com.ethan.rpc.RpcException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;

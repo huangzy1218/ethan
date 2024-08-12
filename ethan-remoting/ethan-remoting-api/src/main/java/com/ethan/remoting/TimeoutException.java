@@ -1,5 +1,7 @@
 package com.ethan.remoting;
 
+import com.ethan.common.RemotingException;
+
 import java.net.InetSocketAddress;
 
 /**
@@ -14,8 +16,8 @@ public class TimeoutException extends RemotingException {
     private static final long serialVersionUID = 3122966731958222692L;
     private final int phase;
 
-    public TimeoutException(boolean serverSide, Channel channel, String message) {
-        super(channel, message);
+    public TimeoutException(boolean serverSide, String message) {
+        super(message);
         this.phase = serverSide ? SERVER_SIDE : CLIENT_SIDE;
     }
 

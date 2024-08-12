@@ -1,7 +1,7 @@
 package com.ethan.remoting.transport.netty;
 
+import com.ethan.common.RemotingException;
 import com.ethan.common.URL;
-import com.ethan.remoting.RemotingException;
 import io.netty.channel.Channel;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

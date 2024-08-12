@@ -4,7 +4,7 @@ import com.ethan.common.URL;
 import com.ethan.common.extension.ExtensionLoader;
 import com.ethan.common.util.UrlUtils;
 import com.ethan.model.ApplicationModel;
-import com.ethan.rpc.compressor.Compressor;
+import com.ethan.remoting.compressor.Compressor;
 import com.ethan.serialize.ObjectInput;
 import com.ethan.serialize.ObjectOutput;
 import com.ethan.serialize.Serialization;

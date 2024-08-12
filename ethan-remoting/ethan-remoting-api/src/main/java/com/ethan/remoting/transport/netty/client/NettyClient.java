@@ -1,5 +1,6 @@
 package com.ethan.remoting.transport.netty.client;
 
+import com.ethan.common.RpcException;
 import com.ethan.common.URL;
 import com.ethan.remoting.RemotingClient;
 import com.ethan.remoting.exchange.Request;
@@ -8,7 +9,6 @@ import com.ethan.remoting.exchange.support.DefaultFuture;
 import com.ethan.remoting.transport.AbstractEndpoint;
 import com.ethan.remoting.transport.netty.NettyChannel;
 import com.ethan.remoting.transport.netty.codec.NettyCodecAdapter;
-import com.ethan.rpc.RpcException;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;

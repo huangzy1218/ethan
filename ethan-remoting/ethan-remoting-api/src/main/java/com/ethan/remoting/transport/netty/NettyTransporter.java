@@ -1,8 +1,8 @@
 package com.ethan.remoting.transport.netty;
 
+import com.ethan.common.RemotingException;
 import com.ethan.common.URL;
 import com.ethan.remoting.RemotingClient;
-import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.RemotingServer;
 import com.ethan.remoting.Transporter;
 import com.ethan.remoting.transport.netty.client.NettyClient;

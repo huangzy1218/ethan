@@ -1,8 +1,8 @@
 package com.ethan.remoting.transport.netty;
 
+import com.ethan.common.RemotingException;
 import com.ethan.common.URL;
 import com.ethan.remoting.Channel;
-import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.util.PayloadDropper;
 import io.netty.channel.ChannelFuture;
 import lombok.extern.slf4j.Slf4j;
@@ -73,7 +73,7 @@ public class NettyChannel implements Channel {
     @Override
     public void send(Object message) throws RemotingException {
         if (isClosed()) {
-            throw new RemotingException(this, "Failed to send message "
+            throw new RemotingException("Failed to send message "
                     + (message == null ? "" : message.getClass().getName()));
         }
         boolean success = true;
@@ -84,12 +84,12 @@ public class NettyChannel implements Channel {
                 throw cause;
             }
         } catch (Throwable e) {
-            throw new RemotingException(this, "Failed to send message " + PayloadDropper.getRequestWithoutData(message)
+            throw new RemotingException("Failed to send message " + PayloadDropper.getRequestWithoutData(message)
                     + " to " + getRemoteAddress() + ", cause: " + e.getMessage(), e);
         }
 
         if (!success) {
-            throw new RemotingException(this, "Failed to send message " + PayloadDropper.getRequestWithoutData(message)
+            throw new RemotingException("Failed to send message " + PayloadDropper.getRequestWithoutData(message)
                     + " to " + getRemoteAddress());
         }
     }

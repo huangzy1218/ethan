@@ -3,7 +3,6 @@ package com.ethan.config;
 import com.ethan.common.config.AbstractInterfaceConfig;
 import com.ethan.common.config.ConsumerConfig;
 import com.ethan.model.ConsumerModel;
-import com.ethan.rpc.Invoker;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
@@ -30,10 +29,6 @@ public class ReferenceConfig<T> extends AbstractInterfaceConfig {
      * The interface proxy reference.
      */
     private transient volatile T ref;
-    /**
-     * The invoker of the reference service.
-     */
-    private transient volatile Invoker<?> invoker;
     /**
      * whether this ReferenceConfig has been destroyed.
      */

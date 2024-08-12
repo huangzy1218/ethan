@@ -2,8 +2,8 @@ package com.ethan.config.annotation;
 
 import com.ethan.common.URL;
 import com.ethan.config.ServiceConfig;
+import com.ethan.config.ServiceRepository;
 import com.ethan.config.support.TransportSupport;
-import com.ethan.remoting.ServiceRepository;
 import com.ethan.rpc.Invoker;
 import com.ethan.rpc.ProxyFactory;
 import lombok.SneakyThrows;

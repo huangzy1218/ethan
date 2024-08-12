@@ -21,7 +21,15 @@
         </dependency>
         <dependency>
             <groupId>com.ethan</groupId>
-            <artifactId>ethan-rpc-api</artifactId>
+            <artifactId>ethan-config-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
         </dependency>
     </dependencies>
 </project>

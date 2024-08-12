@@ -2,7 +2,7 @@ package com.ethan.config.annotation;
 
 import com.ethan.common.context.ApplicationContextHolder;
 import com.ethan.config.ServiceConfig;
-import com.ethan.remoting.ServiceRepository;
+import com.ethan.config.ServiceRepository;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;

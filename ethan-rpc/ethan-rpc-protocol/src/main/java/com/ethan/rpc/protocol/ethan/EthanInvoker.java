@@ -1,7 +1,7 @@
 package com.ethan.rpc.protocol.ethan;
 
+import com.ethan.common.RemotingException;
 import com.ethan.common.URL;
-import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.TimeoutException;
 import com.ethan.remoting.exchange.ExchangeClient;
 import com.ethan.remoting.exchange.Request;

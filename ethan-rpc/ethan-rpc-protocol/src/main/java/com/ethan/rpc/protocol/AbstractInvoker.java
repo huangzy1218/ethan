@@ -1,7 +1,7 @@
 package com.ethan.rpc.protocol;
 
+import com.ethan.common.RemotingException;
 import com.ethan.common.URL;
-import com.ethan.remoting.RemotingException;
 import com.ethan.rpc.*;
 import com.ethan.rpc.support.RpcUtils;
 import com.ethan.serialize.SerializationException;
