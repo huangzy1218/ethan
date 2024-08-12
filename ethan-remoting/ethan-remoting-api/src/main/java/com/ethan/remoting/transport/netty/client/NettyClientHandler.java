@@ -6,6 +6,8 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.CompletableFuture;
+
 
 /**
  * Customize the client ChannelHandler to process the data sent by the server.
@@ -28,8 +30,7 @@ public class NettyClientHandler extends ChannelDuplexHandler {
      */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        if (msg instanceof Response) {
-            Response response = (Response) msg;
+        if (msg instanceof Response response) {
             // Handle the response
             handleResponse(response);
             ctx.fireChannelRead(msg);
@@ -42,6 +43,7 @@ public class NettyClientHandler extends ChannelDuplexHandler {
     }
 
     private void handleResponse(Response response) {
+        CompletableFuture.completedFuture(response);
 //        unprocessedRequests.completeRequest(response.getId(), response);
         log.info("Response processed successfully for requestId: {}", response.getId());
     }

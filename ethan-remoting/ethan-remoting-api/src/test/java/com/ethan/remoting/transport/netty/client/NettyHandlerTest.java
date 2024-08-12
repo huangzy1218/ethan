@@ -18,11 +18,11 @@ public class NettyHandlerTest {
     @BeforeEach
     public void setUp() throws Throwable {
         // Create a mock URL for the server
-        URL serverUrl = URL.valueOf("dubbo://127.0.0.1:8088");
+        URL serverUrl = URL.valueOf("dubbo://127.0.0.1:8084");
         nettyServer = new NettyServer(serverUrl);
         nettyServer.open();
         // Create a mock URL for the client
-        URL clientUrl = URL.valueOf("dubbo://127.0.0.1:8088");
+        URL clientUrl = URL.valueOf("dubbo://127.0.0.1:8084");
         nettyClient = new NettyClient(clientUrl);
         nettyClient.connect();
     }

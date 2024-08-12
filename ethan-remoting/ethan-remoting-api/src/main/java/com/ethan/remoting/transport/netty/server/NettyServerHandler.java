@@ -40,7 +40,6 @@ public class NettyServerHandler extends ChannelDuplexHandler {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (msg instanceof Request request) {
-            request = (Request) msg;
             log.info("Received request: {}", request);
             handleRequest(request, ctx);
             ctx.fireChannelRead(msg);

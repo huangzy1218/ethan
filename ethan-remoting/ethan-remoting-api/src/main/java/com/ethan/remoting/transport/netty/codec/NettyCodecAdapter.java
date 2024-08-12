@@ -42,8 +42,8 @@ public class NettyCodecAdapter {
         @Override
         protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
             boolean encoded = false;
-            if (msg instanceof ByteBuf) {
-                out.writeBytes(((ByteBuf) msg));
+            if (msg instanceof ByteBuf byteBuf) {
+                out.writeBytes(byteBuf);
                 encoded = true;
             }
 
