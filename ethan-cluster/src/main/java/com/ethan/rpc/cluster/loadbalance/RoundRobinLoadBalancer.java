@@ -15,11 +15,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RoundRobinLoadBalancer extends AbstractLoadBalance {
 
+    public static final String NAME = "roundrobin";
+
     /**
      * The index of the current poll.
      */
     private final AtomicInteger currentIndex = new AtomicInteger(0);
-    
+
     @Override
     protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) {
         if (invokers.isEmpty()) {
