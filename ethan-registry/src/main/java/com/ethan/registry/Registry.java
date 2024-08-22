@@ -13,6 +13,11 @@ import java.util.List;
 public interface Registry extends Node {
 
     /**
+     * Init the registry.
+     */
+    void init();
+
+    /**
      * Register data, such as provider service, consumer address.
      *
      * @param url Registration information, such as ethan://127.0.0.1/com.example.Greeting?version=1.0.0
@@ -50,4 +55,8 @@ public interface Registry extends Node {
      */
     List<URL> lookup(URL url);
 
+    /**
+     * Server heartbeat.
+     */
+    void heartbeat();
 }

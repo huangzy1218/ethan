@@ -36,7 +36,6 @@ public class ZookeeperRegistry extends AbstractRegistry {
         }
         this.root = group;
         this.zkClient = ZookeeperTransporter.connect(url);
-
     }
 
     public boolean isAvailable() {
@@ -47,6 +46,11 @@ public class ZookeeperRegistry extends AbstractRegistry {
         if (zkClient == null) {
             throw new IllegalStateException("Registry is destroyed");
         }
+    }
+
+    @Override
+    public void init() {
+        heartbeat();
     }
 
     @Override

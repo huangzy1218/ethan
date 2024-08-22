@@ -45,6 +45,11 @@ public class RedisRegistry extends AbstractRegistry {
     }
 
     @Override
+    public void init() {
+        heartbeat();
+    }
+
+    @Override
     public void register(URL url) {
         try {
             checkDestroyed();

@@ -49,7 +49,7 @@ public interface CommonConstants {
     String LOCAL_PROTOCOL = "injvm";
     String REMOTE_PROTOCOL = "ethan";
     String PROTOCOL_VERSION = "1.0.0";
-    String HEARTBEAT_EVENT = null;
+    String HEARTBEAT_EVENT = "heartbeat";
 
     /*=======================================================================================
      * Configuration properties
@@ -83,5 +83,6 @@ public interface CommonConstants {
     String DEFAULT_REGISTRY = "zookeeper";
     String DEFAULT_TRANSPORT = "netty";
     int DEFAULT_SERVER_PORT = 9851;
+    int DEFAULT_ETCD_HEARTBEAT_TIME = 30;
 
 }

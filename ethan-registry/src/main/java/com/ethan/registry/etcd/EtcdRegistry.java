@@ -2,6 +2,7 @@ package com.ethan.registry.etcd;
 
 import com.ethan.common.RpcException;
 import com.ethan.common.URL;
+import com.ethan.common.util.CollectionUtils;
 import com.ethan.registry.support.AbstractRegistry;
 import io.etcd.jetcd.*;
 import io.etcd.jetcd.options.GetOption;
@@ -13,6 +14,9 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.ethan.common.constant.CommonConstants.*;
@@ -55,6 +59,11 @@ public class EtcdRegistry extends AbstractRegistry {
         if (client == null || kvClient == null) {
             throw new IllegalStateException("Registry is destroyed");
         }
+    }
+
+    @Override
+    public void init() {
+        heartbeat();
     }
 
     @Override
@@ -151,4 +160,28 @@ public class EtcdRegistry extends AbstractRegistry {
         }
         client.close();
     }
+
+    @Override
+    public void heartbeat() {
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        executor.scheduleAtFixedRate(() -> {
+            for (String key : localRegisterNodeKeyMap.keySet()) {
+                try {
+                    List<io.etcd.jetcd.KeyValue> keyValues = kvClient.get(ByteSequence.from(key, StandardCharsets.UTF_8))
+                            .get()
+                            .getKvs();
+                    if (CollectionUtils.isEmpty(keyValues)) {
+                        continue;
+                    }
+                    io.etcd.jetcd.KeyValue keyValue = keyValues.get(0);
+                    String serviceStr = keyValue.getValue().toString(StandardCharsets.UTF_8);
+                    URL serviceURL = URL.valueOf(serviceStr);
+                    register(serviceURL);
+                } catch (Exception e) {
+                    throw new RpcException(key + "renewal failed", e);
+                }
+            }
+        }, 0, DEFAULT_ETCD_HEARTBEAT_TIME, TimeUnit.SECONDS);
+    }
+
 }
