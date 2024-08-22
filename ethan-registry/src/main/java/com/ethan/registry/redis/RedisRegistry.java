@@ -12,7 +12,7 @@ import java.util.List;
 import static com.ethan.common.constant.CommonConstants.*;
 
 /**
- * he implementation of {@link com.ethan.registry.Registry} using Redis.
+ * The implementation of {@link com.ethan.registry.Registry} using Redis.
  *
  * @author Huang Z.Y.
  */

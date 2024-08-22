@@ -144,6 +144,10 @@ public class URL implements Serializable {
         return this;
     }
 
+    public long getTimeout() {
+        return Long.parseLong(urlParam.getParam(TIMEOUT_KEY));
+    }
+
     public boolean hasParameter(String key) {
         String value = getParameter(key);
         return StringUtils.isNotEmpty(value);
