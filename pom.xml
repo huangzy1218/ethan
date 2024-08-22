@@ -42,6 +42,7 @@
         <jedis.version>2.9.0</jedis.version>
         <jetcd.version>0.7.7</jetcd.version>
         <mockito.version>3.7.7</mockito.version>
+        <guava-retrying.version>2.0.0</guava-retrying.version>
     </properties>
 
     <dependencies>

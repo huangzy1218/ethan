@@ -10,7 +10,14 @@
     </parent>
 
     <artifactId>ethan-rpc-api</artifactId>
-    
+    <dependencies>
+        <dependency>
+            <groupId>com.github.rholder</groupId>
+            <artifactId>guava-retrying</artifactId>
+            <version>${guava-retrying.version}</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
