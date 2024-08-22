@@ -1,0 +1,2 @@
+random=com.ethan.rpc.cluster.loadbalance.RandomLoadBalance
+consistenthash=com.ethan.rpc.cluster.loadbalance.ConsistentHashLoadBalance

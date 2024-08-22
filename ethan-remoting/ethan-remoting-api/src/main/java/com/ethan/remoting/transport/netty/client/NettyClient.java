@@ -2,6 +2,8 @@ package com.ethan.remoting.transport.netty.client;
 
 import com.ethan.common.URL;
 import com.ethan.common.context.ApplicationContextHolder;
+import com.ethan.model.ApplicationModel;
+import com.ethan.registry.Registry;
 import com.ethan.remoting.RemotingClient;
 import com.ethan.remoting.transport.AbstractEndpoint;
 import com.ethan.remoting.transport.netty.codec.NettyCodecAdapter;
@@ -9,6 +11,10 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+
+import java.util.concurrent.TimeUnit;
+
+import static com.ethan.common.constant.CommonConstants.DEFAULT_REGISTRY;
 
 /**
  * @author Huang Z.Y.
@@ -18,6 +24,7 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
     private Bootstrap bootstrap;
     private EventLoopGroup group;
     private ChannelProvider channelProvider;
+    private Registry registry;
     /**
      * Save established pipeline.
      */
@@ -29,7 +36,7 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
         bootstrap = new Bootstrap();
         group = new NioEventLoopGroup();
         channelProvider = ApplicationContextHolder.getBean(ChannelProvider.class);
-
+        registry = ApplicationModel.defaultModel().getExtensionLoader(Registry.class).getExtension(DEFAULT_REGISTRY);
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
@@ -47,13 +54,11 @@ public class NettyClient extends AbstractEndpoint implements RemotingClient {
 
     @Override
     public void connect() {
-        try {
-            ChannelFuture future = bootstrap.connect(getUrl().getHost(), getUrl().getPort()).sync();
+        ChannelFuture future = bootstrap.connect(getUrl().getHost(), getUrl().getPort());
+        boolean ret = future.awaitUninterruptibly(getConnectTimeout(), TimeUnit.MILLISECONDS);
+        if (ret) {
             this.channel = future.channel();
             future.channel().closeFuture().addListener(f -> group.shutdownGracefully());
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("Interrupted during connection", e);
         }
     }
 

@@ -6,6 +6,8 @@ import com.ethan.common.config.Environment;
 import com.ethan.common.config.RegistryConfig;
 import com.ethan.common.util.ConcurrentHashMapUtils;
 import com.ethan.common.util.StringUtils;
+import com.ethan.config.ReferenceConfig;
+import com.ethan.config.ServiceConfig;
 import com.ethan.config.bootstrap.builder.ApplicationBuilder;
 import com.ethan.model.ApplicationModel;
 import lombok.Getter;
