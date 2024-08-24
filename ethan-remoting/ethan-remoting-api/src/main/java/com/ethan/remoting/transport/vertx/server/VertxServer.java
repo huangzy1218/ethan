@@ -19,9 +19,9 @@ public class VertxServer implements RemotingServer {
     public VertxServer(final URL url) {
         vertx = Vertx.vertx();
         this.url = url;
-        io.vertx.core.http.HttpServer server = vertx.createHttpServer();
+        server = vertx.createNetServer();
         // Handle request
-        server.requestHandler(new HttpServerHandler());
+        server.connectHandler(new VertxServerHandler());
     }
 
     @Override
