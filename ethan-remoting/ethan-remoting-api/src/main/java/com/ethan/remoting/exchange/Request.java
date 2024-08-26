@@ -1,11 +1,10 @@
 package com.ethan.remoting.exchange;
 
+import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.IdUtil;
 import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static com.ethan.common.constant.CommonConstants.HEARTBEAT_EVENT;
 
@@ -18,11 +17,10 @@ import static com.ethan.common.constant.CommonConstants.HEARTBEAT_EVENT;
 @ToString
 public class Request {
 
-    private static final AtomicLong INVOKE_ID;
+    private static final Snowflake SNOWFLAKE_ID_WORKER;
 
     static {
-        long startId = ThreadLocalRandom.current().nextLong();
-        INVOKE_ID = new AtomicLong(startId);
+        SNOWFLAKE_ID_WORKER = IdUtil.getSnowflake();
     }
 
     @Getter
@@ -43,12 +41,11 @@ public class Request {
 
     private static long newId() {
         // getAndIncrement() When it grows to MAX_VALUE, it will grow to MIN_VALUE, and the negative can be used as ID
-        return INVOKE_ID.getAndIncrement();
+        return SNOWFLAKE_ID_WORKER.nextId();
     }
 
     public boolean isHeartbeat() {
         return event && HEARTBEAT_EVENT == data;
     }
-
 
 }
