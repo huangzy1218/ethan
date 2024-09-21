@@ -28,7 +28,7 @@ public class NativeProtocol implements Protocol {
                 .getExtensionLoader(Protocol.class).getExtension(NativeProtocol.NAME);
     }
 
-    static Exporter<?> getExporter(Map<String, Exporter<?>> map, URL key) {
+    public static Exporter<?> getExporter(Map<String, Exporter<?>> map, URL key) {
         Exporter<?> result = null;
 
         if (!key.getServiceKey().contains("*")) {
