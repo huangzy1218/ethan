@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class IdempotentFilter implements Filter {
 
     // Redisson client instance
-    private RedissonClient redissonClient;
+    private final RedissonClient redissonClient;
 
     /**
      * Local cache can also be used to avoid accessing Redis every time.
