@@ -18,12 +18,16 @@ public abstract class AbstractProxyInvoker<T> implements Invoker<T> {
 
     private final T proxy;
     private final Class<T> type;
-    private final URL url;
+    private URL url;
 
-    public AbstractProxyInvoker(T proxy, Class<T> type, URL url) {
+    protected AbstractProxyInvoker(T proxy, Class<T> type, URL url) {
         this.proxy = proxy;
         this.type = type;
         this.url = url;
+    }
+
+    protected AbstractProxyInvoker(T proxy, Class<T> type) {
+        this(proxy, type, URL.buildFixedURL());
     }
 
     @Override
@@ -48,8 +52,7 @@ public abstract class AbstractProxyInvoker<T> implements Invoker<T> {
             return new AsyncRpcResult(appResponseFuture, invocation);
         } catch (Throwable e) {
             throw new RpcException(
-                    "Failed to invoke remote proxy method " + invocation.getMethodName() + " to " + getUrl()
-                            + ", cause: " + e.getMessage(),
+                    "Failed to invoke remote proxy method " + invocation.getMethodName() + ", cause: " + e.getMessage(),
                     e);
         }
     }

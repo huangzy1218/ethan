@@ -19,10 +19,12 @@ public interface CommonConstants {
     String GROUP_KEY = "group";
     String INTERFACE_KEY = "interface";
     String VERSION_KEY = "version";
+    String PATH_KEY = "path";
     String SIDE_KEY = "side";
     String CATEGORY_KEY = "category";
     String CONSUMERS_CATEGORY = "consumers";
     String CONSUMER_SIDE = "consumer";
+    String LOCALHOST_VALUE = "127.0.0.1";
     Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
     int MAX_PROXY_COUNT = 65535;
     String NATIVE_STUB = "nativestub";
@@ -33,6 +35,7 @@ public interface CommonConstants {
     String SERIALIZATION_KEY = "message.serialize";
     String BIND_PORT_KEY = "bind.port";
     String NETTY_EPOLL_ENABLE_KEY = "netty.epoll.enable";
+    String KEEP_ALIVE_KEY = "keep.alive";
     String OS_NAME_KEY = "os.name";
     String OS_LINUX_PREFIX = "linux";
     String CONNECT_TIMEOUT_KEY = "connect.timeout";
@@ -43,13 +46,30 @@ public interface CommonConstants {
     String ASYNC_KEY = "async";
     String THREAD_NAME_KEY = "threadname";
     String SERVER_THREAD_POOL_NAME = "EthanServerHandler";
-    String LOCAL_PROTOCOL = "native";
+    String LOCAL_PROTOCOL = "injvm";
+    String REMOTE_PROTOCOL = "ethan";
+    String PROTOCOL_VERSION = "1.0.0";
+    String HEARTBEAT_EVENT = "heartbeat";
+
+    /*=======================================================================================
+     * Configuration properties
+     *======================================================================================*/
+    String REGISTRY_HOST = "ethan.registry.host";
+    String REGISTRY_PORT = "ethan.registry.port";
+    String REGISTRY_USERNAME = "ethan.registry.username";
+    String REGISTRY_PASSWORD = "ethan.registry.password";
+    String CONFIG_PATH = "ethan.yaml";
 
     /*=======================================================================================
      * Default configuration
      *======================================================================================*/
     String DEFAULT_SERIALIZATION = "fastjson2";
     String DEFAULT_COMPRESS = "gzip";
+    int DEFAULT_HEARTBEAT = 60 * 1000;
+    String HEARTBEAT_CONFIG_KEY = "ethan.protocol.default-heartbeat";
+    String HEARTBEAT_TIMEOUT_KEY = "heartbeat.timeout";
+    String CLOSE_TIMEOUT_KEY = "close.timeout";
+    String CLOSE_TIMEOUT_CONFIG_KEY = "ethan.protocol.default-close-timeout";
     int DEFAULT_IO_THREADS = Math.min(Runtime.getRuntime().availableProcessors() + 1, 32);
     int DEFAULT_CONNECT_TIMEOUT = 3000;
     String DEFAULT_CATEGORY = PROVIDERS_CATEGORY;
@@ -60,6 +80,9 @@ public interface CommonConstants {
     int DEFAULT_CORE_POOL_SIZE = Runtime.getRuntime().availableProcessors();
     int DEFAULT_KEEP_ALIVE_TIME = 60;
     String DEFAULT_PROXY = "javassist";
-
+    String DEFAULT_REGISTRY = "zookeeper";
+    String DEFAULT_TRANSPORT = "netty";
+    int DEFAULT_SERVER_PORT = 9851;
+    int DEFAULT_ETCD_HEARTBEAT_TIME = 30;
 
 }

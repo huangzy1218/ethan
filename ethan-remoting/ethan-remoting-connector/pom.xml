@@ -15,27 +15,17 @@
             <groupId>com.ethan</groupId>
             <artifactId>ethan-remoting-api</artifactId>
         </dependency>
-        <!-- Curator (Zookeeper client) -->
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-recipes</artifactId>
-            <version>${curator.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.ethan</groupId>
             <artifactId>ethan-serialization-hub</artifactId>
         </dependency>
         <dependency>
             <groupId>com.ethan</groupId>
-            <artifactId>ethan-rpc-protocol</artifactId>
+            <artifactId>ethan-registry</artifactId>
         </dependency>
         <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-rpc-protocol</artifactId>
         </dependency>
     </dependencies>
 

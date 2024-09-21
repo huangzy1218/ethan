@@ -23,6 +23,10 @@ public class RemotingException extends Exception {
                 msg);
     }
 
+    public RemotingException(Exception e) {
+        super(e);
+    }
+
     public RemotingException(InetSocketAddress localAddress, InetSocketAddress remoteAddress, String message) {
         super(message);
 

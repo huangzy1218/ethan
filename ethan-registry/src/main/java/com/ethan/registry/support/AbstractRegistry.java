@@ -77,4 +77,8 @@ public abstract class AbstractRegistry implements Registry {
         notified.remove(url);
     }
 
+    @Override
+    public void heartbeat() {
+        // Default implementation
+    }
 }

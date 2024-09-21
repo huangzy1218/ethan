@@ -32,9 +32,17 @@ public interface ProxyFactory {
      *
      * @param proxy Proxy class
      * @param type  Invoker type
-     * @param url   Invoker information
      * @return invoker
      */
     <T> Invoker<T> getInvoker(T proxy, Class<T> type, URL url) throws RpcException;
+
+    default <T> Invoker<T> getInvoker(T proxy, Class<T> type) throws RpcException {
+        return getInvoker(proxy, type, URL.buildFixedURL());
+    }
+
+    @SuppressWarnings("unchecked")
+    default <T> Invoker<?> getInvoker(Object proxy, Class<?> type, URL url, int tag) throws RpcException {
+        return getInvoker((T) proxy, (Class<? super T>) type, url);
+    }
 
 }

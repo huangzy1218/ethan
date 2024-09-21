@@ -1,7 +1,7 @@
 package com.ethan.serialize.fastjson2;
 
 import com.ethan.common.bean.ScopeBeanFactory;
-import com.ethan.rpc.model.ApplicationModel;
+import com.ethan.model.ApplicationModel;
 import com.ethan.serialize.ObjectInput;
 import com.ethan.serialize.ObjectOutput;
 import com.ethan.serialize.Serialization;

@@ -53,6 +53,11 @@ public class URL implements Serializable {
         serviceKey = urlAddress.getServiceKey();
     }
 
+    public URL() {
+        urlAddress = new URLAddress();
+        urlParam = new URLParam();
+    }
+
     /**
      * Parse decoded url string, formatted dubbo://host:port/path?param=value, into strutted URL.
      *
@@ -119,11 +124,28 @@ public class URL implements Serializable {
         return new URL(urlAddress, urlParam);
     }
 
+    public static URL buildFixedURL() {
+        return URL.valueOf("ethan://0.0.0.0:80");
+    }
+
+    public void setInterfaceName(String interfaceName) {
+        this.urlAddress.setInterfaceName(interfaceName);
+    }
+
     public URL addParameter(String key, String value) {
         urlParam.addParameter(key, value);
         // Invalidate cached service key
         this.serviceKey = null;
         return this;
+    }
+
+    public URL addParameter(String key, boolean value) {
+        urlParam.addParameter(key, String.valueOf(value));
+        return this;
+    }
+
+    public long getTimeout() {
+        return Long.parseLong(urlParam.getParam(TIMEOUT_KEY));
     }
 
     public boolean hasParameter(String key) {
@@ -188,6 +210,10 @@ public class URL implements Serializable {
         return urlAddress.getPort();
     }
 
+    public void setPort(int port) {
+        urlAddress.setPort(port);
+    }
+
     public Map<String, Object> getAttributes() {
         return attributes == null ? Collections.emptyMap() : attributes;
     }
@@ -211,8 +237,9 @@ public class URL implements Serializable {
         return value <= 0 ? defaultValue : value;
     }
 
-    public void addParameter(String key, int value) {
+    public URL addParameter(String key, int value) {
         urlParam.addParameter(key, value);
+        return this;
     }
 
     public String getGroup() {
@@ -237,7 +264,7 @@ public class URL implements Serializable {
     }
 
     public String getServiceInterface() {
-        return serviceKey;
+        return urlAddress.getInterfaceName();
     }
 
     public String getCategory(String defaultValue) {

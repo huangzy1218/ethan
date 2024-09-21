@@ -13,9 +13,9 @@
         <module>ethan-serialization</module>
         <module>ethan-remoting</module>
         <module>ethan-registry</module>
-        <module>ethan-springboot</module>
         <module>ethan-rpc</module>
         <module>ethan-config</module>
+        <module>ethan-cluster</module>
     </modules>
 
     <properties>
@@ -29,17 +29,22 @@
         <kryo.version>4.0.2</kryo.version>
         <lombok.version>1.18.26</lombok.version>
         <slf4j.version>1.7.5</slf4j.version>
-        <fastjson2.version>2.0.47</fastjson2.version>
-        <curator.version>4.2.0</curator.version>
+        <fastjson2.vesion>2.0.50</fastjson2.vesion>
+        <curator.version>5.1.0</curator.version>
         <spring-boot.version>3.2.4</spring-boot.version>
         <netty.version>4.1.77.Final</netty.version>
-        <spring.version>5.3.21</spring.version>
+        <spring.version>6.1.8</spring.version>
+        <zookeeper.version>3.8.4</zookeeper.version>
         <junit.version>4.13.2</junit.version>
         <commons-compress.version>1.21</commons-compress.version>
         <snappy-java.version>1.1.10.5</snappy-java.version>
-        <spring-boot-configuration-processor.version>2.5.0</spring-boot-configuration-processor.version>
         <javassist.version>3.28.0-GA</javassist.version>
         <jedis.version>2.9.0</jedis.version>
+        <jetcd.version>0.7.7</jetcd.version>
+        <mockito.version>3.7.7</mockito.version>
+        <guava-retrying.version>2.0.0</guava-retrying.version>
+        <vertx.version>4.5.1</vertx.version>
+        <hutool.version>5.8.16</hutool.version>
     </properties>
 
     <dependencies>
@@ -60,11 +65,6 @@
             <version>${slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
@@ -73,6 +73,16 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
         </dependency>
     </dependencies>
 
@@ -113,9 +123,19 @@
                 <version>${revision}</version>
             </dependency>
             <dependency>
+                <groupId>com.ethan</groupId>
+                <artifactId>ethan-config-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ethan</groupId>
+                <artifactId>ethan-config-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
-                <version>${fastjson2.version}</version>
+                <version>${fastjson2.vesion}</version>
             </dependency>
             <dependency>
                 <groupId>com.ethan</groupId>
@@ -129,7 +149,7 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
+                <artifactId>spring-boot-starter</artifactId>
                 <version>${spring-boot.version}</version>
             </dependency>
             <dependency>
@@ -137,9 +157,29 @@
                 <artifactId>netty-all</artifactId>
                 <version>${netty.version}</version>
             </dependency>
+            <!-- Mockito -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- Spring Core -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <!-- Spring Context -->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <!-- Spring Beans -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
@@ -170,6 +210,11 @@
             <dependency>
                 <groupId>com.ethan</groupId>
                 <artifactId>ethan-serialization</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ethan</groupId>
+                <artifactId>ethan-config</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

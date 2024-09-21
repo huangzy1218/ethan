@@ -47,8 +47,7 @@ public interface Invocation extends Serializable {
     /**
      * Get attachment by key.
      *
-     * @return Attachment value.
-     * @serial
+     * @return Attachment value
      */
     String getAttachment(String key);
 
@@ -56,5 +55,12 @@ public interface Invocation extends Serializable {
      * For supporting Object transmission.
      */
     void setAttachment(String key, String value);
+
+    /**
+     * Get arguments.
+     *
+     * @return Arguments
+     */
+    Object[] getArguments();
 
 }

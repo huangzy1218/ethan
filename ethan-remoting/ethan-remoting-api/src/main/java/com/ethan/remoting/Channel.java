@@ -1,6 +1,7 @@
 package com.ethan.remoting;
 
 import com.ethan.common.Node;
+import com.ethan.common.RemotingException;
 
 import java.net.InetSocketAddress;
 
@@ -10,7 +11,6 @@ import java.net.InetSocketAddress;
  * @author Huang Z.Y.
  */
 public interface Channel extends Node {
-
 
     /**
      * Get local address.

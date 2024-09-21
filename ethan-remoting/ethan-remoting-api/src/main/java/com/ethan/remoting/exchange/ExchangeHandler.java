@@ -1,7 +1,7 @@
 package com.ethan.remoting.exchange;
 
+import com.ethan.common.RemotingException;
 import com.ethan.remoting.Channel;
-import com.ethan.remoting.RemotingException;
 
 import java.util.concurrent.CompletableFuture;
 

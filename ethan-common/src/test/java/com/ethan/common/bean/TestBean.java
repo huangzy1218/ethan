@@ -7,7 +7,7 @@ import lombok.ToString;
 @ToString
 public class TestBean {
 
-    private int i;
+    private Integer i;
     private String str;
 
 }

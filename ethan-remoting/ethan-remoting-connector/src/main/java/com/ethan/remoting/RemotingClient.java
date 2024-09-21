@@ -1,5 +1,7 @@
 package com.ethan.remoting;
 
+import com.ethan.common.RemotingException;
+
 import java.util.concurrent.CompletableFuture;
 
 /**

@@ -7,8 +7,8 @@ package com.ethan.remoting;
  */
 public interface RemotingServer {
 
-    void doOpen();
+    void open();
 
-    void doClose();
+    void close();
 
 }

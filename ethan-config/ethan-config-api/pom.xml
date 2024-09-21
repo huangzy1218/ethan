@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.ethan</groupId>
+        <artifactId>ethan-config</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>ethan-config-api</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-registry</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

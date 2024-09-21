@@ -8,7 +8,7 @@ import com.ethan.common.extension.SPI;
  *
  * @author Huang Z.Y.
  */
-@SPI
+@SPI("remote")
 public interface Protocol {
 
     /**
@@ -30,6 +30,6 @@ public interface Protocol {
      * @return Invoker service's local proxy
      * @throws RpcException When there's any error while connecting to the service provider
      */
-    <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException;
-
+    <T> Invoker<T> refer(Class<T> type, URL url, Exporter<T> exporter) throws RpcException;
+    
 }

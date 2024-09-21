@@ -1,6 +1,5 @@
 package com.ethan.rpc.proxy;
 
-import com.ethan.common.URL;
 import com.ethan.rpc.Invoker;
 import com.ethan.rpc.RpcInvocation;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +20,7 @@ public class InvokerInvocationHandler implements InvocationHandler {
 
     public InvokerInvocationHandler(Invoker<?> handler) {
         this.invoker = handler;
-        URL url = invoker.getUrl();
-        this.protocolServiceKey = url.getServiceKey();
+        this.protocolServiceKey = invoker.getInterface().getName();
     }
 
     @Override

@@ -19,7 +19,7 @@ public class JdkProxyFactoryTest {
 
         // Get invoker
         URL url = URL.valueOf("http://localhost:8080/helloService");
-        Invoker<HelloService> invoker = proxyFactory.getInvoker(userService, HelloService.class, url);
+        Invoker<HelloService> invoker = proxyFactory.getInvoker(userService, HelloService.class);
         // Get proxy
         HelloService proxy = proxyFactory.getProxy(invoker, new Class[]{HelloService.class});
         // Call the proxy method

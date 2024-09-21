@@ -1,7 +1,7 @@
 package com.ethan.rpc.protocol;
 
+import com.ethan.common.RemotingException;
 import com.ethan.common.URL;
-import com.ethan.remoting.RemotingException;
 import com.ethan.rpc.*;
 import com.ethan.rpc.support.RpcUtils;
 import com.ethan.serialize.SerializationException;
@@ -30,7 +30,7 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
     private final Class<T> type;
 
     /**
-     * Url.
+     * {@link com.ethan.common.Node} Url.
      */
     private final URL url;
 
@@ -41,15 +41,9 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
     @Setter
     private volatile boolean available = true;
 
-    public AbstractInvoker(Class<T> type, URL url) {
+    protected AbstractInvoker(Class<T> type, URL url) {
         this.type = type;
         this.url = url;
-    }
-
-
-    @Override
-    public URL getUrl() {
-        return url;
     }
 
     @Override
@@ -111,26 +105,21 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
             Thread.currentThread().interrupt();
             throw new RpcException(
                     "Interrupted unexpectedly while waiting for remote result to return! method: "
-                            + invocation.getMethodName() + ", provider: " + getUrl() + ", cause: " + e.getMessage(),
-                    e);
+                            + invocation.getMethodName(), e);
         } catch (ExecutionException e) {
             Throwable rootCause = e.getCause();
             if (rootCause instanceof TimeoutException) {
-                throw new RpcException("Invoke remote method timeout. method: " + invocation.getMethodName() + ", provider: "
-                        + getUrl() + ", cause: " + e.getMessage(), e);
+                throw new RpcException("Invoke remote method timeout. method: " + invocation.getMethodName() + ", cause: " + e.getMessage(), e);
             } else if (rootCause instanceof RemotingException) {
-                throw new RpcException("Failed to invoke remote method: " + invocation.getMethodName() + ", provider: " + getUrl()
-                        + ", cause: " + e.getMessage(), e);
+                throw new RpcException("Failed to invoke remote method: " + invocation.getMethodName() + ", cause: " + e.getMessage(), e);
             } else if (rootCause instanceof SerializationException) {
                 throw new RpcException("Invoke remote method failed cause by serialization error.  remote method: "
-                        + invocation.getMethodName() + ", provider: " + getUrl() + ", cause: " + e.getMessage(), e);
+                        + invocation.getMethodName() + e.getMessage(), e);
             } else {
-                throw new RpcException("Fail to invoke remote method: " + invocation.getMethodName() + ", provider: " + getUrl()
-                        + ", cause: " + e.getMessage(), e);
+                throw new RpcException("Fail to invoke remote method: " + invocation.getMethodName() + "cause: " + e.getMessage(), e);
             }
         } catch (java.util.concurrent.TimeoutException e) {
-            throw new RpcException("Invoke remote method timeout. method: " + invocation.getMethodName() + ", provider: " + getUrl()
-                    + ", cause: " + e.getMessage(), e);
+            throw new RpcException("Invoke remote method timeout. method: " + invocation.getMethodName() + "cause: " + e.getMessage(), e);
         } catch (Throwable e) {
             throw new RpcException(e.getMessage(), e);
         }
@@ -138,9 +127,9 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
 
     protected abstract Result doInvoke(Invocation invocation) throws Throwable;
 
-    public boolean isAvailable() {
-        return available;
+    @Override
+    public URL getUrl() {
+        return url;
     }
-
 }
     

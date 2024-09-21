@@ -1,7 +1,7 @@
 package com.ethan.remoting.exchange.support;
 
+import com.ethan.common.RemotingException;
 import com.ethan.remoting.Channel;
-import com.ethan.remoting.RemotingException;
 import com.ethan.remoting.exchange.Request;
 import com.ethan.remoting.exchange.Response;
 import com.ethan.serialize.SerializationException;
@@ -29,6 +29,7 @@ public class DefaultFuture extends CompletableFuture<Object> {
     private static final Map<Long, Channel> CHANNELS = new ConcurrentHashMap<>();
     @Getter
     private final Channel channel;
+    @Getter
     private final Request request;
     @Getter
     private final int timeout;
@@ -62,7 +63,7 @@ public class DefaultFuture extends CompletableFuture<Object> {
     }
 
     /**
-     * check time out of the future
+     * Check time out of the future.
      */
     private static void timeoutCheck(DefaultFuture future) {
         if (future == null || future.isDone()) {
@@ -72,14 +73,14 @@ public class DefaultFuture extends CompletableFuture<Object> {
         task.run();
     }
 
-    public static void sent(Channel channel, Request request) {
+    public static void sent(Request request) {
         DefaultFuture future = FUTURES.get(request.getId());
         if (future != null) {
             future.doSent();
         }
     }
 
-    public static void received(Channel channel, Response response) {
+    public static void received(Response response) {
         try {
             DefaultFuture future = FUTURES.remove(response.getId());
             if (future != null) {
@@ -104,7 +105,7 @@ public class DefaultFuture extends CompletableFuture<Object> {
 
     private void doReceived(Response res) {
         if (res == null) {
-            throw new IllegalStateException("response cannot be null");
+            throw new IllegalStateException("Response cannot be null");
         }
         if (res.getStatus() == Response.OK) {
             this.complete(res.getResult());
@@ -114,7 +115,7 @@ public class DefaultFuture extends CompletableFuture<Object> {
         } else if (res.getStatus() == Response.SERIALIZATION_ERROR) {
             this.completeExceptionally(new SerializationException(res.getErrorMsg()));
         } else {
-            this.completeExceptionally(new RemotingException(channel, res.getErrorMsg()));
+            this.completeExceptionally(new RemotingException(res.getErrorMsg()));
         }
     }
 
@@ -165,7 +166,7 @@ public class DefaultFuture extends CompletableFuture<Object> {
             timeoutResponse.setStatus(future.isSent() ? Response.SERVER_TIMEOUT : Response.CLIENT_TIMEOUT);
             timeoutResponse.setErrorMsg(future.getTimeoutMessage(true));
             // Handle response
-            DefaultFuture.received(future.getChannel(), timeoutResponse);
+            DefaultFuture.received(timeoutResponse);
         }
     }
 

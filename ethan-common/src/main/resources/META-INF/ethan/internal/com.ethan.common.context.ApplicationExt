@@ -1,0 +1,2 @@
+config=com.ethan.common.config.ConfigManager
+environment=com.ethan.common.config.Environment

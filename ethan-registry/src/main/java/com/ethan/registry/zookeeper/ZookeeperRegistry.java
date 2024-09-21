@@ -1,10 +1,10 @@
 package com.ethan.registry.zookeeper;
 
+import com.ethan.common.RpcException;
 import com.ethan.common.URL;
+import com.ethan.registry.client.zookeeper.ZookeeperClient;
+import com.ethan.registry.client.zookeeper.ZookeeperTransporter;
 import com.ethan.registry.support.AbstractRegistry;
-import com.ethan.remoting.client.zookeeper.ZookeeperClient;
-import com.ethan.remoting.client.zookeeper.ZookeeperTransporter;
-import com.ethan.rpc.RpcException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -36,7 +36,6 @@ public class ZookeeperRegistry extends AbstractRegistry {
         }
         this.root = group;
         this.zkClient = ZookeeperTransporter.connect(url);
-
     }
 
     public boolean isAvailable() {
@@ -47,6 +46,11 @@ public class ZookeeperRegistry extends AbstractRegistry {
         if (zkClient == null) {
             throw new IllegalStateException("Registry is destroyed");
         }
+    }
+
+    @Override
+    public void init() {
+        heartbeat();
     }
 
     @Override
@@ -96,7 +100,7 @@ public class ZookeeperRegistry extends AbstractRegistry {
     }
 
     public String toUrlPath(URL url) {
-        return toCategoryPath(url) + url.toFullString();
+        return toCategoryPath(url) + PATH_SEPARATOR + url.toFullString();
     }
 
     private String toCategoryPath(URL url) {
@@ -108,7 +112,7 @@ public class ZookeeperRegistry extends AbstractRegistry {
         if (ANY_VALUE.equals(name)) {
             return toRootPath();
         }
-        return toRootDir() + name;
+        return toRootDir() + PATH_SEPARATOR + name;
     }
 
     private String toRootPath() {

@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
-            <version>${spring-boot-configuration-processor.version}</version>
+            <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -43,14 +43,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <version>2.5.0</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-compress</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.xerial.snappy</groupId>
-            <artifactId>snappy-java</artifactId>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>

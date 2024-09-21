@@ -1,10 +1,10 @@
 package com.ethan.registry.redis;
 
+import com.ethan.common.RpcException;
 import com.ethan.common.URL;
+import com.ethan.registry.client.redis.RedisClient;
+import com.ethan.registry.client.redis.RedisTransporter;
 import com.ethan.registry.support.AbstractRegistry;
-import com.ethan.remoting.client.redis.RedisClient;
-import com.ethan.remoting.client.redis.RedisTransporter;
-import com.ethan.rpc.RpcException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 import static com.ethan.common.constant.CommonConstants.*;
 
 /**
- * he implementation of {@link com.ethan.registry.Registry} using Redis.
+ * The implementation of {@link com.ethan.registry.Registry} using Redis.
  *
  * @author Huang Z.Y.
  */
@@ -42,6 +42,11 @@ public class RedisRegistry extends AbstractRegistry {
     @Override
     public URL getUrl() {
         return registryUrl;
+    }
+
+    @Override
+    public void init() {
+        heartbeat();
     }
 
     @Override

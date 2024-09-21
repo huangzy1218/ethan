@@ -15,5 +15,30 @@
             <groupId>com.ethan</groupId>
             <artifactId>ethan-serialization-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-config-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ethan</groupId>
+            <artifactId>ethan-rpc-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
     </dependencies>
 </project>

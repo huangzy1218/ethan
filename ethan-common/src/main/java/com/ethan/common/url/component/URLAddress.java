@@ -1,6 +1,12 @@
 package com.ethan.common.url.component;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import static com.ethan.common.constant.CommonConstants.ETHAN;
 
 /**
  * A class which address parameters for {@link com.ethan.common.URL}.
@@ -8,18 +14,22 @@ import lombok.Data;
  * @author Huang Z,Y.
  */
 @Data
+@Slf4j
 public class URLAddress {
 
     /**
      * Cache.
      */
     protected transient String rawAddress;
-    private String protocol;
+    private String protocol = ETHAN;
     private String host;
     private int port;
     private String interfaceName;
     private URLParam urlParam;
 
+    public URLAddress() {
+        host = getLocalAddress();
+    }
 
     public URLAddress(String protocol, String host, int port) {
         this.protocol = protocol;
@@ -33,6 +43,16 @@ public class URLAddress {
         this.port = port;
         this.interfaceName = interfaceName;
         this.urlParam = new URLParam();
+    }
+
+    public String getLocalAddress() {
+        try {
+            InetAddress localHost = InetAddress.getLocalHost();
+            return localHost.getHostAddress();
+        } catch (UnknownHostException e) {
+            log.info("Failed to get local host address, returning 'localhost'. Cause: {}", e.getMessage(), e);
+            return "localhost";
+        }
     }
 
     public void addParam(String key, String value) {

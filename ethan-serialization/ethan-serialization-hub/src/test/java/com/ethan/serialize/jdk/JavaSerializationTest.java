@@ -3,7 +3,7 @@ package com.ethan.serialize.jdk;
 
 import com.ethan.common.extension.ExtensionLoader;
 import com.ethan.example.TestPojo;
-import com.ethan.rpc.model.ApplicationModel;
+import com.ethan.model.ApplicationModel;
 import com.ethan.serialize.ObjectInput;
 import com.ethan.serialize.ObjectOutput;
 import com.ethan.serialize.Serialization;
