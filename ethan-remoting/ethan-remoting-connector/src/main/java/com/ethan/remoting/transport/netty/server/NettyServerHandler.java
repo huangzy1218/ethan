@@ -1,4 +1,4 @@
-package com.ethan.remoting.tansport.netty.server;
+package com.ethan.remoting.transport.netty.server;
 
 import com.ethan.common.URL;
 import com.ethan.common.enumeration.CompressType;

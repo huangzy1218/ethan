@@ -1,4 +1,4 @@
-package com.ethan.remoting.tansport.netty;
+package com.ethan.remoting.transport.netty;
 
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.Epoll;

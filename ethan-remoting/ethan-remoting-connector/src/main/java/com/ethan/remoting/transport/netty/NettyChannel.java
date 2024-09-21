@@ -1,4 +1,4 @@
-package com.ethan.remoting.tansport.netty;
+package com.ethan.remoting.transport.netty;
 
 import com.ethan.common.URL;
 import com.ethan.remoting.Channel;

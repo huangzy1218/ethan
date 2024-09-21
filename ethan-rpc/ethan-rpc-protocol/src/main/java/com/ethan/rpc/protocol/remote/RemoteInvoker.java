@@ -40,7 +40,7 @@ public class RemoteInvoker<T> extends AbstractInvoker<T> {
         if (exporter == null) {
             exporter = NativeProtocol.getExporter(exporterMap, getUrl());
             if (exporter == null) {
-                throw new RpcExceptNion("Service [" + key + "] not found.");
+                throw new RpcException("Service [" + key + "] not found.");
             }
         }
         // Solve local exposure, the server opens the token, and the client call fails.

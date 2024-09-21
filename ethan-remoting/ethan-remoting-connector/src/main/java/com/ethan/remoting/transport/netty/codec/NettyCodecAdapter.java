@@ -1,4 +1,4 @@
-package com.ethan.remoting.tansport.netty.codec;
+package com.ethan.remoting.transport.netty.codec;
 
 import com.ethan.common.URL;
 import com.ethan.rpc.Message;
