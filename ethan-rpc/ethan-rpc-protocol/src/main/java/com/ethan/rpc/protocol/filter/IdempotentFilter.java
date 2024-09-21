@@ -1,5 +1,6 @@
 package com.ethan.rpc.protocol.filter;
 
+import com.ethan.rpc.Invocation;
 import com.ethan.rpc.Invoker;
 import com.ethan.rpc.Result;
 import com.ethan.rpc.RpcException;
@@ -77,7 +78,7 @@ public class IdempotentFilter implements Filter {
     private Result getResultFromCache(String requestId) {
         // Read cache data from Redis through Redisson or RedisTemplate
         // Here we assume there is a simple Redis API to get the result
-        return redissonClient.getBucket("cache:request:" + requestId).get();
+        return (Result) redissonClient.getBucket("cache:request:" + requestId).get();
     }
 
     // Implementation to store the processing result in Redis
@@ -85,5 +86,6 @@ public class IdempotentFilter implements Filter {
         // Store data in Redis through Redisson or RedisTemplate
         redissonClient.getBucket("cache:request:" + requestId).set(result, 30, TimeUnit.MINUTES);
     }
+
 }
     

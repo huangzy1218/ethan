@@ -63,4 +63,5 @@ public interface Invocation extends Serializable {
      */
     Object[] getArguments();
 
+    String getId();
 }

@@ -22,6 +22,7 @@ public class RpcInvocation implements Invocation {
     private transient Class<?>[] parameterTypes;
     private transient Object[] parameters;
     private transient Class<?> returnType;
+    private transient String requestId;
     /**
      * Only used on the caller side, will not appear on the wire.
      */
@@ -94,6 +95,16 @@ public class RpcInvocation implements Invocation {
     @Override
     public Object[] getArguments() {
         return parameters;
+    }
+
+    @Override
+    public String getId() {
+        return requestId;
+    }
+
+    public Object setRequestId(String requestId) {
+        this.requestId = requestId;
+        return this;
     }
 
     @Override
