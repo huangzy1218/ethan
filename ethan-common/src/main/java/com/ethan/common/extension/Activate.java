@@ -28,4 +28,12 @@ public @interface Activate {
      * @return Activation conditions
      */
     String[] value() default {};
+
+    /**
+     * The ordering or priority of the filter (lower number means higher priority).
+     *
+     * @return The order of the filter.
+     */
+    int order() default 0;
+    
 }
