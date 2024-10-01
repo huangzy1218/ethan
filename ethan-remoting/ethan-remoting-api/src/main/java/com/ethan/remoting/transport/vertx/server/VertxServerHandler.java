@@ -1,38 +1,41 @@
 package com.ethan.remoting.transport.vertx.server;
 
+import com.alibaba.fastjson.JSON;
+import com.ethan.common.RpcException;
 import com.ethan.common.context.ApplicationContextHolder;
 import com.ethan.config.ServiceRepository;
 import com.ethan.remoting.Codec;
 import com.ethan.remoting.RpcInvocation;
-import com.ethan.remoting.exchange.Request;
-import com.ethan.remoting.exchange.Response;
 import com.ethan.remoting.exchange.codec.EthanCodec;
-import com.ethan.remoting.transport.CodecSupport;
-import com.ethan.remoting.transport.vertx.TcpBufferHandlerWrapper;
-import com.ethan.rpc.AppResponse;
-import com.ethan.serialize.ObjectOutput;
-import com.ethan.serialize.Serialization;
+import com.ethan.remoting.transport.vertx.encrypt.AESEncryptionHelper;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.net.NetSocket;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import javax.crypto.SecretKey;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
  * @author Huang Z.Y.
  */
 @Slf4j
-public class VertxServerHandler implements Handler<NetSocket> {
+public class VertxServerHandler implements Handler<HttpServerRequest> {
 
     private final ServiceRepository repository = ApplicationContextHolder.getBean(ServiceRepository.class);
     private final Codec codec = new EthanCodec();
+
+    @Setter
+    private SecretKey encryptionKey;
+
+    public VertxServerHandler(SecretKey encryptionKey) {
+        this.encryptionKey = encryptionKey;
+    }
 
     private static Buffer convertByteBufToVertxBuffer(ByteBuf byteBuf) {
         byte[] bytes = new byte[byteBuf.readableBytes()];
@@ -40,56 +43,65 @@ public class VertxServerHandler implements Handler<NetSocket> {
         return Buffer.buffer(bytes);
     }
 
-    @Override
-    public void handle(NetSocket request) {
-        Serialization serialization = CodecSupport.getSerialization((byte) 1);
-        TcpBufferHandlerWrapper bufferHandlerWrapper = new TcpBufferHandlerWrapper(buffer -> {
-            Object req = null;
-            try {
-                req = codec.decode(null, convertVertxBufferToNettyBuffer(buffer));
-            } catch (Exception e) {
-                log.error("Decode error", e);
-            }
-            if (req instanceof Request newRequest) {
-                RpcInvocation invocation = (RpcInvocation) (newRequest.getData());
-                Response response = new Response(newRequest.getId());
-                AppResponse appResponse = new AppResponse();
-                try {
-                    Class<?> implClass = repository.getService(invocation.getServiceName()).getClass();
-                    Method method = implClass.getMethod(invocation.getMethodName(), invocation.getParameterTypes());
-                    Object result = method.invoke(implClass.newInstance(), invocation.getArguments());
-                    // Encapsulate return results
-                    appResponse.setValue(result);
-                    response.setResult(appResponse);
-                } catch (Exception e) {
-                    log.info("Invoke method {} failed", invocation.getMethodName(), e);
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-        request.handler(bufferHandlerWrapper);
-    }
-
-    void doResponse(HttpServerRequest request, Response rpcResponse, Serialization serializer) {
-        HttpServerResponse httpServerResponse = request.response()
-                .putHeader("content-type", "application/json");
-        try {
-            // Serialization
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutput objectOutput = serializer.serialize(baos);
-            objectOutput.writeObject(rpcResponse);
-            baos.flush();
-            byte[] serialized = baos.toByteArray();
-            httpServerResponse.end(Buffer.buffer(serialized));
-        } catch (IOException e) {
-            httpServerResponse.end(Buffer.buffer());
-            log.error("Cannot serialize RpcInvocation", e);
-        }
-    }
-
     private ByteBuf convertVertxBufferToNettyBuffer(Buffer vertxBuffer) {
         byte[] bytes = vertxBuffer.getBytes();
         return Unpooled.wrappedBuffer(bytes);
+    }
+
+    @Override
+    public void handle(HttpServerRequest request) {
+        request.bodyHandler(buffer -> {
+            try {
+                // Decrypt the incoming message
+                String decryptedMessage = AESEncryptionHelper.decrypt(buffer.toString(), encryptionKey);
+                log.info("Decrypted message: {}", decryptedMessage);
+
+                // Deserialize the message to your expected object (e.g., RpcInvocation)
+                RpcInvocation invocation = JSON.parseObject(decryptedMessage, RpcInvocation.class);
+
+                // Process the invocation, using the repository or other services
+                Object service = repository.getService(invocation.getServiceName());
+
+                String responseData = JSON.toJSONString(invokeTargetMethod(invocation, service));
+
+                // Encrypt the response
+                String encryptedResponse = AESEncryptionHelper.encrypt(responseData, encryptionKey);
+
+                // Send the response back to the client
+                sendResponse(request.response(), encryptedResponse);
+            } catch (Exception e) {
+                log.error("Error handling message", e);
+                // Optionally send an error response
+                sendErrorResponse(request.response(), "Error processing request");
+            }
+        });
+    }
+
+    private void sendResponse(HttpServerResponse response, String responseBody) {
+        response.setStatusCode(200); // Set the appropriate status code
+        response.putHeader("Content-Type", "application/json"); // Set the content type
+        response.end(responseBody); // Send the encrypted response back
+    }
+
+    private void sendErrorResponse(HttpServerResponse response, String errorMessage) {
+        // Internal server error
+        response.setStatusCode(500);
+        response.putHeader("Content-Type", "text/plain");
+        // Send the error message back
+        response.end(errorMessage);
+    }
+
+    private Object invokeTargetMethod(com.ethan.remoting.RpcInvocation request, Object service) {
+        Object result;
+        try {
+            Method method = service.getClass().getMethod(request.getMethodName(), request.getParameterTypes());
+            result = method.invoke(service, request.getParameters());
+            log.info("Service: [{}] successful invoke method [{}]", request.getServiceName(), request.getMethodName());
+        } catch (NoSuchMethodException | IllegalArgumentException | InvocationTargetException |
+                 IllegalAccessException e) {
+            throw new RpcException(e.getMessage(), e);
+        }
+        return result;
     }
 
 }

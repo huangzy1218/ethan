@@ -2,26 +2,33 @@ package com.ethan.remoting.transport.vertx.server;
 
 import com.ethan.common.URL;
 import com.ethan.remoting.RemotingServer;
+import com.ethan.remoting.transport.vertx.encrypt.AESEncryptionHelper;
 import io.vertx.core.Vertx;
-import io.vertx.core.net.NetServer;
+import io.vertx.core.http.HttpServer;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.crypto.SecretKey;
+
 /**
+ * Vertx server.
+ *
  * @author Huang Z.Y.
  */
 @Slf4j
 public class VertxServer implements RemotingServer {
 
     private Vertx vertx;
-    private NetServer server;
+    private HttpServer server;
     private URL url;
+    private SecretKey encryptionKey;
 
     public VertxServer(final URL url) {
-        vertx = Vertx.vertx();
+        this.vertx = Vertx.vertx();
         this.url = url;
-        server = vertx.createNetServer();
+        this.server = vertx.createHttpServer();
+        this.encryptionKey = AESEncryptionHelper.generateKey();
         // Handle request
-        server.connectHandler(new VertxServerHandler());
+        server.requestHandler(new VertxServerHandler(encryptionKey));
     }
 
     @Override
@@ -39,6 +46,7 @@ public class VertxServer implements RemotingServer {
     @Override
     public void close() {
         server.close();
+        vertx.close();
     }
 
 }

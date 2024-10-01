@@ -21,7 +21,6 @@ class FastJson2SerializationTest {
         ObjectOutput objectOutput = serialization.serialize(outputStream);
         objectOutput.writeUTF("hello");
         objectOutput.flushBuffer();
-
         byte[] bytes = outputStream.toByteArray();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         ObjectInput objectInput = serialization.deserialize(inputStream);

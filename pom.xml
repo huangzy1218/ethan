@@ -43,8 +43,9 @@
         <jetcd.version>0.7.7</jetcd.version>
         <mockito.version>3.7.7</mockito.version>
         <guava-retrying.version>2.0.0</guava-retrying.version>
-        <vertx.version>4.5.1</vertx.version>
+        <vertx.version>4.5.9</vertx.version>
         <hutool.version>5.8.16</hutool.version>
+        <fastjson.version>2.0.40</fastjson.version>
     </properties>
 
     <dependencies>
