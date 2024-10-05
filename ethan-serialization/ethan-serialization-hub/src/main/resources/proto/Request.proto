@@ -13,12 +13,13 @@ message Request {
   // Request data, using Any type to be compatible with multiple types of data
   google.protobuf.Any data = 2;
 
-  // 版本号
+  // Version number.
   string version = 3;
 
-  // 请求是否出现错误
+  // Whether an error occurred in the request.
   bool broken = 4;
 
-  // 是否为事件
+  // Event or not.
   bool event = 5;
+
 }

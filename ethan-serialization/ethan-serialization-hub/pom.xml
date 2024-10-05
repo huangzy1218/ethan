@@ -45,6 +45,11 @@
             <artifactId>protobuf-java</artifactId>
             <version>${protobuf-java.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.thrift</groupId>
+            <artifactId>libthrift</artifactId>
+            <version>0.20.0</version>
+        </dependency>
     </dependencies>
 
     <build>
