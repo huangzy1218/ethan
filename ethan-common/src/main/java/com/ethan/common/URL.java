@@ -250,6 +250,11 @@ public class URL implements Serializable {
         return getParameter(VERSION_KEY);
     }
 
+    public String getVersion(String defaultValue) {
+        String value = getVersion();
+        return StringUtils.isEmpty(value) ? defaultValue : value;
+    }
+
     public String getGroup(String defaultValue) {
         String value = getGroup();
         return StringUtils.isEmpty(value) ? defaultValue : value;
@@ -292,6 +297,18 @@ public class URL implements Serializable {
     public String[] getCategory(String[] defaultValue) {
         String value = getCategory();
         return StringUtils.isEmpty(value) ? defaultValue : COMMA_SPLIT_PATTERN.split(value);
+    }
+
+    public String getProtocol() {
+        return urlAddress == null ? null : urlAddress.getProtocol();
+    }
+
+    public String getPath() {
+        return urlAddress == null ? null : urlAddress.getPath();
+    }
+
+    public Map<String, String> getParameters() {
+        return urlParam.getParameters();
     }
 
 }

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package com.ethan.serialize;
+
+import "google/protobuf/any.proto";
+
+// Request message definition
+message Request {
+
+  // A unique ID generated using the snowflake algorithm
+  int64 id = 1;
+
+  // Request data, using Any type to be compatible with multiple types of data
+  google.protobuf.Any data = 2;
+
+  // 版本号
+  string version = 3;
+
+  // 请求是否出现错误
+  bool broken = 4;
+
+  // 是否为事件
+  bool event = 5;
+}

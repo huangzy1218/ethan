@@ -46,6 +46,8 @@
         <vertx.version>4.5.9</vertx.version>
         <hutool.version>5.8.16</hutool.version>
         <fastjson.version>2.0.40</fastjson.version>
+        <nacos.version>2.4.1</nacos.version>
+        <protobuf-java.version>4.28.2</protobuf-java.version>
     </properties>
 
     <dependencies>

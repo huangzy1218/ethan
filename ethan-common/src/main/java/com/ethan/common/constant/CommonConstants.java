@@ -23,6 +23,11 @@ public interface CommonConstants {
     String SIDE_KEY = "side";
     String CATEGORY_KEY = "category";
     String CONSUMERS_CATEGORY = "consumers";
+    String PROTOCOL_KEY = "protocol";
+    String ADMIN_PROTOCOL = "admin";
+    String ROUTERS_CATEGORY = "routers";
+    String DYNAMIC_ROUTERS_CATEGORY = "dynamicrouters";
+    String CONFIGURATORS_CATEGORY = "configurators";
     String CONSUMER_SIDE = "consumer";
     String LOCALHOST_VALUE = "127.0.0.1";
     Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");

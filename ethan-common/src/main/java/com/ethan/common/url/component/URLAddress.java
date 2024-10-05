@@ -85,4 +85,8 @@ public class URLAddress {
         return port <= 0 ? host : host + ':' + port;
     }
 
+    public String getPath() {
+        return "";
+    }
+    
 }

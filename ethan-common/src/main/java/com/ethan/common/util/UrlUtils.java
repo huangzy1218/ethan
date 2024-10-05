@@ -85,5 +85,5 @@ public class UrlUtils {
         }
         return url.getParameter(HEARTBEAT_KEY, defaultHeartbeat);
     }
-
+    
 }

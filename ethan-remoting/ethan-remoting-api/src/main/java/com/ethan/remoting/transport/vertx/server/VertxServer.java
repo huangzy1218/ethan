@@ -5,6 +5,7 @@ import com.ethan.remoting.RemotingServer;
 import com.ethan.remoting.transport.vertx.encrypt.AESEncryptionHelper;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
+import io.vertx.core.http.HttpServerOptions;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.SecretKey;
@@ -25,7 +26,7 @@ public class VertxServer implements RemotingServer {
     public VertxServer(final URL url) {
         this.vertx = Vertx.vertx();
         this.url = url;
-        this.server = vertx.createHttpServer();
+        this.server = vertx.createHttpServer(new HttpServerOptions().setSsl(true));
         this.encryptionKey = AESEncryptionHelper.generateKey();
         // Handle request
         server.requestHandler(new VertxServerHandler(encryptionKey));

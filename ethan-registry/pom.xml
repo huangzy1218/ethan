@@ -44,5 +44,11 @@
             <artifactId>jetcd-core</artifactId>
             <version>${jetcd.version}</version>
         </dependency>
+        <!-- Nacos client -->
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+            <version>${nacos.version}</version>
+        </dependency>
     </dependencies>
 </project>

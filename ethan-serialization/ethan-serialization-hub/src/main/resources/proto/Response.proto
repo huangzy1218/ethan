@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package com.ethan.serialize;
+
+import "google/protobuf/any.proto";
+
+// Response message definition
+message Response {
+
+  // Unique ID.
+  int64 id = 1;
+
+  // Status code.
+  int32 status = 2;
+
+  // Error message.
+  string errorMsg = 3;
+
+  // Returns the result, using Any type to be compatible with multiple types of data.
+  google.protobuf.Any result = 4;
+
+  // Version number.
+  string version = 5;
+
+  // 是否为事件
+  bool event = 6;
+}
